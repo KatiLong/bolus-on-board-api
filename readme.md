@@ -19,7 +19,7 @@ This app is for many types of users:
 3. Dexcom
 
 ### UI Flow
-![UI Flow handwritten draft](https://github.com/KatiLong/react-capstone/tree/master/github-images)
+![UI Flow handwritten draft](https://github.com/KatiLong/react-capstone/blob/master/github-images/uiflowv1.jpg)
 
 ### Wireframe _main
 ![Wireframe _Main]()
