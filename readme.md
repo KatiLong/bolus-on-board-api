@@ -1,17 +1,16 @@
 ## "B.O.B." | Fullstack React Capstone
 BOB - aka Bolus on Board - is designed for users that take Multiple Daily Injections (MDI) of insulin. It is meant to fill the gap for those that do not have access to insulin pumps or who prefer MDIs. It allows the User to input and track a number of Diabetic factors including: insulin on board (for multiple types of insulin), time of Basal Injection, and Blood Glucose readings. It also has the option to sync with a user's Dexcom account.
 
+## Diabetes FAQ
+###What is Type 1 Diabetes?
+Type 1 Diabetes is an autoimmune disease in which the pancreas produces little or no Insulin. Insulin is a vital part of the body's metalbolic system, and it's function is to help the body break down Glucose.
+
+###I think my Uncle has that.
+Possibly, but it's also likely that he has Type 2 Diabetes, which is far more common.
+
 ## Screenshots
 
-Home Page View | Login Page View #2
-:-------------------------:|:-------------------------:
-![Home Page](https://github.com/KatiLong/shakespeare-passport-node-capstone/blob/master/github-images/home-page.jpg)  |  ![Login Page](https://github.com/KatiLong/shakespeare-passport-node-capstone/blob/master/github-images/login.jpg)
-User Dashboard | Seen Entry
-![User Dashboard](https://github.com/KatiLong/shakespeare-passport-node-capstone/blob/master/github-images/user-dashboard.jpg) | ![Seen Entry](https://github.com/KatiLong/shakespeare-passport-node-capstone/blob/master/github-images/seen-entry.jpg)
-Add Entry  | Edit Entry
-![Add Entry](https://github.com/KatiLong/shakespeare-passport-node-capstone/blob/master/github-images/add-entry.jpg) | ![Edit Entry](https://github.com/KatiLong/shakespeare-passport-node-capstone/blob/master/github-images/edit-entry.jpg)
-Delete Entry |
-![Delete Entry](https://github.com/KatiLong/shakespeare-passport-node-capstone/blob/master/github-images/delete-entry.jpg) |
+Coming Soon
 
 ## User Cases
 This app is for many types of users:
@@ -20,13 +19,13 @@ This app is for many types of users:
 3. Dexcom
 
 ### UI Flow
-![UI Flow handwritten draft]()
+![UI Flow handwritten draft]('https://github.com/KatiLong/react-capstone/tree/master/github-images')
 
 ### Wireframe _main
 ![Wireframe _Main]()
 
 ## Working Prototype
-You can access a working prototype of the app here:
+You can access a working prototype of the app here: Coming Soon
 
 ## Functionality
 The app's functionality includes:
@@ -37,7 +36,7 @@ The app's functionality includes:
 ## Technology
 * Front-End: HTML5 | CSS3 | JavaScript ES6 | React | Redux
 * Back-End: Node.js | Express.js | Mocha | Chai | RESTful API Endpoints | MongoDB | Mongoose
-* Other: React-Native |
+* Other: React-Native | Netlify
 
 
 ## Responsive
@@ -45,5 +44,4 @@ App is strongly built to be usuable on mobile devices, as well as responsive acr
 
 ## Development Roadmap
 This is v1.0 of the app, but future enhancements are expected to include:
-* Google Maps integrated to view all entries by location
-* Featured Theaters of the World Section
+* Nutrition and Exercise Functionality
