@@ -1,4 +1,9 @@
+/*Google Fonts*/
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+/*Main Body styling*/
 body {
+    font-family: 'Roboto', sans-serif;
     text-align: center;
 }
 form {

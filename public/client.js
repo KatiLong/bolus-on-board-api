@@ -1,6 +1,7 @@
-$(function() {
+$(document).ready(function(){
     console.log( "ready!" );
 
+    $('.datepicker').datepicker();
     $('.timepicker').timepicker();
-    $('select').material_select();
+    $('select').formSelect();
 });

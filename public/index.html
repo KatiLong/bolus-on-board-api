@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <!--Import materialize.css-->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
         <!--jQuery Mobile-->
         <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css">
         <link type="text/css" rel="stylesheet" href="./style/style.css">
@@ -13,7 +13,8 @@
     <body>
         <div id="root">
             <header role="banner">
-
+                <h1>Bolus on Board</h1>
+                <h4>Your personal Insulin Tracking helper.</h4>
             </header>
             <main role="main">
                 <section id="login-page">
@@ -56,14 +57,41 @@
                                <option value="Novolog">Novolog</option>
                            </select>
 
+                           <label for="bolus-bg">Blood Sugar</label>
+                            <input type="number" id="bolus-bg">
+
                            <!--# of Units/Carbs-->
+                           <div class="insulin-amount">
+                               <label for="units">Units of Insulin</label>
+                               <input type="text" class="insulin-input" id="insulin">
+                           </div>
+                           <div class="insulin-amount">
+                               <label for="carbs">Carb Amount</label>
+                               <input type="text" class="insulin-input" id="carbs">
+                           </div>
                            <!--Date & Time-->
                            <label for="bolus-date">Date</label>
-                           <input type="date" id="bolus-date">
+                           <input type="text" class="datepicker" id="bolus-date">
+<!--                           <input type="date" id="bolus-date">-->
                            <label for="bolus-time">Time</label>
+<!--                           <input type="text" class="timepicker" id="bolus-time">-->
                            <input type="time" id="bolus-time">
                            <button type="submit" class="waves-effect waves-light btn">Add Bolus</button>
                        </fieldset>
+                    </form>
+                    <button type="button" id="bg-trigger" class="waves-effect waves-light btn">BG</button>
+                    <form action="" id="blood-glucose-form">
+                      <h4>Blood Glucose</h4>
+                       <p>For correction calculator, use BOLUS from previous menu.</p>
+                        <fieldset>
+                            <label for="bg-input">Blood Sugar</label>
+                            <input type="number" id="bg-input">
+                            <label for="bolus-date">Date</label>
+                            <input type="date" id="bolus-date">
+                            <label for="bolus-time">Time</label>
+                            <input type="time" id="bolus-time">
+                            <button type="submit" class="waves-effect waves-light btn">Add BG</button>
+                        </fieldset>
                     </form>
                 </section>
             </main>
