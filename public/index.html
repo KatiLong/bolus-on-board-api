@@ -196,11 +196,38 @@
                                     <input class="with-gap" name="group1" type="radio" id="carbs-select" />
                                     <label for="carbs-select">Carbs</label>
                                 </p>
+
+                                <button type="submit" class="waves-effect waves-light btn">Update</button>
                             </fieldset>
                         </form>
                     </div>
-                    <div id="settings-increment"></div>
-                    <div id="settings-bg-measurement"></div>
+                    <div id="settings-increment">
+                        <form action="" id="increment-form">
+                            <fieldset>
+                                <legend>Insulin Increment</legend>
+
+                                <label for="increment">Amount</label>
+                                <input type="number" id="increment" value="1">
+
+                                <button type="submit" class="waves-effect waves-light btn">Update</button>
+                            </fieldset>
+                        </form>
+                    </div>
+                    <div id="settings-bg-measurement">
+                        <form action="" id="bg-measurement-form">
+                            <fieldset>
+                                <legend>Blood Glucose Measurement</legend>
+
+                                <label for="bg-measure">Select Unit</label>
+                                <select id="bg-measure">
+                                    <option value="mg/dl" selected>USA: mg/dl</option>
+                                    <option value="mmol/L">mmol/L</option>
+                                </select>
+
+                                <button type="submit" class="waves-effect waves-light btn">Update</button>
+                            </fieldset>
+                        </form>
+                    </div>
                 </section>
 
                 <section id="feedback">
