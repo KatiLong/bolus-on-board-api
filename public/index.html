@@ -13,7 +13,7 @@
     <body>
         <div id="root">
             <header role="banner">
-                <h1>Bolus on Board</h1>
+                <h1>B.O.B.</h1>
                 <h4>Your personal Insulin Tracking helper.</h4>
             </header>
             <main role="main">
@@ -25,6 +25,15 @@
                           <input type="text" id="login-username" class="username" placeholder="carmenSD@hotmail.com">
                           <label for="login-password">Password</label>
                           <input type="text" id="login-password" class="password" placeholder="WhereNdwurld24">
+
+                          <button type="submit" class="submit-button waves-effect waves-light btn" id="login-button">Sign In</button>
+                          <span>Need to <button id="change-form-signup">Sign-up</button>?</span>
+
+                          <div id="demo-account">
+                            <p>Demo Account</p>
+                            <p>Username: carmen@gmail.com</p>
+                            <p>Password: where2018</p>
+                          </div>
                       </fieldset>
                     </form>
                 </section>
@@ -38,14 +47,30 @@
                            <input type="text" id="signup-usernaidme" class="username" placeholder="carmenSD@hotmail.com">
                            <label for="signup-password">Password</label>
                            <input type="text" id="signup-password" class="password" placeholder="WhereNdwurld24">
+
+                           <button type="submit" class="submit-button waves-effect waves-light btn">Sign In</button>
+                           <br>
+                           <p id="signup-p">Have an account? <button id="change-form-login">Login</button></p>
+
+                           <div id="demo-account">
+                               <p>Demo Account</p>
+                               <p>Username: carmen@gmail.com</p>
+                               <p>Password: where2018</p>
+                           </div>
                        </fieldset>
                     </form>
+                </section>
+                <section id="iob-display">
+                    <h4>Calculated Insulin On Board:</h4>
+                    <h5> <span>{4.5}</span> units</h5>
+                    <p>Insulin Displayed in different colors (colorblind friendly) for uptake time and actually working.</p>
                 </section>
                 <section id="user-dashboard">
                     <h3>User Dashboard</h3>
                     <div class="chip">
                         Carmen SanDiego [Current User]
                     </div>
+
                     <button type="button" id="bolus-trigger" class="waves-effect waves-light btn">Bolus</button>
                     <form id="bolus-form" action="#root">
                        <fieldset>
@@ -55,19 +80,20 @@
                                <option value="Humalog" selected>Humalog</option>
                                <option value="Insulin R">Insulin R</option>
                                <option value="Novolog">Novolog</option>
+                               <option value="Fiasp">Fiasp</option>
                            </select>
 
                            <label for="bolus-bg">Blood Sugar</label>
-                            <input type="number" id="bolus-bg">
+                           <input type="number" id="bolus-bg" placeholder="131">
 
                            <!--# of Units/Carbs-->
                            <div class="insulin-amount">
-                               <label for="units">Units of Insulin</label>
-                               <input type="text" class="insulin-input" id="insulin">
+                               <label for="bolus-units">Units of Insulin</label>
+                               <input type="number" class="insulin-input" id="bolus-units" placeholder="6"><span>unit(s)</span>
                            </div>
                            <div class="insulin-amount">
                                <label for="carbs">Carb Amount</label>
-                               <input type="text" class="insulin-input" id="carbs">
+                               <input type="number" class="insulin-input" id="carbs" placeholder="54"><span>gram(s)</span>
                            </div>
                            <!--Date & Time-->
                            <label for="bolus-date">Date</label>
@@ -76,16 +102,24 @@
                            <label for="bolus-time">Time</label>
 <!--                           <input type="text" class="timepicker" id="bolus-time">-->
                            <input type="time" id="bolus-time">
+
+                           <p>Calculated Units: {Units || Carbs} + {Correction Amount} -> Exact Amount</p>
+                           <label for="suggested-bolus">Suggested Bolus Amount</label>
+                           <input type="number" class="insulin-input" id="suggested-bolus" value="6"><span>unit(s)</span>
+                           <p>Suggested Total: {Exact calculation rounded to nearest whole number.}</p>
+                           <p>Info Toggle explaining Insulin Calculations: "Insulin Total Suggestions are calculated and rounded to nearest unit of insulin."</p>
+
                            <button type="submit" class="waves-effect waves-light btn">Add Bolus</button>
                        </fieldset>
                     </form>
+
                     <button type="button" id="bg-trigger" class="waves-effect waves-light btn">BG</button>
                     <form action="" id="blood-glucose-form">
-                      <h4>Blood Glucose</h4>
-                       <p>For correction calculator, use BOLUS from previous menu.</p>
                         <fieldset>
+                            <legend>Blood Glucose</legend>
+                            <p>For correction calculator, use BOLUS from previous menu.</p>
                             <label for="bg-input">Blood Sugar</label>
-                            <input type="number" id="bg-input">
+                            <input type="number" id="bg-input"><span>mg/dl</span>
                             <label for="bolus-date">Date</label>
                             <input type="date" id="bolus-date">
                             <label for="bolus-time">Time</label>
@@ -93,7 +127,84 @@
                             <button type="submit" class="waves-effect waves-light btn">Add BG</button>
                         </fieldset>
                     </form>
+
+                    <button type="button" id="basal-trigger" class="waves-effect waves-light btn">BASAL</button>
+                    <form action="" id="basal-form">
+                       <fieldset>
+                            <legend>Basal</legend>
+                            <p>Basal insulin type can be adjusted in settings.</p>
+
+                            <label for="basal-insulin-type">Insulin Type</label>
+                            <select id="basal-insulin-type">
+                               <option value="Novolog" selected disabled>Novolog {global basalInsulinType from Settings}</option>
+                            </select>
+
+                            <label for="basal-units">Units of Insulin</label>
+                            <input type="number" class="insulin-input" id="basal-units" placeholder="25"><span>unit(s)</span>
+                            <label for="basal-date">Date</label>
+                            <input type="date" id="basal-date">
+                            <label for="basal-time">Time</label>
+                            <input type="time" id="basal-time">
+
+                            <button type="submit" class="waves-effect waves-light btn">Add BG</button>
+                        </fieldset>
+                    </form>
+
+                    <button type="button" id="a1c-trigger" class="waves-effect waves-light btn">A1c</button>
+                    <form action="" id="a1c-form">
+                        <fieldset>
+                            <legend>A1c</legend>
+
+                            <label for="a1c-entry">A1c Result</label>
+                            <input type="number" class="insulin-input" id="a1c-entry" placeholder="6.6">
+
+                            <label for="basal-date">Date</label>
+                            <input type="date" id="basal-date">
+                        </fieldset>
+                    </form>
+
+
                 </section>
+
+                <section id="settings-menu">
+                    <button type="button" id="settings-trigger" class="waves-effect waves-light btn">Settings</button>
+                    <h5>Settings</h5>
+                    <ul>
+                        <!--Units or Carbs for Bolus-->
+                        <li>
+                            <button type="button" id="units-carbs-trigger" class="setting-button">Units or Carbs</button>
+                        </li>
+                        <!--Insulin Increment - default 1unit, options for 1/2unit or other-->
+                        <li>
+                            <button type="button" id="increment-trigger" class="setting-button">Insulin Increment</button>
+                        </li>
+                        <!--Blood Glucose mmoL option-->
+                        <li>
+                            <button type="button" id="bg-measurement-trigger" class="setting-button">Feedback</button>
+                        </li>
+                    </ul>
+                </section>
+
+                <section id="feedback">
+                    <form id="feedback-form">
+                        <fieldset>
+                            <legend>Feedback</legend>
+
+                            <label for="feedback-name">Name</label>
+                            <input type="text" id="feedback-name" class="name" placeholder="Carmen SanDiego">
+                            <label for="feedback-email">Email</label>
+                            <input type="text" id="signup-usernaidme" class="feedback-email" placeholder="carmenSD@hotmail.com">
+
+                            <label for="feedback-text">Suggestions? Something not working right? Let me know!</label>
+                            <textarea name="feedback" id="feedback-text" cols="30" rows="10"></textarea>
+                        </fieldset>
+                    </form>
+                </section>
+                <footer>
+                    <p>Have feedback for the app? Please let me know!</p>
+                    <button type="button" id="feedback-trigger" class="waves-effect waves-light btn">Feedback</button>
+                </footer>
+
             </main>
 
         </div>
