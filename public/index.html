@@ -22,9 +22,9 @@
                       <fieldset>
                           <legend>Login Form</legend>
                           <label for="login-username">Username</label>
-                          <input type="text" id="login-username" class="username" placeholder="carmenSD@hotmail.com">
+                          <input type="text" id="login-username" class="username" placeholder="carmenSD@hotmail.com" value="carmen@gmail.com" required>
                           <label for="login-password">Password</label>
-                          <input type="text" id="login-password" class="password" placeholder="WhereNdwurld24">
+                          <input type="text" id="login-password" class="password" placeholder="WhereNdwurld24" value="where2018" required>
 
                           <button type="submit" class="submit-button waves-effect waves-light btn" id="login-button">Sign In</button>
                           <span>Need to <button id="change-form-signup">Sign-up</button>?</span>
@@ -42,11 +42,11 @@
                        <fieldset>
                            <legend>Signup Form</legend>
                            <label for="signup-name">Name</label>
-                           <input type="text" id="signup-name" class="name" placeholder="Carmen SanDiego">
+                           <input type="text" id="signup-name" class="name" placeholder="Carmen SanDiego" value="Carmen SD" required>
                            <label for="signup-username">Username</label>
-                           <input type="text" id="signup-usernaidme" class="username" placeholder="carmenSD@hotmail.com">
+                           <input type="text" id="signup-usernaidme" class="username" placeholder="carmenSD@hotmail.com" value="carmen@gmail.com" required>
                            <label for="signup-password">Password</label>
-                           <input type="text" id="signup-password" class="password" placeholder="WhereNdwurld24">
+                           <input type="text" id="signup-password" class="password" placeholder="WhereNdwurld24" value="where2018" required>
 
                            <button type="submit" class="submit-button waves-effect waves-light btn">Sign In</button>
                            <br>
@@ -168,25 +168,41 @@
 
                 </section>
 
-                <section id="settings-menu">
+                <section id="settings">
                     <button type="button" id="settings-trigger" class="waves-effect waves-light btn">Settings</button>
-                    <h5>Settings</h5>
-                    <ul>
-                        <!--Units or Carbs for Bolus-->
-                        <li>
-                            <button type="button" id="units-carbs-trigger" class="setting-button">Units or Carbs</button>
-                        </li>
-                        <!--Insulin Increment - default 1unit, options for 1/2unit or other-->
-                        <li>
-                            <button type="button" id="increment-trigger" class="setting-button">Insulin Increment</button>
-                        </li>
-                        <!--Blood Glucose mmoL option-->
-                        <li>
-                            <button type="button" id="bg-measurement-trigger" class="setting-button">Feedback</button>
-                        </li>
-                    </ul>
+                    <div id="settings-menu">
+                        <button type="button" class="home-button waves-effect waves-light btn">Back</button>
+                        <h5>Settings</h5>
+                        <ul>
+                            <!--Units or Carbs for Bolus-->
+                            <li>
+                                <button type="button" id="units-carbs-trigger" class="setting-button">Units or Carbs</button>
+                            </li>
+                            <!--Insulin Increment - default 1unit, options for 1/2unit or other-->
+                            <li>
+                                <button type="button" id="increment-trigger" class="setting-button">Insulin Increment</button>
+                            </li>
+                            <!--Blood Glucose mmoL option-->
+                            <li>
+                                <button type="button" id="bg-measurement-trigger" class="setting-button">BG Measurement Type</button>
+                            </li>
+                            <!--Carb Ratio-->
+                            <li>
+                                <button type="button" id="carb-ratio-trigger" class="setting-button">Carb Ratio</button>
+                            </li>
+                            <!--Correction Factor-->
+                            <li>
+                                <button type="button" id="correction-factor-trigger" class="setting-button">Correction Factor</button>
+                            </li>
+                            <!--Target BG-->
+                            <li>
+                                <button type="button" id="target-bg-trigger" class="setting-button">Target BG</button>
+                            </li>
+                        </ul>
+                    </div>
 
                     <div id="settings-units-carbs">
+                        <button type="button" class="back-button waves-effect waves-light btn">Back</button>
                         <form action="" id="units-carbs-form">
                             <fieldset>
                                 <legend>Insulin: Units or Carbs</legend>
@@ -204,6 +220,7 @@
                         </form>
                     </div>
                     <div id="settings-increment">
+                        <button type="button" class="back-button waves-effect waves-light btn">Back</button>
                         <form action="" id="increment-form">
                             <fieldset>
                                 <legend>Insulin Increment</legend>
@@ -215,16 +232,59 @@
                             </fieldset>
                         </form>
                     </div>
+                    <div id="settings-carb-ratio">
+                        <button type="button" class="back-button waves-effect waves-light btn">Back</button>
+                        <form action="" id="carb-ratio-form">
+                            <fieldset>
+                                <legend>Carb Ratio</legend>
+
+                                <label for="carb-ratio">Amount</label>
+                                <input type="number" id="carb-ratio" value="9">
+
+                                <button type="submit" class="waves-effect waves-light btn">Update</button>
+                            </fieldset>
+                        </form>
+                    </div>
+                    <div id="settings-correction-factor">
+                        <button type="button" class="back-button waves-effect waves-light btn">Back</button>
+                        <form action="" id="correction-factor-form">
+                            <fieldset>
+                                <legend>Correction Factor</legend>
+
+                                <label for="correction-factor">Amount</label>
+                                <input type="number" id="correction-factor" value="32">
+
+                                <button type="submit" class="waves-effect waves-light btn">Update</button>
+                            </fieldset>
+                        </form>
+                    </div>
+                    <div id="settings-target-bg">
+                        <button type="button" class="back-button waves-effect waves-light btn">Back</button>
+                        <form action="" id="target-bg-form">
+                            <fieldset>
+                                <legend>Target BG</legend>
+
+                                <label for="target-bg">Amount</label>
+                                <input type="number" id="target-bg" value="120">
+
+                                <button type="submit" class="waves-effect waves-light btn">Update</button>
+                            </fieldset>
+                        </form>
+                    </div>
+
                     <div id="settings-bg-measurement">
+                        <button type="button" class="back-button waves-effect waves-light btn">Back</button>
                         <form action="" id="bg-measurement-form">
                             <fieldset>
                                 <legend>Blood Glucose Measurement</legend>
-
-                                <label for="bg-measure">Select Unit</label>
-                                <select id="bg-measure">
-                                    <option value="mg/dl" selected>USA: mg/dl</option>
-                                    <option value="mmol/L">mmol/L</option>
-                                </select>
+                                <p>
+                                    <input class="with-gap" name="group1" type="radio" id="mgdl-select" checked />
+                                    <label for="mgdl-select">USA: mg/dl</label>
+                                </p>
+                                <p>
+                                    <input class="with-gap" name="group1" type="radio" id="mmol-select" />
+                                    <label for="mmol-select">Metric: mmol/L</label>
+                                </p>
 
                                 <button type="submit" class="waves-effect waves-light btn">Update</button>
                             </fieldset>
@@ -238,13 +298,17 @@
                             <legend>Feedback</legend>
 
                             <label for="feedback-name">Name</label>
-                            <input type="text" id="feedback-name" class="name" placeholder="Carmen SanDiego">
+                            <input type="text" id="feedback-name" class="name" placeholder="Carmen SanDiego" required>
                             <label for="feedback-email">Email</label>
-                            <input type="text" id="signup-usernaidme" class="feedback-email" placeholder="carmenSD@hotmail.com">
+                            <input type="text" id="signup-usernaidme" class="feedback-email" placeholder="carmenSD@hotmail.com" required>
 
-                            <label for="feedback-text">Suggestions? Something not working right? Let me know!</label>
+                            <label for="feedback-text" required>Suggestions? Something not working right? Let me know!</label>
                             <textarea name="feedback" id="feedback-text" cols="30" rows="10"></textarea>
+
                         </fieldset>
+
+                        <button type="submit" class="waves-effect waves-light btn">Submit</button>
+                        <button type="button" class="cancel-button waves-effect waves-light btn">Cancel</button>
                     </form>
                 </section>
                 <footer>
