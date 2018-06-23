@@ -11,3 +11,7 @@ form {
     max-width: 900px;
     width: 100%;
 }
+
+fieldset {
+    border-radius: 10px;
+}
