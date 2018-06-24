@@ -21,3 +21,18 @@ fieldset {
     margin: auto;
     text-align: center;
 }
+
+#user-dashboard {
+    height: 60vh;
+    padding: 25px;
+    background-color: rgba(55, 40, 70, 0.1);
+}
+
+#iob-display {
+    background-color: #66339945;
+    border-radius: 10px;
+    width: 75%;
+    margin: 10 auto 10;
+    padding: 10px;
+    margin: 10px auto;
+}

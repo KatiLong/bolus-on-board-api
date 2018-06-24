@@ -38,14 +38,111 @@ $(document).ready(function(){
 });
 
 ///////////////Triggers//////////////
+//Signup submit
+$('#signup-form').submit( (event) => {
+    event.preventDefault();
+
+    //take the input from the user
+    const name = $("#signup-name").val();
+    const username = $("#signup-username").val();
+    const password = $("#signup-password").val();
+
+    //validate the input
+    if (name == "") {
+        alert('Please add a name');
+    } else if (username == "") {
+        alert('Please add an user name');
+    } else if (password == "") {
+        alert('Please add a password');
+    }
+    //if the input is valid
+    else {
+        //create the payload object (what data we send to the api call)
+        const newUserObject = {
+            name: name,
+            username: username,
+            password: password
+        };
+
+        //make the api call using the payload above
+        $.ajax({
+            type: 'POST',
+            url: '/users/create',
+            dataType: 'json',
+            data: JSON.stringify(newUserObject),
+            contentType: 'application/json'
+        })
+        //if call is succefull
+            .done(function (result) {
+            $('#signup-page').hide();
+            $('form').hide();
+            $('#user-dashboard').show();
+            $('#iob-display').show();
+
+
+            //Function for populating User's info - current IOB
+
+        })
+        //if the call is failing
+            .fail(function (jqXHR, error, errorThrown) {
+            console.log(jqXHR);
+            console.log(error);
+            console.log(errorThrown);
+        });
+    }
+});
 //User Login
 $('#login-form').submit( (event) => {
     event.preventDefault();
 
-    $('#login-page').hide();
-    $('#user-dashboard').show();
-    $('form').hide();
+    //take the input from the user
+    const username = $("#login-username").val();
+    const password = $("#login-password").val();
+
+    //validate the input
+    if (username == "") {
+        alert('Please input user name');
+    } else if (password == "") {
+        alert('Please input password');
+    }
+    //if the input is valid
+    else {
+        //create the payload object (what data we send to the api call)
+        const loginUserObject = {
+            username: username,
+            password: password
+        };
+        console.log(loginUserObject);
+
+        //make the api call using the payload above
+        $.ajax({
+            type: 'POST',
+            url: '/users/login',
+            dataType: 'json',
+            data: JSON.stringify(loginUserObject),
+            contentType: 'application/json'
+        })
+        //if call is succefull
+        .done(function (result) {
+            console.log(result);
+
+            $('#login-page').hide();
+            $('form').hide();
+            $('#user-dashboard').show();
+            $('#iob-display').show();
+
+        })
+        //if the call is failing
+            .fail(function (jqXHR, error, errorThrown) {
+            console.log(jqXHR);
+            console.log(error);
+            console.log(errorThrown);
+            alert('Incorrect Username or Password');
+        });
+    };
 });
+
+
 //Switch User Forms -> Signup
 $('#change-form-signup').click((event) => {
     event.preventDefault();
@@ -82,15 +179,7 @@ $('#change-form-login').click((event) => {
     $('#signup-page').hide();
     $('#login-page').show();
 });
-//Signup submit
-$('#signup-form').submit( (event) => {
-    event.preventDefault();
 
-    $('#signup-page').hide();
-    $('#user-dashboard').show();
-    $('form').hide();
-
-});
 
 ////USER DASHBOARD Triggers/////////
 //Reusable Dashboard Back button
