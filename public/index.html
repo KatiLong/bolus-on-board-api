@@ -73,9 +73,11 @@
                         <p>Insulin Displayed in different colors (colorblind friendly) for uptake time and actually working.</p>
                     </section>
 
-                    <button type="button" id="bolus-trigger" class="waves-effect waves-light btn">Bolus</button>
+                    <button type="button" id="bolus-trigger" class="dash-button waves-effect waves-light btn">Bolus</button>
                     <form id="bolus-form" action="#root">
+
                        <fieldset>
+
                            <!--Type-->
                            <label for="insulin-type">Insulin Type</label>
                            <select id="insulin-type">
@@ -112,10 +114,12 @@
                            <p>Info Toggle explaining Insulin Calculations: "Insulin Total Suggestions are calculated and rounded to nearest unit of insulin."</p>
 
                            <button type="submit" class="waves-effect waves-light btn">Add Bolus</button>
+
+                           <button type="button" id="bolus-trigger" class="dash-back waves-effect waves-light btn">Back</button>
                        </fieldset>
                     </form>
 
-                    <button type="button" id="bg-trigger" class="waves-effect waves-light btn">BG</button>
+                    <button type="button" id="bg-trigger" class="dash-button waves-effect waves-light btn">BG</button>
                     <form action="" id="blood-glucose-form">
                         <fieldset>
                             <legend>Blood Glucose</legend>
@@ -127,10 +131,12 @@
                             <label for="bolus-time">Time</label>
                             <input type="time" id="bolus-time">
                             <button type="submit" class="waves-effect waves-light btn">Add BG</button>
+
+                            <button type="button" id="bolus-trigger" class="dash-back waves-effect waves-light btn">Back</button>
                         </fieldset>
                     </form>
 
-                    <button type="button" id="basal-trigger" class="waves-effect waves-light btn">BASAL</button>
+                    <button type="button" id="basal-trigger" class="dash-button waves-effect waves-light btn">BASAL</button>
                     <form action="" id="basal-form">
                        <fieldset>
                             <legend>Basal</legend>
@@ -149,10 +155,12 @@
                             <input type="time" id="basal-time">
 
                             <button type="submit" class="waves-effect waves-light btn">Add BG</button>
+
+                           <button type="button" id="bolus-trigger" class="dash-back waves-effect waves-light btn">Back</button>
                         </fieldset>
                     </form>
 
-                    <button type="button" id="a1c-trigger" class="waves-effect waves-light btn">A1c</button>
+                    <button type="button" id="a1c-trigger" class="dash-button waves-effect waves-light btn">A1c</button>
                     <form action="" id="a1c-form">
                         <fieldset>
                             <legend>A1c</legend>
@@ -162,134 +170,137 @@
 
                             <label for="basal-date">Date</label>
                             <input type="date" id="basal-date">
+
+                            <button type="submit" class="waves-effect waves-light btn">Add A1c</button>
+                            <button type="button" id="bolus-trigger" class="dash-back waves-effect waves-light btn">Back</button>
                         </fieldset>
                     </form>
 
-
+                    <button type="button" id="settings-trigger" class="dash-button waves-effect waves-light btn">Settings</button>
                 </section>
 
+
                 <section id="settings">
-                    <button type="button" id="settings-trigger" class="waves-effect waves-light btn">Settings</button>
-                    <div id="settings-menu">
-                        <button type="button" class="home-button waves-effect waves-light btn">Back</button>
+                    <section id="settings-menu">
+                        <button type="button" class="home-button waves-effect waves-light btn">Home</button>
                         <h5>Settings</h5>
                         <ul>
                             <!--Units or Carbs for Bolus-->
                             <li>
                                 <button type="button" id="units-carbs-trigger" class="setting-button">Units or Carbs</button>
+                                <div class="settings-div" id="settings-units-carbs">
+                                    <button type="button" class="back-button waves-effect waves-light btn">Back</button>
+                                    <form action="" id="units-carbs-form" class="settings-forms">
+                                        <fieldset>
+                                            <legend>Insulin: Units or Carbs</legend>
+                                            <p>
+                                                <input class="with-gap" name="group1" type="radio" id="units-select" checked />
+                                                <label for="units-select">Units</label>
+                                            </p>
+                                            <p>
+                                                <input class="with-gap" name="group1" type="radio" id="carbs-select" />
+                                                <label for="carbs-select">Carbs</label>
+                                            </p>
+
+                                            <button type="submit" class="waves-effect waves-light btn">Update</button>
+                                        </fieldset>
+                                    </form>
+                                </div>
                             </li>
                             <!--Insulin Increment - default 1unit, options for 1/2unit or other-->
                             <li>
                                 <button type="button" id="increment-trigger" class="setting-button">Insulin Increment</button>
+                                <div class="settings-div" id="settings-increment">
+                                    <button type="button" class="back-button waves-effect waves-light btn">Back</button>
+                                    <form action="" id="increment-form" class="settings-forms">
+                                        <fieldset>
+                                            <legend>Insulin Increment</legend>
+
+                                            <label for="increment">Amount</label>
+                                            <input type="number" id="increment" value="1">
+
+                                            <button type="submit" class="waves-effect waves-light btn">Update</button>
+                                        </fieldset>
+                                    </form>
+                                </div>
                             </li>
                             <!--Blood Glucose mmoL option-->
                             <li>
                                 <button type="button" id="bg-measurement-trigger" class="setting-button">BG Measurement Type</button>
+                                <div class="settings-div" id="settings-bg-measurement">
+                                    <button type="button" class="back-button waves-effect waves-light btn">Back</button>
+                                    <form action="" id="bg-measurement-form" class="settings-forms">
+                                        <fieldset>
+                                            <legend>Blood Glucose Measurement</legend>
+                                            <p>
+                                                <input class="with-gap" name="group1" type="radio" id="mgdl-select" checked />
+                                                <label for="mgdl-select">USA: mg/dl</label>
+                                            </p>
+                                            <p>
+                                                <input class="with-gap" name="group1" type="radio" id="mmol-select" />
+                                                <label for="mmol-select">Metric: mmol/L</label>
+                                            </p>
+
+                                            <button type="submit" class="waves-effect waves-light btn">Update</button>
+                                        </fieldset>
+                                    </form>
+                                </div>
                             </li>
                             <!--Carb Ratio-->
                             <li>
                                 <button type="button" id="carb-ratio-trigger" class="setting-button">Carb Ratio</button>
+                                <div class="settings-div" id="settings-carb-ratio">
+                                    <button type="button" class="back-button waves-effect waves-light btn">Back</button>
+                                    <form action="" id="carb-ratio-form" class="settings-forms">
+                                        <fieldset>
+                                            <legend>Carb Ratio</legend>
+
+                                            <label for="carb-ratio">Amount</label>
+                                            <input type="number" id="carb-ratio" value="9">
+
+                                            <button type="submit" class="waves-effect waves-light btn">Update</button>
+                                        </fieldset>
+                                    </form>
+                                </div>
                             </li>
                             <!--Correction Factor-->
                             <li>
                                 <button type="button" id="correction-factor-trigger" class="setting-button">Correction Factor</button>
+                                <div class="settings-div" id="settings-correction-factor">
+                                    <button type="button" class="back-button waves-effect waves-light btn">Back</button>
+                                    <form action="" id="correction-factor-form" class="settings-forms">
+                                        <fieldset>
+                                            <legend>Correction Factor</legend>
+
+                                            <label for="correction-factor">Amount</label>
+                                            <input type="number" id="correction-factor" value="32">
+
+                                            <button type="submit" class="waves-effect waves-light btn">Update</button>
+                                        </fieldset>
+                                    </form>
+                                </div>
                             </li>
                             <!--Target BG-->
                             <li>
                                 <button type="button" id="target-bg-trigger" class="setting-button">Target BG</button>
+                                <div class="settings-div" id="settings-target-bg">
+                                    <button type="button" class="back-button waves-effect waves-light btn">Back</button>
+                                    <form action="" id="target-bg-form" class="settings-forms">
+                                        <fieldset>
+                                            <legend>Target BG</legend>
+
+                                            <label for="target-bg">Amount</label>
+                                            <input type="number" id="target-bg" value="120">
+
+                                            <button type="submit" class="waves-effect waves-light btn">Update</button>
+                                        </fieldset>
+                                    </form>
+                                </div>
+
                             </li>
                         </ul>
-                    </div>
+                    </section>
 
-                    <div id="settings-units-carbs">
-                        <button type="button" class="back-button waves-effect waves-light btn">Back</button>
-                        <form action="" id="units-carbs-form">
-                            <fieldset>
-                                <legend>Insulin: Units or Carbs</legend>
-                                <p>
-                                    <input class="with-gap" name="group1" type="radio" id="units-select" checked />
-                                    <label for="units-select">Units</label>
-                                </p>
-                                <p>
-                                    <input class="with-gap" name="group1" type="radio" id="carbs-select" />
-                                    <label for="carbs-select">Carbs</label>
-                                </p>
-
-                                <button type="submit" class="waves-effect waves-light btn">Update</button>
-                            </fieldset>
-                        </form>
-                    </div>
-                    <div id="settings-increment">
-                        <button type="button" class="back-button waves-effect waves-light btn">Back</button>
-                        <form action="" id="increment-form">
-                            <fieldset>
-                                <legend>Insulin Increment</legend>
-
-                                <label for="increment">Amount</label>
-                                <input type="number" id="increment" value="1">
-
-                                <button type="submit" class="waves-effect waves-light btn">Update</button>
-                            </fieldset>
-                        </form>
-                    </div>
-                    <div id="settings-carb-ratio">
-                        <button type="button" class="back-button waves-effect waves-light btn">Back</button>
-                        <form action="" id="carb-ratio-form">
-                            <fieldset>
-                                <legend>Carb Ratio</legend>
-
-                                <label for="carb-ratio">Amount</label>
-                                <input type="number" id="carb-ratio" value="9">
-
-                                <button type="submit" class="waves-effect waves-light btn">Update</button>
-                            </fieldset>
-                        </form>
-                    </div>
-                    <div id="settings-correction-factor">
-                        <button type="button" class="back-button waves-effect waves-light btn">Back</button>
-                        <form action="" id="correction-factor-form">
-                            <fieldset>
-                                <legend>Correction Factor</legend>
-
-                                <label for="correction-factor">Amount</label>
-                                <input type="number" id="correction-factor" value="32">
-
-                                <button type="submit" class="waves-effect waves-light btn">Update</button>
-                            </fieldset>
-                        </form>
-                    </div>
-                    <div id="settings-target-bg">
-                        <button type="button" class="back-button waves-effect waves-light btn">Back</button>
-                        <form action="" id="target-bg-form">
-                            <fieldset>
-                                <legend>Target BG</legend>
-
-                                <label for="target-bg">Amount</label>
-                                <input type="number" id="target-bg" value="120">
-
-                                <button type="submit" class="waves-effect waves-light btn">Update</button>
-                            </fieldset>
-                        </form>
-                    </div>
-
-                    <div id="settings-bg-measurement">
-                        <button type="button" class="back-button waves-effect waves-light btn">Back</button>
-                        <form action="" id="bg-measurement-form">
-                            <fieldset>
-                                <legend>Blood Glucose Measurement</legend>
-                                <p>
-                                    <input class="with-gap" name="group1" type="radio" id="mgdl-select" checked />
-                                    <label for="mgdl-select">USA: mg/dl</label>
-                                </p>
-                                <p>
-                                    <input class="with-gap" name="group1" type="radio" id="mmol-select" />
-                                    <label for="mmol-select">Metric: mmol/L</label>
-                                </p>
-
-                                <button type="submit" class="waves-effect waves-light btn">Update</button>
-                            </fieldset>
-                        </form>
-                    </div>
                 </section>
 
                 <section id="feedback">
