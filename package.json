@@ -14,8 +14,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "npm test",
-    "start": "npm start"
+      "test": "mocha",
+      "start": "node server.js"
   },
   "repository": {
     "type": "git",
