@@ -1,4 +1,4 @@
-const globalObject = {
+const dataToTrackList = {
     name: 'Carmen',
     username: 'CarmenSD',
     password: 'Where?2018',

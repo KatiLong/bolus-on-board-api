@@ -1,0 +1,30 @@
+{
+  "name": "bolus-on-board",
+  "version": "1.0.0",
+  "description": "BOB - aka Bolus on Board - is designed for users that take Multiple Daily Injections (MDI) of insulin. It is meant to fill the gap for those that do not have access to insulin pumps or who prefer MDIs. It allows the User to input and track a number of Diabetic factors including: insulin on board (for multiple types of insulin), time of Basal Injection, and Blood Glucose readings. It also has the option to sync with a user's Dexcom account.",
+  "main": "config.js",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "chai": "^4.1.2",
+    "chai-http": "^4.0.0",
+    "express": "^4.16.3",
+    "materialize-css": "^1.0.0-rc.1",
+    "mocha": "^5.2.0",
+    "mongoose": "^5.1.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "npm test",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KatiLong/bolus-on-board.git"
+  },
+  "author": "Kati Long",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KatiLong/bolus-on-board/issues"
+  },
+  "homepage": "https://github.com/KatiLong/bolus-on-board#readme"
+}
