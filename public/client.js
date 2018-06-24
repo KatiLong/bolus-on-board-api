@@ -207,11 +207,57 @@ $('.home-button').click(function(event) {
     $('#user-dashboard').show();
 });
 
-//
+//Units or Carbs Submit
 $('#units-carbs-form').submit( (event) => {
     event.preventDefault();
 
-    $('form').hide();
-    $('.dash-button').show();
+    $('.settings-div').hide();
+    $('.setting-button').show();
+
+    alert('Form submitted');
+});
+//Insulin Increment Submit
+$('#increment-form').submit( (event) => {
+    event.preventDefault();
+
+    $('.settings-div').hide();
+    $('.setting-button').show();
+
+    alert('Form submitted');
+});
+//BG Measurement Unit Submit
+$('#bg-measurement-form').submit( (event) => {
+    event.preventDefault();
+
+    $('.settings-div').hide();
+    $('.setting-button').show();
+
+    alert('Form submitted');
+});
+//Units or Carbs Submit
+$('#carb-ratio-form').submit( (event) => {
+    event.preventDefault();
+
+    $('.settings-div').hide();
+    $('.setting-button').show();
+
+    alert('Form submitted');
+});
+//Correction Factor Form Submit
+$('#correction-factor-form').submit( (event) => {
+    event.preventDefault();
+
+    $('.settings-div').hide();
+    $('.setting-button').show();
+
+    alert('Form submitted');
+});
+//Target BG submit
+$('#target-bg-form').submit( (event) => {
+    event.preventDefault();
+
+    $('.settings-div').hide();
+    $('.setting-button').show();
+
     alert('Form submitted');
 });
