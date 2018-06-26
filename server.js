@@ -1,20 +1,10 @@
-//const express = require('express');
-//const app = express();
-//
-//const PORT = process.env.PORT || 3000;
-//
-//app.get('/api/*', (req, res) => {
-//    res.json({ok: true});
-//});
-//
-//app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
-//
-//module.exports = {app};
-
-
+// Models
 const User = require('./models/user');
 const Settings = require('./models/settings');
-
+//const Bolus = require('./models/bolus');
+//const Basal = require('./models/basal');
+//const bloodGlucose = require('./models/blood-glucose');
+//const A1c = require('./models/a1c');
 
 const bodyParser = require('body-parser');
 const config = require('./config');
@@ -191,8 +181,35 @@ app.post('/users/login', function (req, res) {
     });
 });
 
-app.post('/users/bolus', (req, res) => {
+app.post('/bolus', (req, res) => {
 
+})
+
+app.post('/settings', (req, res) => {
+
+    const requiredFields = ['insulinMetric', 'insulinIncrement', 'carbRatio', 'correctionFactor', 'targetBG'];
+    for (let i = 0; i < requiredFields.length; i++) {
+        const field = requiredFields[i];
+        if (!(field in req.body)) {
+            const message = `Missing \`${field}\` in request body`;
+            console.error(message);
+            return res.status(400).send(message);
+        }
+    }
+
+    Settings
+        .create({
+            insulinMetric: req.body.insulinMetric,
+            insulinIncrement: req.body.insulinIncrement,
+            carbRatio: req.body.carbRatio,
+            correctionFactor: req.body.correctionFactor,
+            targetBG: req.body.targetBG
+        })
+        .then(settings => res.status(201).json(settings.serialize()))
+        .catch(err => {
+        console.error(err);
+        res.status(500).json({ error: 'Something went wrong' });
+    });
 })
 
 

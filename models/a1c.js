@@ -18,6 +18,6 @@ const a1cSchema = new mongoose.Schema({
     },
 });
 
-const a1c = mongoose.model('A1c', a1cSchema);
+const A1c = mongoose.model('A1c', a1cSchema);
 
-module.exports = Entry;
+module.exports = A1c;

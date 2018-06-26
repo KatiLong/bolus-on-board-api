@@ -22,6 +22,39 @@ const dataToTrackList = {
     }
 }
 
+function settingsAjax (payload) {
+    console.log(payload);
+
+    //make the api call using the payload above
+//    $.ajax({
+//        type: 'PUT',
+//        url: `/settings`,
+//        dataType: 'json',
+//        data: JSON.stringify(payload),
+//        contentType: 'application/json'
+//    })
+//    //if call is succefull
+//        .done(function (result) {
+//
+//        $('.settings-div').hide();
+//        $('.setting-button').show();
+//
+//        alert('Form submitted');
+//
+//        $('html, body').animate({
+//            scrollTop: parentDiv.offset().top
+//        }, 1000);
+//
+//    })
+//    //if the call is failing
+//        .fail(function (jqXHR, error, errorThrown) {
+//        console.log(jqXHR);
+//        console.log(error);
+//        console.log(errorThrown);
+//    });
+
+}
+
 ///////////////Document Ready Function///////////
 
 $(document).ready(function(){
@@ -67,6 +100,13 @@ $('#signup-form').submit( (event) => {
                 username: username,
                 password: password
             };
+            const initialSettings = {
+                insulinMetric: 'units',
+                insulinIncrement: 1,
+                carbRatio: 9,
+                correctionFactor: 34,
+                targetBG: 120
+            }
 
             //make the api call using the payload above
             $.ajax({
@@ -77,7 +117,7 @@ $('#signup-form').submit( (event) => {
                 contentType: 'application/json'
             })
             //if call is succefull
-                .done(function (result) {
+            .done(function (result) {
 
                 $('#medical-disclaimer').hide();
                 $('#signup-page').hide();
@@ -87,7 +127,26 @@ $('#signup-form').submit( (event) => {
                 //Function for populating User's info - current IOB
             })
             //if the call is failing
-                .fail(function (jqXHR, error, errorThrown) {
+            .fail(function (jqXHR, error, errorThrown) {
+                console.log(jqXHR);
+                console.log(error);
+                console.log(errorThrown);
+            });
+
+            //make the api call using the payload above
+            $.ajax({
+                type: 'POST',
+                url: '/settings',
+                dataType: 'json',
+                data: JSON.stringify(initialSettings),
+                contentType: 'application/json'
+            })
+            //if call is succefull
+            .done(function (result) {
+                console.log('Settings created', result);
+            })
+            //if the call is failing
+            .fail(function (jqXHR, error, errorThrown) {
                 console.log(jqXHR);
                 console.log(error);
                 console.log(errorThrown);
@@ -311,11 +370,10 @@ $('.home-button').click(function(event) {
 //Units or Carbs Submit
 $('#units-carbs-form').submit( (event) => {
     event.preventDefault();
+    let selected = $('input[name=group1]:checked').attr('id');
 
-    $('.settings-div').hide();
-    $('.setting-button').show();
+    settingsAjax({insulinMetric: selected.substring(0, 5)});
 
-    alert('Form submitted');
 });
 //Insulin Increment Submit
 $('#increment-form').submit( (event) => {
