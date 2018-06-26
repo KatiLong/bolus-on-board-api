@@ -196,7 +196,6 @@ $('#login-form').submit( (event) => {
             username: username,
             password: password
         };
-        console.log(loginUserObject);
 
         //make the api call using the payload above
         $.ajax({
@@ -208,7 +207,7 @@ $('#login-form').submit( (event) => {
         })
         //if call is succefull
         .done(function (result) {
-            console.log(result);
+            //console.log(result);
             $('#current-user').text(`${result.name}`);
 
             $('#login-page').hide();
@@ -234,16 +233,21 @@ $('#login-form').submit( (event) => {
             contentType: 'application/json'
         })
         .done(function (result) {
-            console.log(result);
+            //console.log(result);
+
             //Set the HTML text to User's setting
             $('#i-o-b').text(`${result.settingsOutput.insulinOnBoard.amount}`);
             $('#iob-time').text(`${result.settingsOutput.insulinOnBoard.timeLeft}`);
             $('#increment').val(`${result.settingsOutput.insulinIncrement}`);
             $('#carb-ratio').val(`${result.settingsOutput.carbRatio}`);
             $('#correction-factor').val(`${result.settingsOutput.correctionFactor}`);
+            //Carbs or Units Select
             if (result.settingsOutput.insulinMetric === 'carbs') {
+                console.log('carbs selected');
+//                $('input[name=group1]:checked').attr('id');
                 $('#carbs').prop('checked', true);
             } else if (result.settingsOutput.insulinMetric === 'units') {
+                console.log('units selected');
                 $('#units').prop('checked', true);
             }
 

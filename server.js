@@ -1,10 +1,10 @@
 // Models
 const User = require('./models/user');
 const Settings = require('./models/settings');
-//const Bolus = require('./models/bolus');
-//const Basal = require('./models/basal');
-//const bloodGlucose = require('./models/blood-glucose');
-//const A1c = require('./models/a1c');
+const Bolus = require('./models/bolus');
+const Basal = require('./models/basal');
+const bloodGlucose = require('./models/blood-glucose');
+const A1c = require('./models/a1c');
 
 const bodyParser = require('body-parser');
 const config = require('./config');
@@ -235,7 +235,20 @@ app.get('/settings/:user', function (req, res) {
 });
 
 app.post('/bolus', (req, res) => {
+    const requiredFields = [];
+    for (let i = 0; i < requiredFields.length; i++) {
+        const field = requiredFields[i];
+        if (!(field in req.body)) {
+            const message = `Missing \`${field}\` in request body`;
+            console.error(message);
+            return res.status(400).send(message);
+        }
+    }
 
+    Bolus
+        .create({
+
+        })
 })
 
 

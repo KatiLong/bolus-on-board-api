@@ -25,11 +25,11 @@ const bolusSchema = new mongoose.Schema({
         required: false
     },
     inputTime: {
-        type: Time,
+        type: String,
         required: false
     },
     bolusAmount: {
-        type: number,
+        type: Number,
         required: false
     }
 });

@@ -17,7 +17,7 @@ const basalSchema = new mongoose.Schema({
         required: false
     },
     inputTime: {
-        type: Time,
+        type: String,
         required: false
     }
 });

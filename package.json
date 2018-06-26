@@ -8,7 +8,6 @@
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
     "express": "^4.16.3",
-    "materialize-css": "^1.0.0-rc.1",
     "moment": "^2.22.2",
     "mongoose": "^5.1.6",
     "passport": "^0.4.0",
