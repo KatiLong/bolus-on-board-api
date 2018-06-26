@@ -29,6 +29,10 @@ const settingsSchema = new mongoose.Schema({
                  required: false},
         timeLeft: {type: Number,
                    required: false}
+    },
+    loggedInUsername: {
+        type: String,
+        required: false
     }
 });
 

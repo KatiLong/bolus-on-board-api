@@ -84,14 +84,15 @@ $('#signup-form').submit( (event) => {
     $('#disclaimer-accept').click((event) => {
         event.preventDefault();
 
-        //Set displayed Insulin on Board to zero
-        $("#i-o-b").text("0");
-        $("#iob-time").text("0:00");
-
         //take the input from the user
         const name = $("#signup-name").val();
         const username = $("#signup-username").val();
         const password = $("#signup-password").val();
+
+        //Set displayed Insulin on Board to zero
+        $("#i-o-b").text("0");
+        $("#iob-time").text("0:00");
+        $("#current-user").text(`${name}`);
 
         //validate the input
         if (name == "") {
@@ -116,7 +117,8 @@ $('#signup-form').submit( (event) => {
                 carbRatio: 9,
                 correctionFactor: 34,
                 targetBG: 120,
-                insulinOnBoard: {amount: 0, timeLeft: 0}
+                insulinOnBoard: {amount: 0, timeLeft: 0},
+                loggedInUsername: username
             }
 
             //API call to create User
@@ -176,7 +178,7 @@ $('#signup-form').submit( (event) => {
 //User Login
 $('#login-form').submit( (event) => {
     event.preventDefault();
-
+    console.log($('#units').val(), $('#carbs').val())
     //take the input from the user
     const username = $("#login-username").val();
     const password = $("#login-password").val();
@@ -207,6 +209,7 @@ $('#login-form').submit( (event) => {
         //if call is succefull
         .done(function (result) {
             console.log(result);
+            $('#current-user').text(`${result.name}`);
 
             $('#login-page').hide();
             $('form').hide();
@@ -215,11 +218,40 @@ $('#login-form').submit( (event) => {
 
         })
         //if the call is failing
-            .fail(function (jqXHR, error, errorThrown) {
+        .fail(function (jqXHR, error, errorThrown) {
             console.log(jqXHR);
             console.log(error);
             console.log(errorThrown);
             alert('Incorrect Username or Password');
+        });
+
+        //Get User's Settings
+        $.ajax({
+            type: 'GET',
+            url: `/settings/${username}`,
+            dataType: 'json',
+            data: JSON.stringify(loginUserObject),
+            contentType: 'application/json'
+        })
+        .done(function (result) {
+            console.log(result);
+            //Set the HTML text to User's setting
+            $('#i-o-b').text(`${result.settingsOutput.insulinOnBoard.amount}`);
+            $('#iob-time').text(`${result.settingsOutput.insulinOnBoard.timeLeft}`);
+            $('#increment').val(`${result.settingsOutput.insulinIncrement}`);
+            $('#carb-ratio').val(`${result.settingsOutput.carbRatio}`);
+            $('#correction-factor').val(`${result.settingsOutput.correctionFactor}`);
+            if (result.settingsOutput.insulinMetric === 'carbs') {
+                $('#carbs').prop('checked', true);
+            } else if (result.settingsOutput.insulinMetric === 'units') {
+                $('#units').prop('checked', true);
+            }
+
+        })
+        .fail(function (jqXHR, error, errorThrown) {
+            console.log(jqXHR);
+            console.log(error);
+            console.log(errorThrown);
         });
     };
 });
@@ -383,7 +415,7 @@ $('#units-carbs-form').submit( (event) => {
     event.preventDefault();
     let selected = $('input[name=group1]:checked').attr('id');
 
-    settingsAjax({insulinMetric: selected.substring(0, 5)});
+    settingsAjax({insulinMetric: selected});
 
 });
 //Insulin Increment Submit

@@ -184,7 +184,7 @@ app.post('/users/login', function (req, res) {
 // creating User settings
 app.post('/settings', (req, res) => {
 
-    const requiredFields = ['insulinMetric', 'insulinIncrement', 'carbRatio', 'correctionFactor', 'targetBG', 'insulinOnBoard'];
+    const requiredFields = ['insulinMetric', 'insulinIncrement', 'carbRatio', 'correctionFactor', 'targetBG', 'insulinOnBoard', 'loggedInUsername'];
     for (let i = 0; i < requiredFields.length; i++) {
         const field = requiredFields[i];
         if (!(field in req.body)) {
@@ -202,14 +202,37 @@ app.post('/settings', (req, res) => {
             carbRatio: req.body.carbRatio,
             correctionFactor: req.body.correctionFactor,
             targetBG: req.body.targetBG,
-            insulinOnBoard: req.body.insulinOnBoard
+            insulinOnBoard: req.body.insulinOnBoard,
+            loggedInUsername: req.body.loggedInUsername
         })
         .then(settings => res.status(201).json(settings))
         .catch(err => {
-        console.error(err);
-        res.status(500).json({ error: 'Something went wrong' });
+            console.error(err);
+            res.status(500).json({ error: 'Something went wrong' });
     });
 })
+// GET loggedIn User's settings
+// accessing all of a user's entries
+app.get('/settings/:user', function (req, res) {
+
+    Settings
+        .find()
+        .then(function (settings) {
+            console.log(settings, req.params);
+            let settingsOutput = settings.find( (setting) =>(setting.loggedInUsername == req.params.user));
+            console.log(settingsOutput);
+            res.json({
+                settingsOutput
+            });
+
+        })
+        .catch(function (err) {
+            console.error(err);
+            res.status(500).json({
+                message: 'Internal server error'
+            });
+    });
+});
 
 app.post('/bolus', (req, res) => {
 
