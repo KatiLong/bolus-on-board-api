@@ -22,7 +22,6 @@ const dataToTrackList = {
     }
 }
 
-
 ///////////////Document Ready Function///////////
 
 $(document).ready(function(){
@@ -41,55 +40,68 @@ $(document).ready(function(){
 //Signup submit
 $('#signup-form').submit( (event) => {
     event.preventDefault();
+    //user must accept medical disclaimer before creating an account
+    $('#medical-disclaimer').show();
 
-    //take the input from the user
-    const name = $("#signup-name").val();
-    const username = $("#signup-username").val();
-    const password = $("#signup-password").val();
+    $('#disclaimer-accept').click((event) => {
+        event.preventDefault();
 
-    //validate the input
-    if (name == "") {
-        alert('Please add a name');
-    } else if (username == "") {
-        alert('Please add an user name');
-    } else if (password == "") {
-        alert('Please add a password');
-    }
-    //if the input is valid
-    else {
-        //create the payload object (what data we send to the api call)
-        const newUserObject = {
-            name: name,
-            username: username,
-            password: password
-        };
+        //take the input from the user
+        const name = $("#signup-name").val();
+        const username = $("#signup-username").val();
+        const password = $("#signup-password").val();
 
-        //make the api call using the payload above
-        $.ajax({
-            type: 'POST',
-            url: '/users/create',
-            dataType: 'json',
-            data: JSON.stringify(newUserObject),
-            contentType: 'application/json'
-        })
-        //if call is succefull
-            .done(function (result) {
-            $('#signup-page').hide();
-            $('form').hide();
-            $('#user-dashboard').show();
-            $('#iob-display').show();
+        //validate the input
+        if (name == "") {
+            alert('Please add a name');
+        } else if (username == "") {
+            alert('Please add an user name');
+        } else if (password == "") {
+            alert('Please add a password');
+        }
+        //if the input is valid
+        else {
+            //create the payload object (what data we send to the api call)
+            const newUserObject = {
+                name: name,
+                username: username,
+                password: password
+            };
 
+            //make the api call using the payload above
+            $.ajax({
+                type: 'POST',
+                url: '/users/create',
+                dataType: 'json',
+                data: JSON.stringify(newUserObject),
+                contentType: 'application/json'
+            })
+            //if call is succefull
+                .done(function (result) {
 
-            //Function for populating User's info - current IOB
+                $('#medical-disclaimer').hide();
+                $('#signup-page').hide();
+                $('form').hide();
+                $('#user-dashboard').show();
+                $('#iob-display').show();
+                //Function for populating User's info - current IOB
+            })
+            //if the call is failing
+                .fail(function (jqXHR, error, errorThrown) {
+                console.log(jqXHR);
+                console.log(error);
+                console.log(errorThrown);
+            });
+        }
 
-        })
-        //if the call is failing
-            .fail(function (jqXHR, error, errorThrown) {
-            console.log(jqXHR);
-            console.log(error);
-            console.log(errorThrown);
-        });
-    }
+    })
+
+    $('#cancel-disclaimer').click((event) => {
+        event.preventDefault();
+
+        $('#medical-disclaimer').hide();
+    })
+
 });
 //User Login
 $('#login-form').submit( (event) => {

@@ -23,7 +23,7 @@ fieldset {
 }
 
 #user-dashboard {
-    height: 60vh;
+    min-height: 55vh;
     padding: 25px;
     background-color: rgba(55, 40, 70, 0.1);
 }
@@ -36,3 +36,23 @@ fieldset {
     padding: 10px;
     margin: 10px auto;
 }
+
+#disclaimer-background {
+    width: 100%;
+    background-color: rgba (0, 0, 0, .2);
+}
+
+#disclaimer-wrapper {
+    margin: 0 auto;
+    width: 80%;
+    text-align: left;
+    font-size: 1.3rem;
+    background-color: rgba (255,255,255, .8);
+}
+
+#disclaimer-buttons {
+    width: 100%;
+    text-align: center;
+}
+
+

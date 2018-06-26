@@ -13,7 +13,9 @@
 
 
 const User = require('./models/user');
-//const Entry = require('./models/entry');
+const Settings = require('./models/settings');
+
+
 const bodyParser = require('body-parser');
 const config = require('./config');
 const mongoose = require('mongoose');
@@ -188,6 +190,11 @@ app.post('/users/login', function (req, res) {
         };
     });
 });
+
+app.post('/users/bolus', (req, res) => {
+
+})
+
 
 // MISC ------------------------------------------
 // catch-all endpoint if client makes request to non-existent endpoint
