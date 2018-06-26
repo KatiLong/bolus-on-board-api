@@ -100,6 +100,7 @@ $('#signup-form').submit( (event) => {
                 username: username,
                 password: password
             };
+            //User ID should be included**
             const initialSettings = {
                 insulinMetric: 'units',
                 insulinIncrement: 1,

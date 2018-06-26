@@ -196,7 +196,8 @@ app.post('/settings', (req, res) => {
             return res.status(400).send(message);
         }
     }
-
+    //Add User ID
+    console.log(req.body);
     Settings
         .create({
             insulinMetric: req.body.insulinMetric,
@@ -205,7 +206,7 @@ app.post('/settings', (req, res) => {
             correctionFactor: req.body.correctionFactor,
             targetBG: req.body.targetBG
         })
-        .then(settings => res.status(201).json(settings.serialize()))
+        .then(settings => res.status(201).json(settings))
         .catch(err => {
         console.error(err);
         res.status(500).json({ error: 'Something went wrong' });
