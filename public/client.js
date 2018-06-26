@@ -22,6 +22,11 @@ const dataToTrackList = {
     }
 }
 
+//Insulin on Board caclulation
+setInterval(function(){ alert("Hello"); }, 300000); //5 minute intervals
+clearInterval() //When Insulin equals 0
+
+//Update setting
 function settingsAjax (payload) {
     console.log(payload);
 
@@ -79,6 +84,10 @@ $('#signup-form').submit( (event) => {
     $('#disclaimer-accept').click((event) => {
         event.preventDefault();
 
+        //Set displayed Insulin on Board to zero
+        $("#i-o-b").text("0");
+        $("#iob-time").text("0:00");
+
         //take the input from the user
         const name = $("#signup-name").val();
         const username = $("#signup-username").val();
@@ -106,10 +115,11 @@ $('#signup-form').submit( (event) => {
                 insulinIncrement: 1,
                 carbRatio: 9,
                 correctionFactor: 34,
-                targetBG: 120
+                targetBG: 120,
+                insulinOnBoard: {amount: 0, timeLeft: 0}
             }
 
-            //make the api call using the payload above
+            //API call to create User
             $.ajax({
                 type: 'POST',
                 url: '/users/create',

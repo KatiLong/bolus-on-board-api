@@ -181,13 +181,10 @@ app.post('/users/login', function (req, res) {
     });
 });
 
-app.post('/bolus', (req, res) => {
-
-})
-
+// creating User settings
 app.post('/settings', (req, res) => {
 
-    const requiredFields = ['insulinMetric', 'insulinIncrement', 'carbRatio', 'correctionFactor', 'targetBG'];
+    const requiredFields = ['insulinMetric', 'insulinIncrement', 'carbRatio', 'correctionFactor', 'targetBG', 'insulinOnBoard'];
     for (let i = 0; i < requiredFields.length; i++) {
         const field = requiredFields[i];
         if (!(field in req.body)) {
@@ -204,13 +201,18 @@ app.post('/settings', (req, res) => {
             insulinIncrement: req.body.insulinIncrement,
             carbRatio: req.body.carbRatio,
             correctionFactor: req.body.correctionFactor,
-            targetBG: req.body.targetBG
+            targetBG: req.body.targetBG,
+            insulinOnBoard: req.body.insulinOnBoard
         })
         .then(settings => res.status(201).json(settings))
         .catch(err => {
         console.error(err);
         res.status(500).json({ error: 'Something went wrong' });
     });
+})
+
+app.post('/bolus', (req, res) => {
+
 })
 
 

@@ -23,6 +23,12 @@ const settingsSchema = new mongoose.Schema({
     targetBG: {
         type: Number,
         required: false
+    },
+    insulinOnBoard: {
+        amount: {type: Number,
+                 required: false},
+        timeLeft: {type: Number,
+                   required: false}
     }
 });
 
