@@ -27,36 +27,24 @@ const dataToTrackList = {
 //clearInterval() //When Insulin equals 0
 
 //Update setting
-function settingsAjax (payload) {
+function updateSettings (payload) {
     console.log(payload);
 
-    //make the api call using the payload above
-//    $.ajax({
-//        type: 'PUT',
-//        url: `/settings`,
-//        dataType: 'json',
-//        data: JSON.stringify(payload),
-//        contentType: 'application/json'
-//    })
-//    //if call is succefull
-//        .done(function (result) {
-//
-//        $('.settings-div').hide();
-//        $('.setting-button').show();
-//
-//        alert('Form submitted');
-//
-//        $('html, body').animate({
-//            scrollTop: parentDiv.offset().top
-//        }, 1000);
-//
-//    })
-//    //if the call is failing
-//        .fail(function (jqXHR, error, errorThrown) {
-//        console.log(jqXHR);
-//        console.log(error);
-//        console.log(errorThrown);
-//    });
+    $.ajax({
+        type: 'PUT',
+        url: `/settings/${payload.loggedInUsername}`,
+        dataType: 'json',
+        data: JSON.stringify(payload),
+        contentType: 'application/json'
+    })
+    .done(function (result) {
+        console.log(result);
+    })
+    .fail(function (jqXHR, error, errorThrown) {
+        console.log(jqXHR);
+        console.log(error);
+        console.log(errorThrown);
+    });
 
 }
 
@@ -278,6 +266,7 @@ $('.cancel-button').click((event) => {
     $('footer').show();
     $('#feedback').hide();
 });
+
 //Feedback submit
 $('#feedback-form').submit( (event) => {
     event.preventDefault();
@@ -512,7 +501,10 @@ $('#units-carbs-form').submit( (event) => {
     event.preventDefault();
     let selected = $('input[name=group1]:checked').attr('id');
 
-    settingsAjax({insulinMetric: selected});
+    updateSettings({
+        insulinMetric: selected,
+        loggedInUsername: $('#current-username').text()
+    });
 
 });
 //Insulin Increment Submit

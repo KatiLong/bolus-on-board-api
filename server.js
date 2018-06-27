@@ -218,7 +218,7 @@ app.post('/settings', (req, res) => {
 })
 // GET loggedIn User's settings
 // accessing all of a user's entries
-app.get('/settings/:user', function (req, res) {
+app.get('/settings/:user', (req, res) => {
 
     Settings
         .find()
@@ -343,6 +343,30 @@ app.post('/a1c', (req, res) => {
         });
 })
 
+// PUT --------------------------------------
+app.put('/settings/:user', (req, res) => {
+    let toUpdate = {};
+
+    let updateableFields = ['insulinMetric', 'insulinIncrement', 'carbRatio', 'correctionFactor', 'targetBG', 'insulinOnBoard'];
+    updateableFields.forEach(function (field) {
+        if (field in req.body) {
+            toUpdate[field] = req.body[field];
+        }
+    });
+    console.log(toUpdate);
+    console.log(req.params);
+
+    Settings
+        .findByIdAndUpdate(req.body.loggedInUsername, {
+            $set: toUpdate
+        }).exec().then(function (achievement) {
+            return res.status(204).end();
+        }).catch(function (err) {
+            return res.status(500).json({
+                message: 'Internal Server Error'
+            });
+        });
+});
 
 // MISC ------------------------------------------
 // catch-all endpoint if client makes request to non-existent endpoint
