@@ -23,8 +23,8 @@ const dataToTrackList = {
 }
 
 //Insulin on Board caclulation
-setInterval(function(){ alert("Hello"); }, 300000); //5 minute intervals
-clearInterval() //When Insulin equals 0
+//setInterval(function(){ alert("Hello"); }, 300000); //5 minute intervals
+//clearInterval() //When Insulin equals 0
 
 //Update setting
 function settingsAjax (payload) {
@@ -64,10 +64,6 @@ function settingsAjax (payload) {
 
 $(document).ready(function(){
     console.log( "ready!" );
-
-    $('.datepicker').datepicker();
-    $('.timepicker').timepicker();
-    $('select').formSelect();
 
     $('section').hide();
     $('#login-page').show();
@@ -138,32 +134,29 @@ $('#signup-form').submit( (event) => {
                 $('#user-dashboard').show();
                 $('#iob-display').show();
                 //Function for populating User's info - current IOB
-            })
-            //if the call is failing
-            .fail(function (jqXHR, error, errorThrown) {
-                console.log(jqXHR);
-                console.log(error);
-                console.log(errorThrown);
-            });
 
-            //make the api call using the payload above
-            $.ajax({
-                type: 'POST',
-                url: '/settings',
-                dataType: 'json',
-                data: JSON.stringify(initialSettings),
-                contentType: 'application/json'
-            })
-            //if call is succefull
-            .done(function (result) {
-                console.log('Settings created', result);
+                //Creates Users Settings
+                $.ajax({
+                    type: 'POST',
+                    url: '/settings',
+                    dataType: 'json',
+                    data: JSON.stringify(initialSettings),
+                    contentType: 'application/json'
+                })
+                .done(function (result) {
+                    console.log('Settings created');
+                })
+                .fail(function (jqXHR, error, errorThrown) {
+                    console.log(jqXHR, error, errorThrown);
+                });
             })
             //if the call is failing
             .fail(function (jqXHR, error, errorThrown) {
                 console.log(jqXHR);
                 console.log(error);
+                if (errorThrown === 'Conflict') alert('User with that username already exists');
                 console.log(errorThrown);
-            });
+            })
         }
 
     })
@@ -295,7 +288,9 @@ $('#change-form-login').click((event) => {
     event.preventDefault();
 
     $('#signup-page').hide();
+    $('#medical-disclaimer').hide();
     $('#login-page').show();
+
 });
 
 
@@ -320,9 +315,37 @@ $('#bolus-trigger').click((event) => {
 $('#bolus-form').submit( (event) => {
     event.preventDefault();
 
-    $('form').hide();
-    $('.dash-button').show();
-    alert('Form submitted');
+    const bolusObject = {
+        insulinType: $('#insulin-type').find(":selected").text(),
+        bloodGlucose: Number($('#bolus-bg').val()),
+        bolusUnits: Number($('#bolus-units').val()),
+        bolusCarbs: Number($('#bolus-carbs').val()),
+        bolusDate: $('#bolus-date').val(),
+        bolusTime: $('#bolus-time').val(),
+        bolusAmount: Number($('#suggested-bolus').val()),
+        loggedInUsername: $('#current-user').text()
+    }
+    console.log(bolusObject);
+    $.ajax({
+        type: 'POST',
+        url: '/bolus',
+        dataType: 'json',
+        data: JSON.stringify(bolusObject),
+        contentType: 'application/json'
+    })
+    .done(function (result) {
+        console.log(result);
+        $('form').hide();
+        $('.dash-button').show();
+
+    })
+        .fail(function (jqXHR, error, errorThrown) {
+        console.log(jqXHR);
+        console.log(error);
+        console.log(errorThrown);
+    });
+
+
 });
 
 //BG show

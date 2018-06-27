@@ -72,6 +72,14 @@ app.post('/users/create', (req, res) => {
     username = username.trim();
     password = password.trim();
 
+    User.findOne({username}, (err, items) => {
+        if (items) {
+            return res.status(409).json({
+                message: "User with that username already exists!"
+            });
+        }
+    })
+
     //create an encryption key
     bcrypt.genSalt(10, (err, salt) => {
 
@@ -189,12 +197,9 @@ app.post('/settings', (req, res) => {
         const field = requiredFields[i];
         if (!(field in req.body)) {
             const message = `Missing \`${field}\` in request body`;
-            console.error(message);
             return res.status(400).send(message);
         }
     }
-    //Add User ID
-    console.log(req.body);
     Settings
         .create({
             insulinMetric: req.body.insulinMetric,
@@ -218,13 +223,11 @@ app.get('/settings/:user', function (req, res) {
     Settings
         .find()
         .then(function (settings) {
-            console.log(settings, req.params);
             let settingsOutput = settings.find( (setting) =>(setting.loggedInUsername == req.params.user));
-            console.log(settingsOutput);
+
             res.json({
                 settingsOutput
             });
-
         })
         .catch(function (err) {
             console.error(err);
@@ -233,22 +236,36 @@ app.get('/settings/:user', function (req, res) {
             });
     });
 });
-
+// POST Bolus Entry
 app.post('/bolus', (req, res) => {
-    const requiredFields = [];
+    console.log(req.body);
+    const requiredFields = ['bolusCarbs', 'bolusUnits', 'insulinType', 'bolusTime', 'bolusDate', 'bolusAmount', 'loggedInUsername'];
     for (let i = 0; i < requiredFields.length; i++) {
         const field = requiredFields[i];
         if (!(field in req.body)) {
-            const message = `Missing \`${field}\` in request body`;
-            console.error(message);
+            const message = `Missing required field - please fill out \`${field}\` in request body`;
             return res.status(400).send(message);
         }
     }
-
     Bolus
         .create({
-
+            insulinType: req.body.insulinType,
+            bloodGlucose: req.body.bloodGlucose,
+            bolusUnits: req.body.bolusUnits,
+            bolusCarbs: req.body.bolusCarbs,
+            bolusDate: req.body.bolusDate,
+            bolusTime: req.body.bolusTime,
+            bolusAmount: req.body.bolusAmount,
+            loggedInUsername: req.body.loggedInUsername
         })
+        .then(settings => {
+            console.log(settings);
+            res.status(201).json(settings)
+        })
+        .catch(err => {
+        console.error(err);
+        res.status(500).json({ error: 'Something went wrong' });
+        });
 })
 
 

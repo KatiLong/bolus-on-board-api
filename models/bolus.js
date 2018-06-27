@@ -1,7 +1,6 @@
 "use strict";
 
 const mongoose = require('mongoose');
-// const bcrypt = require('bcryptjs');
 
 const bolusSchema = new mongoose.Schema({
     insulinType: {
@@ -12,24 +11,28 @@ const bolusSchema = new mongoose.Schema({
         type: Number,
         required: false
     },
-    insulinUnits: {
+    bolusUnits: {
         type: Number,
         required: false
     },
-    inputCarbs: {
+    bolusCarbs: {
         type: Number,
         required: false
     },
-    inputDate: {
+    bolusDate: {
         type: Date,
         required: false
     },
-    inputTime: {
+    bolusTime: {
         type: String,
         required: false
     },
     bolusAmount: {
         type: Number,
+        required: false
+    },
+    loggedInUsername: {
+        type: String,
         required: false
     }
 });
