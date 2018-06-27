@@ -2,21 +2,25 @@
 
 const mongoose = require('mongoose');
 
-const bloodGulcoseSchema = new mongoose.Schema({
+const bloodGlucoseSchema = new mongoose.Schema({
     bloodGlucose: {
         type: Number,
         required: false
     },
-    inputTime: {
+    bgDate: {
+        type: Date,
+        required: false
+    },
+    bgTime: {
         type: String,
         required: false
     },
-    bolusAmount: {
-        type: Number,
+    loggedInUsername: {
+        type: String,
         required: false
     }
 });
 
-const bloodGlucose = mongoose.model('Blood Glucose', bloodGulcoseSchema);
+const bloodGlucose = mongoose.model('Blood Glucose', bloodGlucoseSchema);
 
 module.exports = bloodGlucose;

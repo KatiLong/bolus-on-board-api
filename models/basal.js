@@ -12,11 +12,15 @@ const basalSchema = new mongoose.Schema({
         type: Number,
         required: false
     },
-    inputDate: {
+    basalDate: {
         type: Date,
         required: false
     },
-    inputTime: {
+    basalTime: {
+        type: String,
+        required: false
+    },
+    loggedInUsername: {
         type: String,
         required: false
     }

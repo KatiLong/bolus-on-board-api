@@ -88,9 +88,9 @@
                 </section>
                 <section id="user-dashboard">
                     <h3>User Dashboard</h3>
-                    <div class="chip" id="current-user">
 
-                    </div>
+                    <div class="chip" id="current-user"></div>
+                    <span id="current-username" style="display: none;"></span>
 
                     <section id="iob-display">
                         <h4>Calculated Insulin On Board:</h4>
@@ -149,10 +149,10 @@
                             <p>For correction calculator, use BOLUS from previous menu.</p>
                             <label for="bg-input">Blood Sugar</label>
                             <input type="number" id="bg-input"><span>mg/dl</span>
-                            <label for="bolus-date">Date</label>
-                            <input type="date" id="bolus-date">
-                            <label for="bolus-time">Time</label>
-                            <input type="time" id="bolus-time">
+                            <label for="bg-date">Date</label>
+                            <input type="date" id="bg-date">
+                            <label for="bg-time">Time</label>
+                            <input type="time" id="bg-time">
                             <button type="submit" class="waves-effect waves-light btn">Add BG</button>
 
                             <button type="button" id="bolus-trigger" class="dash-back waves-effect waves-light btn">Back</button>
@@ -163,11 +163,12 @@
                     <form action="" id="basal-form">
                        <fieldset>
                             <legend>Basal</legend>
-                            <p>Basal insulin type can be adjusted in settings.</p>
 
                             <label for="basal-insulin-type">Insulin Type</label>
                             <select id="basal-insulin-type">
-                               <option value="Novolog" selected disabled>Novolog {global basalInsulinType from Settings}</option>
+                               <option value="Basaglar" selected>Basaglar</option>
+                               <option value="Levemir">Levemir</option>
+                               <option value="Lantus">Lantus</option>
                             </select>
 
                             <label for="basal-units">Units of Insulin</label>

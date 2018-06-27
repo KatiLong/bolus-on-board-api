@@ -133,6 +133,7 @@ $('#signup-form').submit( (event) => {
                 $('form').hide();
                 $('#user-dashboard').show();
                 $('#iob-display').show();
+                $('#current-username').text(username);
                 //Function for populating User's info - current IOB
 
                 //Creates Users Settings
@@ -202,11 +203,12 @@ $('#login-form').submit( (event) => {
         .done(function (result) {
             //console.log(result);
             $('#current-user').text(`${result.name}`);
-
+            $('#current-username').text(username);
             $('#login-page').hide();
             $('form').hide();
             $('#user-dashboard').show();
             $('#iob-display').show();
+
 
         })
         //if the call is failing
@@ -323,9 +325,9 @@ $('#bolus-form').submit( (event) => {
         bolusDate: $('#bolus-date').val(),
         bolusTime: $('#bolus-time').val(),
         bolusAmount: Number($('#suggested-bolus').val()),
-        loggedInUsername: $('#current-user').text()
+        loggedInUsername: $('#current-username').text()
     }
-    console.log(bolusObject);
+
     $.ajax({
         type: 'POST',
         url: '/bolus',
@@ -334,12 +336,12 @@ $('#bolus-form').submit( (event) => {
         contentType: 'application/json'
     })
     .done(function (result) {
-        console.log(result);
+
         $('form').hide();
         $('.dash-button').show();
 
     })
-        .fail(function (jqXHR, error, errorThrown) {
+    .fail(function (jqXHR, error, errorThrown) {
         console.log(jqXHR);
         console.log(error);
         console.log(errorThrown);
@@ -360,9 +362,32 @@ $('#bg-trigger').click((event) => {
 $('#blood-glucose-form').submit( (event) => {
     event.preventDefault();
 
-    $('form').hide();
-    $('.dash-button').show();
-    alert('Form submitted');
+    const bgObject = {
+        bloodGlucose: Number($('#bg-input').val()),
+        bgDate: $('#bg-date').val(),
+        bgTime: $('#bg-time').val(),
+        loggedInUsername: $('#current-username').text()
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/blood-glucose',
+        dataType: 'json',
+        data: JSON.stringify(bgObject),
+        contentType: 'application/json'
+    })
+    .done(function (result) {
+        console.log(result);
+        $('form').hide();
+        $('.dash-button').show();
+
+    })
+    .fail(function (jqXHR, error, errorThrown) {
+        console.log(jqXHR);
+        console.log(error);
+        console.log(errorThrown);
+    });
+
 });
 
 //Basal show
@@ -377,9 +402,32 @@ $('#basal-trigger').click((event) => {
 $('#basal-form').submit( (event) => {
     event.preventDefault();
 
-    $('form').hide();
-    $('.dash-button').show();
-    alert('Form submitted');
+    const basalObject = {
+        insulinType: $('#basal-insulin-type').find(":selected").text(),
+        insulinUnits: Number($('#basal-units').val()),
+        basalDate: $('#basal-date').val(),
+        basalTime: $('#basal-time').val(),
+        loggedInUsername: $('#current-username').text()
+    }
+    console.log(basalObject);
+    $.ajax({
+        type: 'POST',
+        url: '/basal',
+        dataType: 'json',
+        data: JSON.stringify(basalObject),
+        contentType: 'application/json'
+    })
+    .done(function (result) {
+        console.log(result);
+        $('form').hide();
+        $('.dash-button').show();
+    })
+    basal.fail(function (jqXHR, error, errorThrown) {
+        console.log(jqXHR);
+        console.log(error);
+        console.log(errorThrown);
+    });
+
 });
 
 //A1c show

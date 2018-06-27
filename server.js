@@ -238,7 +238,6 @@ app.get('/settings/:user', function (req, res) {
 });
 // POST Bolus Entry
 app.post('/bolus', (req, res) => {
-    console.log(req.body);
     const requiredFields = ['bolusCarbs', 'bolusUnits', 'insulinType', 'bolusTime', 'bolusDate', 'bolusAmount', 'loggedInUsername'];
     for (let i = 0; i < requiredFields.length; i++) {
         const field = requiredFields[i];
@@ -259,7 +258,6 @@ app.post('/bolus', (req, res) => {
             loggedInUsername: req.body.loggedInUsername
         })
         .then(settings => {
-            console.log(settings);
             res.status(201).json(settings)
         })
         .catch(err => {
@@ -267,7 +265,58 @@ app.post('/bolus', (req, res) => {
         res.status(500).json({ error: 'Something went wrong' });
         });
 })
-
+// POST blood sugar
+app.post('/blood-glucose', (req, res) => {
+    const requiredFields = ['bloodGlucose', 'bgDate', 'bgTime', 'loggedInUsername'];
+    for (let i = 0; i < requiredFields.length; i++) {
+        const field = requiredFields[i];
+        if (!(field in req.body)) {
+            const message = `Missing required field - please fill out \`${field}\` in request body`;
+            return res.status(400).send(message);
+        }
+    }
+    bloodGlucose
+        .create({
+            bloodGlucose: req.body.bloodGlucose,
+            bgDate: req.body.bgDate,
+            bgTime: req.body.bgTime,
+            loggedInUsername: req.body.loggedInUsername
+        })
+        .then(settings => {
+            res.status(201).json(settings)
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({ error: 'Something went wrong' });
+        });
+})
+// POST Basal Entry
+app.post('/basal', (req, res) => {
+    console.log(req.body);
+    const requiredFields = ['insulinType', 'insulinUnits', 'basalDate', 'basalTime', 'loggedInUsername'];
+    for (let i = 0; i < requiredFields.length; i++) {
+        const field = requiredFields[i];
+        if (!(field in req.body)) {
+            const message = `Missing required field - please fill out \`${field}\` in request body`;
+            return res.status(400).send(message);
+        }
+    }
+    Basal
+        .create({
+            insulinType: req.body.insulinType,
+            insulinUnits: req.body.insulinUnits,
+            basalDate: req.body.basalDate,
+            basalTime: req.body.basalTime,
+            loggedInUsername: req.body.loggedInUsername
+        })
+        .then(settings => {
+            res.status(201).json(settings)
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({ error: 'Something went wrong' });
+        });
+})
 
 // MISC ------------------------------------------
 // catch-all endpoint if client makes request to non-existent endpoint
