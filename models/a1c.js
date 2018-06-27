@@ -4,11 +4,11 @@ const mongoose = require('mongoose');
 // const bcrypt = require('bcryptjs');
 
 const a1cSchema = new mongoose.Schema({
-    inputNumber: {
+    a1cNumber: {
         type: Number,
         required: false
     },
-    inputDate: {
+    a1cDate: {
         type: Date,
         required: false
     },

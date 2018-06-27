@@ -442,9 +442,31 @@ $('#a1c-trigger').click((event) => {
 $('#a1c-form').submit( (event) => {
     event.preventDefault();
 
-    $('form').hide();
-    $('.dash-button').show();
-    alert('Form submitted');
+    const a1cObject = {
+        a1cNumber: Number($('#a1c-entry').val()),
+        a1cDate: $('#a1c-date').val(),
+        loggedInUsername: $('#current-username').text()
+    }
+    console.log(a1cObject);
+    $.ajax({
+        type: 'POST',
+        url: '/a1c',
+        dataType: 'json',
+        data: JSON.stringify(a1cObject),
+        contentType: 'application/json'
+    })
+    .done(function (result) {
+        console.log(result);
+
+        $('form').hide();
+        $('.dash-button').show();
+    })
+    .fail(function (jqXHR, error, errorThrown) {
+        console.log(jqXHR);
+        console.log(error);
+        console.log(errorThrown);
+    });
+
 });
 ////////////////////////////////////////
 //Settings Section show

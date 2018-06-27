@@ -317,6 +317,32 @@ app.post('/basal', (req, res) => {
             res.status(500).json({ error: 'Something went wrong' });
         });
 })
+// POST A1c Entry
+app.post('/a1c', (req, res) => {
+    console.log(req.body);
+    const requiredFields = ['a1cNumber', 'a1cDate', 'loggedInUsername'];
+    for (let i = 0; i < requiredFields.length; i++) {
+        const field = requiredFields[i];
+        if (!(field in req.body)) {
+            const message = `Missing required field - please fill out \`${field}\` in request body`;
+            return res.status(400).send(message);
+        }
+    }
+    A1c
+        .create({
+            a1cNumber: req.body.a1cNumber,
+            a1cDate: req.body.a1cDate,
+            loggedInUsername: req.body.loggedInUsername
+        })
+        .then(settings => {
+            res.status(201).json(settings)
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({ error: 'Something went wrong' });
+        });
+})
+
 
 // MISC ------------------------------------------
 // catch-all endpoint if client makes request to non-existent endpoint
