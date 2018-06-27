@@ -422,7 +422,7 @@ $('#basal-form').submit( (event) => {
         $('form').hide();
         $('.dash-button').show();
     })
-    basal.fail(function (jqXHR, error, errorThrown) {
+    .fail(function (jqXHR, error, errorThrown) {
         console.log(jqXHR);
         console.log(error);
         console.log(errorThrown);
