@@ -26,20 +26,34 @@ fieldset {
     border-radius: 10px;
 }
 
+input {
+    margin: 10px;
+}
+
 button:hover {
     cursor: pointer;
     background-color: azure;
 }
 ul {
-    padding: 0;
-    list-style-type: none;
-}
-#demo-account {
-    width: 100%;
-    margin: auto;
+    width: 50%;
+    margin: 0 auto;
     text-align: center;
+    border: 1px lightskyblue solid;
 }
-
+.demo-account {
+    width: 50%;
+    margin: 10px auto;
+    text-align: center;
+    border: 1px solid skyblue;
+}
+.demo-account p {
+    text-align: left;
+    margin-left: 20%;
+}
+.demo-account h6 {
+    font-size: 1rem;
+    margin: 10px;
+}
 #user-dashboard {
     min-height: 55vh;
     padding: 25px;

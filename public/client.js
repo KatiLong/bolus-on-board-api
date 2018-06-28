@@ -28,6 +28,8 @@ const dataToTrackList = {
 //setInterval(function(){ alert("Hello"); }, 300000); //5 minute intervals
 //clearInterval() //When Insulin equals 0
 
+//15 minutes from bolus time hold (displayed but not calculated)
+
 //Update setting
 function updateSettings (payload) {
     console.log(payload);
