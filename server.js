@@ -192,7 +192,7 @@ app.post('/users/login', function (req, res) {
 // creating User settings
 app.post('/settings', (req, res) => {
 
-    const requiredFields = ['insulinMetric', 'insulinIncrement', 'carbRatio', 'correctionFactor', 'targetBG', 'insulinOnBoard', 'loggedInUsername'];
+    const requiredFields = ['insulinMetric', 'insulinIncrement', 'carbRatio', 'correctionFactor', 'targetBG', 'insulinOnBoard', 'loggedInUsername', 'userID'];
     for (let i = 0; i < requiredFields.length; i++) {
         const field = requiredFields[i];
         if (!(field in req.body)) {
@@ -208,7 +208,8 @@ app.post('/settings', (req, res) => {
             correctionFactor: req.body.correctionFactor,
             targetBG: req.body.targetBG,
             insulinOnBoard: req.body.insulinOnBoard,
-            loggedInUsername: req.body.loggedInUsername
+            loggedInUsername: req.body.loggedInUsername,
+            userID: req.body.userID
         })
         .then(settings => res.status(201).json(settings))
         .catch(err => {
@@ -353,13 +354,10 @@ app.put('/settings/:user', (req, res) => {
             toUpdate[field] = req.body[field];
         }
     });
-    console.log(toUpdate);
-    console.log(req.params);
-
     Settings
-        .findByIdAndUpdate(req.body.loggedInUsername, {
+        .findOneAndUpdate(req.params.user, {
             $set: toUpdate
-        }).exec().then(function (achievement) {
+        }).then(function (achievement) {
             return res.status(204).end();
         }).catch(function (err) {
             return res.status(500).json({

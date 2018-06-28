@@ -21,7 +21,8 @@ button:hover {
     background-color: azure;
 }
 ul {
-    list-style: none;
+    padding: 0;
+    list-style-type: none;
 }
 #demo-account {
     width: 100%;

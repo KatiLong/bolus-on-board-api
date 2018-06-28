@@ -38,7 +38,10 @@ function updateSettings (payload) {
         contentType: 'application/json'
     })
     .done(function (result) {
-        console.log(result);
+        console.log('Update successful');
+
+        $('.settings-div').hide();
+        $('.setting-button').show();
     })
     .fail(function (jqXHR, error, errorThrown) {
         console.log(jqXHR);
@@ -94,16 +97,6 @@ $('#signup-form').submit( (event) => {
                 username: username,
                 password: password
             };
-            //User ID should be included**
-            const initialSettings = {
-                insulinMetric: 'units',
-                insulinIncrement: 1,
-                carbRatio: 9,
-                correctionFactor: 34,
-                targetBG: 120,
-                insulinOnBoard: {amount: 0, timeLeft: 0},
-                loggedInUsername: username
-            }
 
             //API call to create User
             $.ajax({
@@ -116,13 +109,28 @@ $('#signup-form').submit( (event) => {
             //if call is succefull
             .done(function (result) {
 
+                $('#current-username-id').val(`${result._id}`);
+                $('#current-username').val(username);
+
                 $('#medical-disclaimer').hide();
                 $('#signup-page').hide();
                 $('form').hide();
                 $('#user-dashboard').show();
                 $('#iob-display').show();
-                $('#current-username').text(username);
+
                 //Function for populating User's info - current IOB
+
+                //User ID should be included**
+                const initialSettings = {
+                    insulinMetric: 'units',
+                    insulinIncrement: 1,
+                    carbRatio: 9,
+                    correctionFactor: 34,
+                    targetBG: 120,
+                    insulinOnBoard: {amount: 0, timeLeft: 0},
+                    loggedInUsername: username,
+                    userID: result._id
+                }
 
                 //Creates Users Settings
                 $.ajax({
@@ -134,6 +142,7 @@ $('#signup-form').submit( (event) => {
                 })
                 .done(function (result) {
                     console.log('Settings created');
+                    $('#current-user-settings').val(`${result._id}`);
                 })
                 .fail(function (jqXHR, error, errorThrown) {
                     console.log(jqXHR, error, errorThrown);
@@ -175,11 +184,11 @@ $('#login-form').submit( (event) => {
     else {
         //create the payload object (what data we send to the api call)
         const loginUserObject = {
-            username: username,
-            password: password
+            username,
+            password
         };
 
-        //make the api call using the payload above
+        //User Login Call
         $.ajax({
             type: 'POST',
             url: '/users/login',
@@ -187,17 +196,50 @@ $('#login-form').submit( (event) => {
             data: JSON.stringify(loginUserObject),
             contentType: 'application/json'
         })
-        //if call is succefull
         .done(function (result) {
-            //console.log(result);
+            //Set User's id in an accessible input
+            $('#current-username-id').val(`${result._id}`);
+            $('#current-username').val(username);
+            $('#current-user-settings').val(`${result._id}`);
             $('#current-user').text(`${result.name}`);
-            $('#current-username').text(username);
+
             $('#login-page').hide();
             $('form').hide();
             $('#user-dashboard').show();
             $('#iob-display').show();
 
+            //Get User's Settings
+            $.ajax({
+                type: 'GET',
+                url: `/settings/${username}`,
+                dataType: 'json',
+                data: JSON.stringify(loginUserObject),
+                contentType: 'application/json'
+            })
+            .done(function (result) {
+                //console.log(result);
 
+                //Set the HTML text to User's setting
+                $('#i-o-b').text(`${result.settingsOutput.insulinOnBoard.amount}`);
+                $('#iob-time').text(`${result.settingsOutput.insulinOnBoard.timeLeft}`);
+                $('#increment').val(`${result.settingsOutput.insulinIncrement}`);
+                $('#carb-ratio').val(`${result.settingsOutput.carbRatio}`);
+                $('#correction-factor').val(`${result.settingsOutput.correctionFactor}`);
+                //Carbs or Units Select
+                if (result.settingsOutput.insulinMetric === 'carbs') {
+                    console.log('carbs selected');
+                    //                $('input[name=group1]:checked').attr('id');
+                    $('#carbs').prop('checked', true);
+                } else if (result.settingsOutput.insulinMetric === 'units') {
+                    console.log('units selected');
+                    $('#units').prop('checked', true);
+                }
+            })
+            .fail(function (jqXHR, error, errorThrown) {
+                console.log(jqXHR);
+                console.log(error);
+                console.log(errorThrown);
+            });
         })
         //if the call is failing
         .fail(function (jqXHR, error, errorThrown) {
@@ -205,40 +247,6 @@ $('#login-form').submit( (event) => {
             console.log(error);
             console.log(errorThrown);
             alert('Incorrect Username or Password');
-        });
-
-        //Get User's Settings
-        $.ajax({
-            type: 'GET',
-            url: `/settings/${username}`,
-            dataType: 'json',
-            data: JSON.stringify(loginUserObject),
-            contentType: 'application/json'
-        })
-        .done(function (result) {
-            //console.log(result);
-
-            //Set the HTML text to User's setting
-            $('#i-o-b').text(`${result.settingsOutput.insulinOnBoard.amount}`);
-            $('#iob-time').text(`${result.settingsOutput.insulinOnBoard.timeLeft}`);
-            $('#increment').val(`${result.settingsOutput.insulinIncrement}`);
-            $('#carb-ratio').val(`${result.settingsOutput.carbRatio}`);
-            $('#correction-factor').val(`${result.settingsOutput.correctionFactor}`);
-            //Carbs or Units Select
-            if (result.settingsOutput.insulinMetric === 'carbs') {
-                console.log('carbs selected');
-//                $('input[name=group1]:checked').attr('id');
-                $('#carbs').prop('checked', true);
-            } else if (result.settingsOutput.insulinMetric === 'units') {
-                console.log('units selected');
-                $('#units').prop('checked', true);
-            }
-
-        })
-        .fail(function (jqXHR, error, errorThrown) {
-            console.log(jqXHR);
-            console.log(error);
-            console.log(errorThrown);
         });
     };
 });
@@ -503,7 +511,7 @@ $('#units-carbs-form').submit( (event) => {
 
     updateSettings({
         insulinMetric: selected,
-        loggedInUsername: $('#current-username').text()
+        user: $('#current-username').val()
     });
 
 });
@@ -511,44 +519,44 @@ $('#units-carbs-form').submit( (event) => {
 $('#increment-form').submit( (event) => {
     event.preventDefault();
 
-    $('.settings-div').hide();
-    $('.setting-button').show();
-
-    alert('Form submitted');
-});
-//BG Measurement Unit Submit
-$('#bg-measurement-form').submit( (event) => {
-    event.preventDefault();
-
-    $('.settings-div').hide();
-    $('.setting-button').show();
-
-    alert('Form submitted');
+    updateSettings({
+        insulinIncrement: $('#increment').val(),
+        user: $('#current-username').val()
+    });
 });
 //Units or Carbs Submit
 $('#carb-ratio-form').submit( (event) => {
     event.preventDefault();
 
-    $('.settings-div').hide();
-    $('.setting-button').show();
-
-    alert('Form submitted');
+    updateSettings({
+        carbRatio: $('#carb-ratio').val(),
+        user: $('#current-username').val()
+    });
 });
 //Correction Factor Form Submit
 $('#correction-factor-form').submit( (event) => {
     event.preventDefault();
 
-    $('.settings-div').hide();
-    $('.setting-button').show();
-
-    alert('Form submitted');
+    updateSettings({
+        correctionFactor: $('#correction-factor').val(),
+        user: $('#current-username').val()
+    });
 });
 //Target BG submit
 $('#target-bg-form').submit( (event) => {
     event.preventDefault();
 
-    $('.settings-div').hide();
-    $('.setting-button').show();
+    updateSettings({
+        targetBG: $('#target-bg').val(),
+        user: $('#current-username').val()
+    });
+});
 
-    alert('Form submitted');
+
+///////////////////////////////////////////////////////////
+//Bonus Features: To Be Implemented
+//BG Measurement Unit Submit
+$('#bg-measurement-form').submit( (event) => {
+    event.preventDefault();
+
 });

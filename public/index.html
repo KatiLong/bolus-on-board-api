@@ -90,7 +90,8 @@
                     <h3>User Dashboard</h3>
 
                     <div class="chip" id="current-user"></div>
-                    <span id="current-username" style="display: none;"></span>
+                    <input id="current-username" type="hidden"/>
+                    <input id="current-username-id" type="hidden"/>
 
                     <section id="iob-display">
                         <h4>Calculated Insulin On Board:</h4>
@@ -142,7 +143,7 @@
                        </fieldset>
                     </form>
 
-                    <button type="button" id="bg-trigger" class="dash-button waves-effect waves-light btn">BG</button>
+                    <button type="button" id="bg-trigger" class="dash-button">BG</button>
                     <form action="" id="blood-glucose-form">
                         <fieldset>
                             <legend>Blood Glucose</legend>
@@ -159,7 +160,7 @@
                         </fieldset>
                     </form>
 
-                    <button type="button" id="basal-trigger" class="dash-button waves-effect waves-light btn">BASAL</button>
+                    <button type="button" id="basal-trigger" class="dash-button">BASAL</button>
                     <form action="" id="basal-form">
                        <fieldset>
                             <legend>Basal</legend>
@@ -178,9 +179,9 @@
                             <label for="basal-time">Time</label>
                             <input type="time" id="basal-time">
 
-                            <button type="submit" class="waves-effect waves-light btn">Add Basal</button>
+                            <button type="submit">Add Basal</button>
 
-                           <button type="button" id="bolus-trigger" class="dash-back waves-effect waves-light btn">Back</button>
+                           <button type="button" id="bolus-trigger" class="dash-back">Back</button>
                         </fieldset>
                     </form>
 
@@ -196,24 +197,25 @@
                             <input type="date" id="a1c-date" required>
 
                             <button type="submit" class="waves-effect waves-light btn">Add A1c</button>
-                            <button type="button" id="bolus-trigger" class="dash-back waves-effect waves-light btn">Back</button>
+                            <button type="button" id="bolus-trigger" class="dash-back">Back</button>
                         </fieldset>
                     </form>
 
-                    <button type="button" id="settings-trigger" class="dash-button waves-effect waves-light btn">Settings</button>
+                    <button type="button" id="settings-trigger" class="dash-button">Settings</button>
                 </section>
 
 
                 <section id="settings">
                     <section id="settings-menu">
-                        <button type="button" class="home-button waves-effect waves-light btn">Home</button>
+                        <input id="current-user-settings" type="hidden"/>
+                        <button type="button" class="home-button">Home</button>
                         <h5>Settings</h5>
                         <ul>
                             <!--Units or Carbs for Bolus-->
                             <li>
                                 <button type="button" id="units-carbs-trigger" class="setting-button">Units or Carbs</button>
                                 <div class="settings-div" id="settings-units-carbs">
-                                    <button type="button" class="back-button waves-effect waves-light btn">Back</button>
+                                    <button type="button" class="back-button">Back</button>
                                     <form action="" id="units-carbs-form" class="settings-forms">
                                         <fieldset>
                                             <legend>Insulin: Units or Carbs</legend>
@@ -241,7 +243,7 @@
                                             <legend>Insulin Increment</legend>
 
                                             <label for="increment">Amount</label>
-                                            <input type="number" id="increment" value="1">
+                                            <input type="number" id="increment" value="1" step="0.5">
 
                                             <button type="submit" class="waves-effect waves-light btn">Update</button>
                                         </fieldset>
@@ -249,6 +251,7 @@
                                 </div>
                             </li>
                             <!--Blood Glucose mmoL option-->
+<!--
                             <li>
                                 <button type="button" id="bg-measurement-trigger" class="setting-button">BG Measurement Type</button>
                                 <div class="settings-div" id="settings-bg-measurement">
@@ -270,6 +273,7 @@
                                     </form>
                                 </div>
                             </li>
+-->
                             <!--Carb Ratio-->
                             <li>
                                 <button type="button" id="carb-ratio-trigger" class="setting-button">Carb Ratio</button>

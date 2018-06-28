@@ -33,6 +33,9 @@ const settingsSchema = new mongoose.Schema({
     loggedInUsername: {
         type: String,
         required: false
+    },
+    userID: {
+        type: String
     }
 });
 
