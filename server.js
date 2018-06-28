@@ -345,7 +345,7 @@ app.post('/a1c', (req, res) => {
 })
 
 // PUT --------------------------------------
-app.put('/settings/:user', (req, res) => {
+app.put('/settings/:id', (req, res) => {
     let toUpdate = {};
 
     let updateableFields = ['insulinMetric', 'insulinIncrement', 'carbRatio', 'correctionFactor', 'targetBG', 'insulinOnBoard'];
@@ -354,8 +354,10 @@ app.put('/settings/:user', (req, res) => {
             toUpdate[field] = req.body[field];
         }
     });
+    console.log(toUpdate);
+    console.log(req.params);
     Settings
-        .findOneAndUpdate(req.params.user, {
+        .findByIdAndUpdate(req.params.id, {
             $set: toUpdate
         }).then(function (achievement) {
             return res.status(204).end();

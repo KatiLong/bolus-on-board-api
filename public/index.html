@@ -5,6 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <!--jQuery Mobile-->
         <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css">
+<!--        <link type="text/css" rel="stylesheet" href="./style/load.css">-->
+<!--        <link type="text/css" rel="stylesheet" href="./style/metal.css">-->
         <link type="text/css" rel="stylesheet" href="./style/style.css">
         <title>Bolus on Board</title>
     </head>
@@ -15,7 +17,13 @@
                 <h4>Your personal Insulin Tracking helper.</h4>
             </header>
             <main role="main">
-                <section id="login-page">
+<!--
+                <div class="spinner">
+                    <div class="double-bounce1"></div>
+                    <div class="double-bounce2"></div>
+                </div>
+-->
+                <section id="login-page" class="metal linear">
                     <form action="#root" id="login-form">
                       <fieldset>
                           <legend>Login Form</legend>
@@ -202,8 +210,31 @@
                     </form>
 
                     <button type="button" id="settings-trigger" class="dash-button">Settings</button>
+
+                    <button type="button" id="logs-trigger" class="dash-button">Logs</button>
                 </section>
 
+                <section id="logs">
+                    <div id="total-daily-dose">
+                        <h5>Total Daily Dose: <span id="tdd">${Calculated Dose Today}</span></h5>
+                        <p>Bolus Total: <span id="bolus-total">${Today's Dose}</span></p>
+                        <p>Basal Total: <span id="basal-total">${Today's Dose}</span></p>
+                    </div>
+                    <div id="log-entries">
+                        <div class="log-div type-bolus">
+                            <p>Type | Amount: Insulin | Carbs | BG | Date | Time</p>
+                        </div>
+                        <div class="log-div type-basal">
+                            <p>Type | Amount: Insulin | Date | Time</p>
+                        </div>
+                        <div class="log-div type-bg">
+                            <p>Type | Reading | Date | Time</p>
+                        </div>
+                        <div class="log-div type-a1c">
+                            <p>Type | Reading | Date | Time</p>
+                        </div>
+                    </div>
+                </section>
 
                 <section id="settings">
                     <section id="settings-menu">

@@ -2,10 +2,20 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 
 /*Main Body styling*/
-body {
-    font-family: 'Roboto', sans-serif;
-    text-align: center;
+html {
+    box-sizing: border-box;
 }
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+body {
+/*    font-family: 'Roboto', sans-serif;*/
+    text-align: center;
+    color: #3a3a3a;
+    background: #fff;
+    font-family: "colfax-web",sans-serif;
+}
+
 form {
     margin: auto;
     max-width: 900px;

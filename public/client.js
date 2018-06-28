@@ -1,3 +1,5 @@
+'use strict';
+
 const dataToTrackList = {
     name: 'Carmen',
     username: 'CarmenSD',
@@ -32,7 +34,7 @@ function updateSettings (payload) {
 
     $.ajax({
         type: 'PUT',
-        url: `/settings/${payload.loggedInUsername}`,
+        url: `/settings/${payload.settingId}`,
         dataType: 'json',
         data: JSON.stringify(payload),
         contentType: 'application/json'
@@ -108,7 +110,7 @@ $('#signup-form').submit( (event) => {
             })
             //if call is succefull
             .done(function (result) {
-
+                console.log(result);
                 $('#current-username-id').val(`${result._id}`);
                 $('#current-username').val(username);
 
@@ -197,6 +199,7 @@ $('#login-form').submit( (event) => {
             contentType: 'application/json'
         })
         .done(function (result) {
+            console.log(result);
             //Set User's id in an accessible input
             $('#current-username-id').val(`${result._id}`);
             $('#current-username').val(username);
@@ -511,7 +514,7 @@ $('#units-carbs-form').submit( (event) => {
 
     updateSettings({
         insulinMetric: selected,
-        user: $('#current-username').val()
+        settingId: $('#current-user-settings').val()
     });
 
 });
@@ -521,7 +524,7 @@ $('#increment-form').submit( (event) => {
 
     updateSettings({
         insulinIncrement: $('#increment').val(),
-        user: $('#current-username').val()
+        settingId: $('#current-user-settings').val()
     });
 });
 //Units or Carbs Submit
@@ -530,7 +533,7 @@ $('#carb-ratio-form').submit( (event) => {
 
     updateSettings({
         carbRatio: $('#carb-ratio').val(),
-        user: $('#current-username').val()
+        settingId: $('#current-user-settings').val()
     });
 });
 //Correction Factor Form Submit
@@ -539,7 +542,7 @@ $('#correction-factor-form').submit( (event) => {
 
     updateSettings({
         correctionFactor: $('#correction-factor').val(),
-        user: $('#current-username').val()
+        settingId: $('#current-user-settings').val()
     });
 });
 //Target BG submit
@@ -548,7 +551,7 @@ $('#target-bg-form').submit( (event) => {
 
     updateSettings({
         targetBG: $('#target-bg').val(),
-        user: $('#current-username').val()
+        settingId: $('#current-user-settings').val()
     });
 });
 

@@ -36,6 +36,9 @@ const settingsSchema = new mongoose.Schema({
     },
     userID: {
         type: String
+    },
+    settingId: {
+        type: String,
     }
 });
 
