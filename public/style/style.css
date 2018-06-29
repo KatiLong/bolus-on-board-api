@@ -91,8 +91,11 @@ ul {
 #total-daily-dose {
     background: rgba(125, 0, 125, 0.2);
     border-radius: 10px;
-    width: 95%;
+    min-width: 600px;
+    width: 50%;
     margin: 0 auto;
+    padding-top: 10px;
+    padding-bottom: 5px;
 }
 #log-entries {
     width: 100%;
@@ -102,6 +105,9 @@ ul {
     text-align: left;
     margin: 10px auto;
     font-size: .85rem;
+    background: rgba(90, 90, 90, .2);
+    border-radius: 5px;
+    padding: 5px;
 }
 
 .log-col {
@@ -111,7 +117,7 @@ ul {
 
 .type {
     width: 16%;
-    float: left;
+
 }
 
 .readings {
@@ -122,15 +128,35 @@ ul {
 .readings span {
     width: 100%;
     display: block;
+    vertical-align: top;
 }
 
 .date-time {
     width: 39%;
     vertical-align: top;
-    float: right;
+    text-align: left;
 }
 
 .date-time span {
     width: 100%;
     display: block;
+    vertical-align: top;
+}
+
+#log-sort-options span, p{
+    display: inline-block;
+}
+
+#log-sort-options span:hover{
+    cursor: pointer;
+    color: aquamarine;
+}
+
+#log-options span, p {
+    display: inline-block;
+}
+
+#log-options span:hover {
+    cursor: pointer;
+    color: aquamarine;
 }

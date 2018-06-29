@@ -123,15 +123,7 @@ app.post('/users/create', (req, res) => {
 
                     //display the new user
                     console.log(`User \`${username}\` created.`);
-//                    return res.json(item);
-//                    const requiredFields = ['insulinMetric', 'insulinIncrement', 'carbRatio', 'correctionFactor', 'targetBG', 'insulinOnBoard', 'loggedInUsername', 'userID'];
-//                    for (let i = 0; i < requiredFields.length; i++) {
-//                        const field = requiredFields[i];
-//                        if (!(field in req.body)) {
-//                            const message = `Missing \`${field}\` in request body`;
-//                            return res.status(400).send(message);
-//                        }
-//                    }
+
                     Settings
                         .create({
                         insulinMetric: 'units',
@@ -218,26 +210,7 @@ app.post('/settings', (req, res) => {
 
 
 })
-// GET loggedIn User's settings
-// accessing all of a user's entries
-app.get('/settings/:user', (req, res) => {
 
-    Settings
-        .find()
-        .then(function (settings) {
-            let settingsOutput = settings.find( (setting) =>(setting.loggedInUsername == req.params.user));
-
-            res.json({
-                settingsOutput
-            });
-        })
-        .catch(function (err) {
-            console.error(err);
-            res.status(500).json({
-                message: 'Internal server error'
-            });
-    });
-});
 // POST Bolus Entry
 app.post('/bolus', (req, res) => {
     const requiredFields = ['bolusCarbs', 'bolusUnits', 'insulinType', 'bolusTime', 'bolusDate', 'bolusAmount', 'loggedInUsername'];
@@ -345,6 +318,85 @@ app.post('/a1c', (req, res) => {
         });
 })
 
+// GET --------------------------------------
+// GET loggedIn User's settings
+// accessing all of a user's settings
+app.get('/settings/:user', (req, res) => {
+
+    Settings
+        .find()
+        .then(function (settings) {
+        let settingsOutput = settings.find( (setting) =>(setting.loggedInUsername == req.params.user));
+
+        res.json({
+            settingsOutput
+        });
+    })
+        .catch(function (err) {
+        console.error(err);
+        res.status(500).json({
+            message: 'Internal server error'
+        });
+    });
+});
+// accessing all of a user's entries
+app.get('/logs/:user', (req, res) => {
+
+
+
+    Bolus
+        .find()
+        .then(function (settings) {
+            let settingsOutput = settings.find( (setting) =>(setting.loggedInUsername == req.params.user));
+
+        })
+        .catch(function (err) {
+        console.error(err);
+        res.status(500).json({
+            message: 'Internal server error'
+        });
+    });
+    bloodGlucose
+        .find()
+        .then(function (settings) {
+            let settingsOutput = settings.find( (setting) =>(setting.loggedInUsername == req.params.user));
+
+        })
+        .catch(function (err) {
+        console.error(err);
+        res.status(500).json({
+            message: 'Internal server error'
+        });
+    });
+    Basal
+        .find()
+        .then(function (settings) {
+            let settingsOutput = settings.find( (setting) =>(setting.loggedInUsername == req.params.user));
+
+        })
+        .catch(function (err) {
+        console.error(err);
+        res.status(500).json({
+            message: 'Internal server error'
+        });
+    });
+    A1c
+        .find()
+        .then(function (settings) {
+            let settingsOutput = settings.find( (setting) =>(setting.loggedInUsername == req.params.user));
+            res.json({
+            settingsOutput
+        });
+        })
+        .catch(function (err) {
+        console.error(err);
+        res.status(500).json({
+            message: 'Internal server error'
+        });
+    });
+});
+
+
 // PUT --------------------------------------
 app.put('/settings/:id', (req, res) => {
     let toUpdate = {};
@@ -368,6 +420,7 @@ app.put('/settings/:id', (req, res) => {
             });
         });
 });
+
 
 // MISC ------------------------------------------
 // catch-all endpoint if client makes request to non-existent endpoint

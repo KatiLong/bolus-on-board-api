@@ -23,18 +23,8 @@
 /*Android Resolution (Lollipop) 640px*/
 
 @media only screen and (min-width: 640px) {
-
-
-}
-
-/*ipad potrait*/
-
-@media only screen and (min-width: 768px) {
     body {
-        color: red;
-    }
-    .log-div {
-
+        color: darkturquoise;
     }
     .type {
         width: 10%;
@@ -53,16 +43,28 @@
         width: 49%;
         display: inline-block;
     }
-}
-
 
 }
+
+/*ipad potrait*/
+
+@media only screen and (min-width: 768px) {
+    body {
+        color: red;
+        font-size: 20px;
+    }
+
+}
+
 
 /*ipad lanscape / small laptop*/
 
 @media only screen and (min-width: 1024px) {
 
     body {
-        color: aliceblue;
+        color: black;
+    }
+    .log-div {
+        font-size: 1.2rem;
     }
 }

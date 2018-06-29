@@ -467,10 +467,11 @@ $('#a1c-form').submit( (event) => {
 
 });
 ////////////////////////////////////////
-//Settings Section show
+//Logs Section show
 $('#logs-trigger').click((event) => {
     event.preventDefault();
     console.log('Logs Trigger working');
+    //Get call for Bolus, Basal, BG & A1c logs
 
     $('#user-dashboard').hide();
     $('#logs').show();
@@ -512,6 +513,7 @@ $('.home-button').click(function(event) {
     event.preventDefault();
 
     $('#settings').hide();
+    $('#logs').hide();
     $('#user-dashboard').show();
 });
 
