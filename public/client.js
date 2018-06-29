@@ -25,8 +25,8 @@ const dataToTrackList = {
 }
 
 //Insulin on Board caclulation
-//setInterval(function(){ alert("Hello"); }, 300000); //5 minute intervals
-//clearInterval() //When Insulin equals 0
+setInterval(function(){ alert("Hello"); }, 300000); //5 minute intervals
+clearInterval() //When Insulin equals 0
 
 //15 minutes from bolus time hold (displayed but not calculated)
 
@@ -101,7 +101,7 @@ $('#signup-form').submit( (event) => {
                 username: username,
                 password: password
             };
-
+            console.log(newUserObject);
             //API call to create User
             $.ajax({
                 type: 'POST',
@@ -113,8 +113,9 @@ $('#signup-form').submit( (event) => {
             //if call is succefull
             .done(function (result) {
                 console.log(result);
-                $('#current-username-id').val(`${result._id}`);
-                $('#current-username').val(username);
+                $('#current-username-id').val(`${result.userID}`);
+                $('#current-username').val(`${result.loggedInUsername}`);
+                $('#current-user-settings').val(`${result._id}`);
 
                 $('#medical-disclaimer').hide();
                 $('#signup-page').hide();
@@ -122,35 +123,26 @@ $('#signup-form').submit( (event) => {
                 $('#user-dashboard').show();
                 $('#iob-display').show();
 
+
                 //Function for populating User's info - current IOB
 
                 //User ID should be included**
-                const initialSettings = {
-                    insulinMetric: 'units',
-                    insulinIncrement: 1,
-                    carbRatio: 9,
-                    correctionFactor: 34,
-                    targetBG: 120,
-                    insulinOnBoard: {amount: 0, timeLeft: 0},
-                    loggedInUsername: username,
-                    userID: result._id
-                }
 
-                //Creates Users Settings
-                $.ajax({
-                    type: 'POST',
-                    url: '/settings',
-                    dataType: 'json',
-                    data: JSON.stringify(initialSettings),
-                    contentType: 'application/json'
-                })
-                .done(function (result) {
-                    console.log('Settings created');
-                    $('#current-user-settings').val(`${result._id}`);
-                })
-                .fail(function (jqXHR, error, errorThrown) {
-                    console.log(jqXHR, error, errorThrown);
-                });
+
+//                //Creates Users Settings
+//                $.ajax({
+//                    type: 'POST',
+//                    url: '/settings',
+//                    dataType: 'json',
+//                    data: JSON.stringify(initialSettings),
+//                    contentType: 'application/json'
+//                })
+//                .done(function (result) {
+//
+//                })
+//                .fail(function (jqXHR, error, errorThrown) {
+//                    console.log(jqXHR, error, errorThrown);
+//                });
             })
             //if the call is failing
             .fail(function (jqXHR, error, errorThrown) {
@@ -205,7 +197,7 @@ $('#login-form').submit( (event) => {
             //Set User's id in an accessible input
             $('#current-username-id').val(`${result._id}`);
             $('#current-username').val(username);
-            $('#current-user-settings').val(`${result._id}`);
+
             $('#current-user').text(`${result.name}`);
 
             $('#login-page').hide();
@@ -222,8 +214,8 @@ $('#login-form').submit( (event) => {
                 contentType: 'application/json'
             })
             .done(function (result) {
-                //console.log(result);
-
+                console.log(result);
+                $('#current-user-settings').val(`${result.settingsOutput._id}`);
                 //Set the HTML text to User's setting
                 $('#i-o-b').text(`${result.settingsOutput.insulinOnBoard.amount}`);
                 $('#iob-time').text(`${result.settingsOutput.insulinOnBoard.timeLeft}`);
@@ -327,7 +319,7 @@ $('#bolus-form').submit( (event) => {
         bolusDate: $('#bolus-date').val(),
         bolusTime: $('#bolus-time').val(),
         bolusAmount: Number($('#suggested-bolus').val()),
-        loggedInUsername: $('#current-username').text()
+        loggedInUsername: $('#current-username').val()
     }
 
     $.ajax({
@@ -368,7 +360,7 @@ $('#blood-glucose-form').submit( (event) => {
         bloodGlucose: Number($('#bg-input').val()),
         bgDate: $('#bg-date').val(),
         bgTime: $('#bg-time').val(),
-        loggedInUsername: $('#current-username').text()
+        loggedInUsername: $('#current-username').val()
     }
 
     $.ajax({
@@ -409,7 +401,7 @@ $('#basal-form').submit( (event) => {
         insulinUnits: Number($('#basal-units').val()),
         basalDate: $('#basal-date').val(),
         basalTime: $('#basal-time').val(),
-        loggedInUsername: $('#current-username').text()
+        loggedInUsername: $('#current-username').val()
     }
     console.log(basalObject);
     $.ajax({
@@ -447,7 +439,7 @@ $('#a1c-form').submit( (event) => {
     const a1cObject = {
         a1cNumber: Number($('#a1c-entry').val()),
         a1cDate: $('#a1c-date').val(),
-        loggedInUsername: $('#current-username').text()
+        loggedInUsername: $('#current-username').val()
     }
     console.log(a1cObject);
     $.ajax({

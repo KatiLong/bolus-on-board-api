@@ -123,7 +123,31 @@ app.post('/users/create', (req, res) => {
 
                     //display the new user
                     console.log(`User \`${username}\` created.`);
-                    return res.json(item);
+//                    return res.json(item);
+//                    const requiredFields = ['insulinMetric', 'insulinIncrement', 'carbRatio', 'correctionFactor', 'targetBG', 'insulinOnBoard', 'loggedInUsername', 'userID'];
+//                    for (let i = 0; i < requiredFields.length; i++) {
+//                        const field = requiredFields[i];
+//                        if (!(field in req.body)) {
+//                            const message = `Missing \`${field}\` in request body`;
+//                            return res.status(400).send(message);
+//                        }
+//                    }
+                    Settings
+                        .create({
+                        insulinMetric: 'units',
+                        insulinIncrement: 1,
+                        carbRatio: 9,
+                        correctionFactor: 34,
+                        targetBG: 120,
+                        insulinOnBoard: {amount: 0, timeLeft: 0},
+                        loggedInUsername: item.username,
+                        userID: item._id
+                    })
+                        .then(settings => res.status(201).json(settings))
+                        .catch(err => {
+                        console.error(err);
+                        res.status(500).json({ error: 'Something went wrong' });
+                    });
                 }
             });
         });
@@ -192,30 +216,7 @@ app.post('/users/login', function (req, res) {
 // creating User settings
 app.post('/settings', (req, res) => {
 
-    const requiredFields = ['insulinMetric', 'insulinIncrement', 'carbRatio', 'correctionFactor', 'targetBG', 'insulinOnBoard', 'loggedInUsername', 'userID'];
-    for (let i = 0; i < requiredFields.length; i++) {
-        const field = requiredFields[i];
-        if (!(field in req.body)) {
-            const message = `Missing \`${field}\` in request body`;
-            return res.status(400).send(message);
-        }
-    }
-    Settings
-        .create({
-            insulinMetric: req.body.insulinMetric,
-            insulinIncrement: req.body.insulinIncrement,
-            carbRatio: req.body.carbRatio,
-            correctionFactor: req.body.correctionFactor,
-            targetBG: req.body.targetBG,
-            insulinOnBoard: req.body.insulinOnBoard,
-            loggedInUsername: req.body.loggedInUsername,
-            userID: req.body.userID
-        })
-        .then(settings => res.status(201).json(settings))
-        .catch(err => {
-            console.error(err);
-            res.status(500).json({ error: 'Something went wrong' });
-    });
+
 })
 // GET loggedIn User's settings
 // accessing all of a user's entries
