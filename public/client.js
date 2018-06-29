@@ -25,10 +25,14 @@ const dataToTrackList = {
 }
 
 //Insulin on Board caclulation
-setInterval(function(){ alert("Hello"); }, 300000); //5 minute intervals
-clearInterval() //When Insulin equals 0
+//setInterval(function(){ alert("Hello"); }, 300000); //5 minute intervals
+//clearInterval() //When Insulin equals 0
 
-//15 minutes from bolus time hold (displayed but not calculated)
+//if 15 minutes from bolus time hold (displayed but not calculated)
+//if Entry input, run function and API update IOB call
+    //display combined totals
+//Every 5 minutes function rerun and API update call
+//if 0 minutes remain,
 
 //Update setting
 function updateSettings (payload) {
@@ -462,6 +466,16 @@ $('#a1c-form').submit( (event) => {
     });
 
 });
+////////////////////////////////////////
+//Settings Section show
+$('#logs-trigger').click((event) => {
+    event.preventDefault();
+    console.log('Logs Trigger working');
+
+    $('#user-dashboard').hide();
+    $('#logs').show();
+});
+
 ////////////////////////////////////////
 //Settings Section show
 $('#settings-trigger').click((event) => {

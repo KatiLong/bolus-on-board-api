@@ -14,6 +14,7 @@ body {
     color: #3a3a3a;
     background: #fff;
     font-family: "colfax-web",sans-serif;
+    font-size: 16px;
 }
 
 form {
@@ -87,4 +88,35 @@ ul {
     text-align: center;
 }
 
+#total-daily-dose {
+    background: rgba(125, 0, 125, 0.2);
+    border-radius: 10px;
+    width: 95%;
+    margin: 0 auto;
+}
+#log-entries {
+    width: 100%;
+}
+.log-div {
+    width: 95%;
+    text-align: left;
+    margin: 0 auto;
+    font-size: .85rem;
+}
 
+.log-col {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.type {
+    width: 16%;
+}
+
+.readings {
+    width: 39%;
+}
+
+.date-time {
+    width: 39%;
+}

@@ -224,18 +224,41 @@
                         <p>Bolus Total: <span id="bolus-total">${Today's Dose}</span></p>
                         <p>Basal Total: <span id="basal-total">${Today's Dose}</span></p>
                     </div>
+                    <h3>User Logs</h3>
                     <div id="log-entries">
                         <div class="log-div type-bolus">
-                            <p>Type | Amount: Insulin | Carbs | BG | Date | Time</p>
+                           <span class="type log-col">Bolus</span>
+                            <div class="readings log-col">
+                               <span class="insulin-amount">Insulin: ${5} units</span>
+                                <br>
+                               <span class="carbs-amount">Carbs: ${45} carbs</span>
+                                <br>
+                               <span class="bg">BG: ${155} mg/dL</span>
+                           </div>
+                            <div class="date-time log-col">
+                                <span class="date">Date: ${02/22/2017}</span>
+                                <br>
+                                <span class="time">Time: ${4:55 PM}</span>
+                            </div>
                         </div>
                         <div class="log-div type-basal">
-                            <p>Type | Amount: Insulin | Date | Time</p>
+                            <span class="type log-col-4">Basal</span>
+                            <span class="insulin-amount log-col-4">Insulin: ${40} units</span>
+                            <span class="date log-col-4">Date: ${02/22/2017}</span>
+                            <span class="time log-col-4">Time: ${4:55 PM}</span>
                         </div>
                         <div class="log-div type-bg">
-                            <p>Type | Reading | Date | Time</p>
+                            <span class="type log-col-4">BG</span>
+                            <span class="bg-reading log-col-4">${155} mg/dL</span>
+                            <span class="date log-col-4">Date: ${02/22/2017}</span>
+                            <span class="time log-col-4">Time: ${4:55 PM}</span>
+
                         </div>
                         <div class="log-div type-a1c">
-                            <p>Type | Reading | Date | Time</p>
+                            <span class="type log-col-4">BG</span>
+                            <span class="bg-reading log-col-4">${6.7}</span>
+                            <span class="date log-col-4">Date: ${02/22/2017}</span>
+
                         </div>
                     </div>
                 </section>
