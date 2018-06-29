@@ -100,7 +100,7 @@ ul {
 .log-div {
     width: 95%;
     text-align: left;
-    margin: 0 auto;
+    margin: 10px auto;
     font-size: .85rem;
 }
 
@@ -115,8 +115,20 @@ ul {
 
 .readings {
     width: 39%;
+    vertical-align: top;
+}
+
+.readings span {
+    width: 100%;
+    display: block;
 }
 
 .date-time {
     width: 39%;
+    vertical-align: top;
+}
+
+.date-time span {
+    width: 100%;
+    display: block;
 }
