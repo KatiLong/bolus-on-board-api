@@ -24,6 +24,31 @@ const dataToTrackList = {
     }
 }
 
+//Update setting
+function updateSettings (payload) {
+    console.log(payload);
+
+    $.ajax({
+        type: 'PUT',
+        url: `/settings/${payload.settingId}`,
+        dataType: 'json',
+        data: JSON.stringify(payload),
+        contentType: 'application/json'
+    })
+        .done(function (result) {
+        console.log('Update successful');
+
+        $('.settings-div').hide();
+        $('.setting-button').show();
+    })
+        .fail(function (jqXHR, error, errorThrown) {
+        console.log(jqXHR);
+        console.log(error);
+        console.log(errorThrown);
+    });
+
+}
+
 //Insulin on Board caclulation
 //setInterval(function(){ alert("Hello"); }, 300000); //5 minute intervals
 //clearInterval() //When Insulin equals 0
@@ -35,6 +60,47 @@ const dataToTrackList = {
     //display combined totals
 //Every 5 minutes function rerun and API update call
 //if 0 minutes remain,
+
+function updateIobHtml () {
+    $('#i-o-b').val()
+    $('#iob-time').val()
+}
+
+function insulinOnBoard (event, bolusAmount) {
+    const initialTime = (new Date()).getTime();
+    let difference = initialTime - timeRemaining;
+
+    let timeRemaining = 14400000; //4hours->milliseconds
+    let insulinRemaining = bolusAmount;
+    let payload = {
+        insulinOnBoard: {
+            amount: insulinRemaining,
+            timeLeft: timeRemaining
+        },
+        settingId: $('#current-user-settings').val()
+    }
+    let updateIOB = setInterval(() => {
+        updateSettings(payload);
+
+    }, 300000); //5 minute intervals
+
+
+
+    //initial settings update when bolus added
+    updateSettings({
+        insulinOnBoard: {
+            amount: insulinRemaining,
+            timeLeft: timeRemaining
+        },
+        settingId
+    });
+
+
+    if (timeRemaining > 13500000) {}//first 15 minutes
+    else if (timeRemaining < 900000) {}//Insulin on board
+    else if (timeRemaining < 900000) {}//No insulin remaining
+
+}
 
 //Populates current Date & Time for relevant forms
 function dateTimePopulate (event) {
@@ -57,30 +123,7 @@ function dateTimePopulate (event) {
 
 }
 
-//Update setting
-function updateSettings (payload) {
-    console.log(payload);
 
-    $.ajax({
-        type: 'PUT',
-        url: `/settings/${payload.settingId}`,
-        dataType: 'json',
-        data: JSON.stringify(payload),
-        contentType: 'application/json'
-    })
-    .done(function (result) {
-        console.log('Update successful');
-
-        $('.settings-div').hide();
-        $('.setting-button').show();
-    })
-    .fail(function (jqXHR, error, errorThrown) {
-        console.log(jqXHR);
-        console.log(error);
-        console.log(errorThrown);
-    });
-
-}
 
 ///////////////Document Ready Function///////////
 
@@ -221,19 +264,19 @@ $(document).on('submit', '#login-form', (event) => {
             })
             .done(function (result) {
                 console.log(result);
-                $('#current-user-settings').val(`${result.settingsOutput._id}`);
+                $('#current-user-settings').val(`${result[0]._id}`);
                 //Set the HTML text to User's setting
-                $('#i-o-b').text(`${result.settingsOutput.insulinOnBoard.amount}`);
-                $('#iob-time').text(`${result.settingsOutput.insulinOnBoard.timeLeft}`);
-                $('#increment').val(`${result.settingsOutput.insulinIncrement}`);
-                $('#carb-ratio').val(`${result.settingsOutput.carbRatio}`);
-                $('#correction-factor').val(`${result.settingsOutput.correctionFactor}`);
+                $('#i-o-b').text(`${result[0].insulinOnBoard.amount}`);
+                $('#iob-time').text(`${result[0].insulinOnBoard.timeLeft}`);
+                $('#increment').val(`${result[0].insulinIncrement}`);
+                $('#carb-ratio').val(`${result[0].carbRatio}`);
+                $('#correction-factor').val(`${result[0].correctionFactor}`);
                 //Carbs or Units Select
-                if (result.settingsOutput.insulinMetric === 'carbs') {
+                if (result[0].insulinMetric === 'carbs') {
                     console.log('carbs selected');
                     //                $('input[name=group1]:checked').attr('id');
                     $('#carbs').prop('checked', true);
-                } else if (result.settingsOutput.insulinMetric === 'units') {
+                } else if (result[0].insulinMetric === 'units') {
                     console.log('units selected');
                     $('#units').prop('checked', true);
                 }
@@ -343,6 +386,27 @@ $(document).on('submit', '#bolus-form', (event) => {
 
     })
     .fail(function (jqXHR, error, errorThrown) {
+        console.log(jqXHR);
+        console.log(error);
+        console.log(errorThrown);
+    });
+    //Get current Insulin on Board & add new IOB
+    $.ajax({
+        type: 'GET',
+        url: `/settings/${username}`,
+        dataType: 'json',
+        data: JSON.stringify(loginUserObject),
+        contentType: 'application/json'
+    })
+        .done(function (result) {
+        console.log(result);
+        //Set the HTML text to User's setting
+        $('#i-o-b').text(`${result[0].insulinOnBoard.amount}`);
+        $('#iob-time').text(`${result[0].insulinOnBoard.timeLeft}`);
+
+        insulinOnBoard(event, bolusObject.bolusAmount);
+    })
+        .fail(function (jqXHR, error, errorThrown) {
         console.log(jqXHR);
         console.log(error);
         console.log(errorThrown);

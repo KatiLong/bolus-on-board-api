@@ -319,13 +319,15 @@ app.post('/a1c', (req, res) => {
 app.get('/settings/:user', (req, res) => {
 
     Settings
-        .find()
-        .then(function (settings) {
-            let settingsOutput = settings.find( (setting) =>(setting.loggedInUsername == req.params.user));
-
-            res.json({
-                settingsOutput
-            });
+        .find({
+            loggedInUsername: req.params.user
+        })
+        .then((settings) => {
+//            let settingsOutput = settings.find( (setting) =>(setting.loggedInUsername == req.params.user));
+//            res.json({
+//                settingsOutput
+//            });
+            res.status(201).json(settings)
         })
         .catch(function (err) {
         console.error(err);
