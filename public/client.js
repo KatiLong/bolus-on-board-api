@@ -36,6 +36,7 @@ const dataToTrackList = {
 //Every 5 minutes function rerun and API update call
 //if 0 minutes remain,
 
+//Populates current Date & Time for relevant forms
 function dateTimePopulate (event) {
     const currentDateTime = new Date();
     let currentDate, currentTime = '';
@@ -48,10 +49,8 @@ function dateTimePopulate (event) {
     currentDate = `${currentDateTime.getFullYear()}-${month}-${day}`;
     currentTime = `${currentDateTime.getHours()}:${currentDateTime.getMinutes()}`;
 
-    console.log(currentDate, $(event.currentTarget).next('form').find('.date-dash'));
     $(event.currentTarget).next('form').find('.date-dash').val(currentDate);
 
-    console.log(currentTime, $(event.currentTarget).next('form').find('.time-dash'));
     if ($(event.currentTarget).next('form').find('.time-dash')) {
         $(event.currentTarget).next('form').find('.time-dash').val(currentTime);
     }
@@ -151,26 +150,6 @@ $(document).on('submit', '#signup-form', (event) => {
                 $('#user-dashboard').show();
                 $('#iob-display').show();
 
-
-                //Function for populating User's info - current IOB
-
-                //User ID should be included**
-
-
-//                //Creates Users Settings
-//                $.ajax({
-//                    type: 'POST',
-//                    url: '/settings',
-//                    dataType: 'json',
-//                    data: JSON.stringify(initialSettings),
-//                    contentType: 'application/json'
-//                })
-//                .done(function (result) {
-//
-//                })
-//                .fail(function (jqXHR, error, errorThrown) {
-//                    console.log(jqXHR, error, errorThrown);
-//                });
             })
             //if the call is failing
             .fail(function (jqXHR, error, errorThrown) {
@@ -180,7 +159,6 @@ $(document).on('submit', '#signup-form', (event) => {
                 console.log(errorThrown);
             })
         }
-
     })
 
     $(document).on('click', '#cancel-disclaimer', (event) => {

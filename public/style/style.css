@@ -40,6 +40,8 @@ ul {
     margin: 0 auto;
     text-align: center;
     border: 1px lightskyblue solid;
+    list-style: none;
+    padding: 0;
 }
 .demo-account {
     width: 50%;
