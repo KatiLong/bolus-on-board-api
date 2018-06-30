@@ -73,12 +73,12 @@ $(document).ready(function(){
 
 ///////////////Triggers//////////////
 //Signup submit
-$('#signup-form').submit( (event) => {
+$(document).on('submit', '#signup-form', (event) => {
     event.preventDefault();
     //user must accept medical disclaimer before creating an account
     $('#medical-disclaimer').show();
 
-    $('#disclaimer-accept').click((event) => {
+    $(document).on('click', '#disclaimer-accept', (event) => {
         event.preventDefault();
 
         //take the input from the user
@@ -161,7 +161,7 @@ $('#signup-form').submit( (event) => {
 
     })
 
-    $('#cancel-disclaimer').click((event) => {
+    $(document).on('click', '#cancel-disclaimer', (event) => {
         event.preventDefault();
 
         $('#medical-disclaimer').hide();
@@ -169,7 +169,7 @@ $('#signup-form').submit( (event) => {
 
 });
 //User Login
-$('#login-form').submit( (event) => {
+$(document).on('submit', '#login-form', (event) => {
     event.preventDefault();
     console.log($('#units').val(), $('#carbs').val())
     //take the input from the user
@@ -256,14 +256,14 @@ $('#login-form').submit( (event) => {
 
 
 //Switch User Forms -> Signup
-$('#change-form-signup').click((event) => {
+$(document).on('click', '#change-form-signup', (event) => {
     event.preventDefault();
 
     $('#login-page').hide();
     $('#signup-page').show();
 });
 //Feedback Form
-$('#feedback-trigger').click((event) => {
+$(document).on('click', '#feedback-trigger', (event) => {
     event.preventDefault();
 
     $('footer').hide();
@@ -271,7 +271,7 @@ $('#feedback-trigger').click((event) => {
     $('#feedback-form').show();
 });
 //Cancel button Feedback form
-$('.cancel-button').click((event) => {
+$(document).on('click', '.cancel-button', (event) => {
     event.preventDefault();
 
     $('footer').show();
@@ -279,14 +279,14 @@ $('.cancel-button').click((event) => {
 });
 
 //Feedback submit
-$('#feedback-form').submit( (event) => {
+$(document).on('submit', '#feedback-form', (event) => {
     event.preventDefault();
     alert("Thanks for the Feedback!");
     $('#feedback').hide();
     $('footer').show();
 });
 //User Signup switch form -> Login
-$('#change-form-login').click((event) => {
+$(document).on('click', '#change-form-login', (event) => {
     event.preventDefault();
 
     $('#signup-page').hide();
@@ -298,7 +298,7 @@ $('#change-form-login').click((event) => {
 
 ////USER DASHBOARD Triggers/////////
 //Reusable Dashboard Back button
-$('.dash-back').click((event) => {
+$(document).on('click', '.dash-back', (event) => {
     event.preventDefault();
 
     $('form').hide();
@@ -306,7 +306,7 @@ $('.dash-back').click((event) => {
 });
 
 //Bolus show
-$('#bolus-trigger').click((event) => {
+$(document).on('click', '#bolus-trigger', (event) => {
     event.preventDefault();
 
     $('.dash-button').hide();
@@ -314,7 +314,7 @@ $('#bolus-trigger').click((event) => {
 });
 
 //Bolus submit
-$('#bolus-form').submit( (event) => {
+$(document).on('submit', '#bolus-form', (event) => {
     event.preventDefault();
 
     const bolusObject = {
@@ -351,7 +351,7 @@ $('#bolus-form').submit( (event) => {
 });
 
 //BG show
-$('#bg-trigger').click((event) => {
+$(document).on('click', '#bg-trigger', (event) => {
     event.preventDefault();
 
     $('.dash-button').hide();
@@ -359,7 +359,7 @@ $('#bg-trigger').click((event) => {
 });
 
 //BG submit
-$('#blood-glucose-form').submit( (event) => {
+$(document).on('submit', '#blood-glucose-form',  (event) => {
     event.preventDefault();
 
     const bgObject = {
@@ -391,7 +391,7 @@ $('#blood-glucose-form').submit( (event) => {
 });
 
 //Basal show
-$('#basal-trigger').click((event) => {
+$(document).on('click', '#basal-trigger', (event) => {
     event.preventDefault();
 
     $('.dash-button').hide();
@@ -399,7 +399,7 @@ $('#basal-trigger').click((event) => {
 });
 
 //Basal submit
-$('#basal-form').submit( (event) => {
+$(document).on('submit', '#basal-form', (event) => {
     event.preventDefault();
 
     const basalObject = {
@@ -431,7 +431,7 @@ $('#basal-form').submit( (event) => {
 });
 
 //A1c show
-$('#a1c-trigger').click((event) => {
+$(document).on('click', '#a1c-trigger', (event) => {
     event.preventDefault();
 
     $('.dash-button').hide();
@@ -439,7 +439,7 @@ $('#a1c-trigger').click((event) => {
 });
 
 //A1c submit
-$('#a1c-form').submit( (event) => {
+$(document).on('submit', '#a1c-form', (event) => {
     event.preventDefault();
 
     const a1cObject = {
@@ -470,7 +470,7 @@ $('#a1c-form').submit( (event) => {
 });
 ////////////////////////////////////////
 //Logs Section show
-$('#logs-trigger').click((event) => {
+$(document).on('click', '#logs-trigger', (event) => {
     event.preventDefault();
     console.log('Logs Trigger working');
     //Get call for Bolus, Basal, BG & A1c logs
@@ -481,7 +481,7 @@ $('#logs-trigger').click((event) => {
 
 ////////////////////////////////////////
 //Settings Section show
-$('#settings-trigger').click((event) => {
+$(document).on('click', '#settings-trigger', (event) => {
     event.preventDefault();
 
     $('#user-dashboard').hide();
@@ -494,7 +494,7 @@ $('#settings-trigger').click((event) => {
 });
 
 //Settings Show Section Trigger
-$('.setting-button').click(function(event) {
+$(document).on('click', '.setting-button', (event) => {
     event.preventDefault();
 
     $('.settings-div').hide();
@@ -504,14 +504,14 @@ $('.setting-button').click(function(event) {
 });
 
 //Settings Back Button
-$('.back-button').click(function(event) {
+$(document).on('click', '.back-button', (event) => {
     event.preventDefault();
 
     $('.settings-div').hide();
     $('.setting-button').show();
 });
 
-$('.home-button').click(function(event) {
+$(document).on('click', '.home-button', (event) => {
     event.preventDefault();
 
     $('#settings').hide();
@@ -520,7 +520,7 @@ $('.home-button').click(function(event) {
 });
 
 //Units or Carbs Submit
-$('#units-carbs-form').submit( (event) => {
+$(document).on('submit', '#units-carbs-form', (event) => {
     event.preventDefault();
     let selected = $('input[name=group1]:checked').attr('id');
 
@@ -531,7 +531,7 @@ $('#units-carbs-form').submit( (event) => {
 
 });
 //Insulin Increment Submit
-$('#increment-form').submit( (event) => {
+$(document).on('submit', '#increment-form', (event) => {
     event.preventDefault();
 
     updateSettings({
@@ -540,7 +540,7 @@ $('#increment-form').submit( (event) => {
     });
 });
 //Units or Carbs Submit
-$('#carb-ratio-form').submit( (event) => {
+$(document).on('submit', '#carb-ratio-form', (event) => {
     event.preventDefault();
 
     updateSettings({
@@ -549,7 +549,7 @@ $('#carb-ratio-form').submit( (event) => {
     });
 });
 //Correction Factor Form Submit
-$('#correction-factor-form').submit( (event) => {
+$(document).on('submit', '#correction-factor-form', (event) => {
     event.preventDefault();
 
     updateSettings({
@@ -558,7 +558,7 @@ $('#correction-factor-form').submit( (event) => {
     });
 });
 //Target BG submit
-$('#target-bg-form').submit( (event) => {
+$(document).on('submit', '#target-bg-form', (event) => {
     event.preventDefault();
 
     updateSettings({
@@ -571,7 +571,7 @@ $('#target-bg-form').submit( (event) => {
 ///////////////////////////////////////////////////////////
 //Bonus Features: To Be Implemented
 //BG Measurement Unit Submit
-$('#bg-measurement-form').submit( (event) => {
+$(document).on('submit', '#bg-measurement-form', (event) => {
     event.preventDefault();
 
 });
