@@ -60,7 +60,7 @@ function closeServer() {
 
 // ---------------USER ENDPOINTS-------------------------------------
 // POST -----------------------------------
-// creating a new user
+// creating a new user & settings
 app.post('/users/create', (req, res) => {
 
     //take the name, username and the password from the ajax api call
@@ -205,11 +205,6 @@ app.post('/users/login', function (req, res) {
     });
 });
 
-// creating User settings
-app.post('/settings', (req, res) => {
-
-
-})
 
 // POST Bolus Entry
 app.post('/bolus', (req, res) => {
@@ -326,12 +321,12 @@ app.get('/settings/:user', (req, res) => {
     Settings
         .find()
         .then(function (settings) {
-        let settingsOutput = settings.find( (setting) =>(setting.loggedInUsername == req.params.user));
+            let settingsOutput = settings.find( (setting) =>(setting.loggedInUsername == req.params.user));
 
-        res.json({
-            settingsOutput
-        });
-    })
+            res.json({
+                settingsOutput
+            });
+        })
         .catch(function (err) {
         console.error(err);
         res.status(500).json({
@@ -339,62 +334,71 @@ app.get('/settings/:user', (req, res) => {
         });
     });
 });
+
 // accessing all of a user's entries
-app.get('/logs/:user', (req, res) => {
-
-
+app.get('/bolus-logs/:user', (req, res) => {
 
     Bolus
-        .find()
-        .then(function (settings) {
-            let settingsOutput = settings.find( (setting) =>(setting.loggedInUsername == req.params.user));
+        .find({
+            loggedInUsername: req.params.user
+        })
+        .then(settings => {
+            res.status(201).json(settings)
+        })
+        .catch(function (err) {
+            console.error(err);
+            res.status(500).json({
+                message: 'Internal server error'
+            });
+        });
 
-        })
-        .catch(function (err) {
-        console.error(err);
-        res.status(500).json({
-            message: 'Internal server error'
-        });
-    });
-    bloodGlucose
-        .find()
-        .then(function (settings) {
-            let settingsOutput = settings.find( (setting) =>(setting.loggedInUsername == req.params.user));
-
-        })
-        .catch(function (err) {
-        console.error(err);
-        res.status(500).json({
-            message: 'Internal server error'
-        });
-    });
-    Basal
-        .find()
-        .then(function (settings) {
-            let settingsOutput = settings.find( (setting) =>(setting.loggedInUsername == req.params.user));
-
-        })
-        .catch(function (err) {
-        console.error(err);
-        res.status(500).json({
-            message: 'Internal server error'
-        });
-    });
-    A1c
-        .find()
-        .then(function (settings) {
-            let settingsOutput = settings.find( (setting) =>(setting.loggedInUsername == req.params.user));
-            res.json({
-            settingsOutput
-        });
-        })
-        .catch(function (err) {
-        console.error(err);
-        res.status(500).json({
-            message: 'Internal server error'
-        });
-    });
 });
+
+app.get('/bg-logs/:user', (req, res) => {
+    bloodGlucose
+        .find({
+            loggedInUsername: req.params.user
+        })
+        .then(settings => {
+        res.status(201).json(settings)
+        })
+        .catch(function (err) {
+        console.error(err);
+        res.status(500).json({
+            message: 'Internal server error'
+        });
+    });
+})
+app.get('/basal-logs/:user', (req, res) => {
+    Basal
+        .find({
+            loggedInUsername: req.params.user
+        })
+        .then(settings => {
+            res.status(201).json(settings)
+        })
+        .catch(function (err) {
+            console.error(err);
+            res.status(500).json({
+                message: 'Internal server error'
+            });
+        });
+})
+app.get('/a1c-logs/:user', (req, res) => {
+    A1c
+        .find({
+            loggedInUsername: req.params.user
+        })
+        .then(settings => {
+            res.status(201).json(settings)
+        })
+        .catch(function (err) {
+            console.error(err);
+            res.status(500).json({
+                message: 'Internal server error'
+            });
+        });
+})
 
 
 // PUT --------------------------------------

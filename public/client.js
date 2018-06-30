@@ -27,6 +27,8 @@ const dataToTrackList = {
 //Insulin on Board caclulation
 //setInterval(function(){ alert("Hello"); }, 300000); //5 minute intervals
 //clearInterval() //When Insulin equals 0
+//getTime() milliseconds since January 1, 1970
+//When bolus is submitted & clock starts
 
 //if 15 minutes from bolus time hold (displayed but not calculated)
 //if Entry input, run function and API update IOB call
