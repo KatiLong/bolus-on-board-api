@@ -139,10 +139,10 @@
                            <input type="number" id="bolus-bg" placeholder="131" value="131">
                            <!--Date & Time-->
                            <label for="bolus-date">Date</label>
-                           <input type="date" id="bolus-date" value="2015-05-12" required>
+                           <input type="date" class="date-dash" id="bolus-date" value="2015-05-12" required>
 
                            <label for="bolus-time">Time</label>
-                           <input type="time" id="bolus-time" value="16:35" required>
+                           <input type="time" class="time-dash" id="bolus-time" value="16:35" required>
 
                            <p>Calculated Units: {Units || Carbs} + {Correction Amount} -> Exact Amount</p>
                            <label for="suggested-bolus">Suggested Bolus Amount</label>
@@ -164,9 +164,9 @@
                             <label for="bg-input">Blood Sugar</label>
                             <input type="number" id="bg-input"><span>mg/dl</span>
                             <label for="bg-date">Date</label>
-                            <input type="date" id="bg-date">
+                            <input type="date" class="date-dash" id="bg-date">
                             <label for="bg-time">Time</label>
-                            <input type="time" id="bg-time">
+                            <input type="time" class="time-dash" id="bg-time">
                             <button type="submit" class="waves-effect waves-light btn">Add BG</button>
 
                             <button type="button" class="dash-back">Back</button>
@@ -188,9 +188,9 @@
                             <label for="basal-units">Units of Insulin</label>
                             <input type="number" class="insulin-input" id="basal-units" placeholder="25"><span>unit(s)</span>
                             <label for="basal-date">Date</label>
-                            <input type="date" id="basal-date">
+                           <input type="date" class="date-dash" id="basal-date">
                             <label for="basal-time">Time</label>
-                            <input type="time" id="basal-time">
+                           <input type="time" class="time-dash" id="basal-time">
 
                             <button type="submit">Add Basal</button>
 
@@ -207,7 +207,7 @@
                             <input type="number" class="insulin-input" id="a1c-entry" step="0.1" placeholder="6.6" required>
 
                             <label for="a1c-date">Date</label>
-                            <input type="date" id="a1c-date" required>
+                            <input type="date" class="date-dash" id="a1c-date" required>
 
                             <button type="submit" class="waves-effect waves-light btn">Add A1c</button>
                             <button type="button" class="dash-back">Back</button>

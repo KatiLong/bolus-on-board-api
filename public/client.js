@@ -36,6 +36,28 @@ const dataToTrackList = {
 //Every 5 minutes function rerun and API update call
 //if 0 minutes remain,
 
+function dateTimePopulate (event) {
+    const currentDateTime = new Date();
+    let currentDate, currentTime = '';
+
+    let month = currentDateTime.getMonth()
+    if (month < 10) month = "0" + month;
+    let day = currentDateTime.getDay()
+    if (day < 10) day = "0" + day;
+
+    currentDate = `${currentDateTime.getFullYear()}-${month}-${day}`;
+    currentTime = `${currentDateTime.getHours()}:${currentDateTime.getMinutes()}`;
+
+    console.log(currentDate, $(event.currentTarget).next('form').find('.date-dash'));
+    $(event.currentTarget).next('form').find('.date-dash').val(currentDate);
+
+    console.log(currentTime, $(event.currentTarget).next('form').find('.time-dash'));
+    if ($(event.currentTarget).next('form').find('.time-dash')) {
+        $(event.currentTarget).next('form').find('.time-dash').val(currentTime);
+    }
+
+}
+
 //Update setting
 function updateSettings (payload) {
     console.log(payload);
@@ -309,6 +331,7 @@ $(document).on('click', '.dash-back', (event) => {
 $(document).on('click', '#bolus-trigger', (event) => {
     event.preventDefault();
 
+    dateTimePopulate(event);
     $('.dash-button').hide();
     $('#bolus-form').show();
 });
@@ -354,6 +377,7 @@ $(document).on('submit', '#bolus-form', (event) => {
 $(document).on('click', '#bg-trigger', (event) => {
     event.preventDefault();
 
+    dateTimePopulate(event);
     $('.dash-button').hide();
     $('#blood-glucose-form').show();
 });
@@ -394,6 +418,7 @@ $(document).on('submit', '#blood-glucose-form',  (event) => {
 $(document).on('click', '#basal-trigger', (event) => {
     event.preventDefault();
 
+    dateTimePopulate(event);
     $('.dash-button').hide();
     $('#basal-form').show();
 });
@@ -434,6 +459,7 @@ $(document).on('submit', '#basal-form', (event) => {
 $(document).on('click', '#a1c-trigger', (event) => {
     event.preventDefault();
 
+    dateTimePopulate(event);
     $('.dash-button').hide();
     $('#a1c-form').show();
 });
