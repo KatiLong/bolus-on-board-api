@@ -28,7 +28,15 @@ const settingsSchema = new mongoose.Schema({
         amount: {type: Number,
                  required: false},
         timeLeft: {type: Number,
-                   required: false}
+                   required: false},
+        currentEntries: [{
+            entryAmount: {
+                type: Number
+            },
+            timeStart: {
+                type: Number
+            }
+        }]
     },
     loggedInUsername: {
         type: String,

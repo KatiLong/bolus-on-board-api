@@ -62,43 +62,48 @@ function updateSettings (payload) {
 //if 0 minutes remain,
 
 function updateIobHtml () {
-    $('#i-o-b').val()
-    $('#iob-time').val()
+    //Set the HTML text to User's setting
+    $('#i-o-b').text(`${result[0].insulinOnBoard.amount}`);
+    $('#iob-time').text(`${result[0].insulinOnBoard.timeLeft}`);
 }
 
-function insulinOnBoard (event, bolusAmount) {
-    const initialTime = (new Date()).getTime();
-    let difference = initialTime - timeRemaining;
-
-    let timeRemaining = 14400000; //4hours->milliseconds
-    let insulinRemaining = bolusAmount;
-    let payload = {
-        insulinOnBoard: {
-            amount: insulinRemaining,
-            timeLeft: timeRemaining
-        },
-        settingId: $('#current-user-settings').val()
-    }
-    let updateIOB = setInterval(() => {
-        updateSettings(payload);
-
-    }, 300000); //5 minute intervals
-
-
+function insulinOnBoard (bolusAdded, currentIOBAmount, currentIOBTime) {
+    //insulinOnBoard(bolusAdded, currentIOBAmount, currentIOBTime)
+    console.log('IOB function ran', bolusAdded, currentIOBAmount, currentIOBTime);
 
     //initial settings update when bolus added
     updateSettings({
         insulinOnBoard: {
-            amount: insulinRemaining,
-            timeLeft: timeRemaining
+            amount: 5,
+            timeLeft: 200,
+            currentEntries: [...currentEntries, {
+                entryAmount: 5,
+                timeStart: 166000
+            }]
         },
-        settingId
+        settingId: $('#current-user-settings').val()
     });
 
-
-    if (timeRemaining > 13500000) {}//first 15 minutes
-    else if (timeRemaining < 900000) {}//Insulin on board
-    else if (timeRemaining < 900000) {}//No insulin remaining
+//    const initialTime = (new Date()).getTime();
+//    let difference = initialTime - timeRemaining;
+//
+//    let timeRemaining = 14400000; //4hours->milliseconds
+//    let insulinRemaining = bolusAdded + currentIOBAmount;
+//    let payload = {
+//        insulinOnBoard: {
+//            amount: insulinRemaining,
+//            timeLeft: timeRemaining
+//        },
+//        settingId: $('#current-user-settings').val()
+//    }
+//    let updateIOB = setInterval(() => {
+//        updateSettings(payload);
+//
+//    }, 300000); //5 minute intervals
+//
+//    if (timeRemaining > 13500000) {}//first 15 minutes
+//    else if (timeRemaining < 900000) {}//Insulin on board
+//    else if (timeRemaining < 900000) {}//No insulin remaining
 
 }
 
@@ -360,7 +365,7 @@ $(document).on('click', '#bolus-trigger', (event) => {
 //Bolus submit
 $(document).on('submit', '#bolus-form', (event) => {
     event.preventDefault();
-
+    // POST Bolus entry to Server
     const bolusObject = {
         insulinType: $('#insulin-type').find(":selected").text(),
         bloodGlucose: Number($('#bolus-bg').val()),
@@ -390,26 +395,21 @@ $(document).on('submit', '#bolus-form', (event) => {
         console.log(error);
         console.log(errorThrown);
     });
-    //Get current Insulin on Board & add new IOB
+    //GET current Insulin on Board when new Bolus added & add new IOB
     $.ajax({
         type: 'GET',
-        url: `/settings/${username}`,
+        url: `/settings/${bolusObject.loggedInUsername}`,
         dataType: 'json',
-        data: JSON.stringify(loginUserObject),
         contentType: 'application/json'
     })
-        .done(function (result) {
+    .done(function (result) {
         console.log(result);
-        //Set the HTML text to User's setting
-        $('#i-o-b').text(`${result[0].insulinOnBoard.amount}`);
-        $('#iob-time').text(`${result[0].insulinOnBoard.timeLeft}`);
 
-        insulinOnBoard(event, bolusObject.bolusAmount);
+        //insulinOnBoard(bolusAdded, currentIOBAmount, currentIOBTime)
+        insulinOnBoard(bolusObject.bolusAmount, result[0].insulinOnBoard.amount, result[0].insulinOnBoard.timeLeft);
     })
-        .fail(function (jqXHR, error, errorThrown) {
-        console.log(jqXHR);
-        console.log(error);
-        console.log(errorThrown);
+    .fail(function (jqXHR, error, errorThrown) {
+        console.log(jqXHR, error, errorThrown);
     });
 
 
