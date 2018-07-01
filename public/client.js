@@ -36,7 +36,7 @@ function updateSettings (payload) {
         contentType: 'application/json'
     })
         .done(function (result) {
-        console.log('Update successful');
+        console.log(result);
 
         $('.settings-div').hide();
         $('.setting-button').show();
@@ -78,6 +78,10 @@ function insulinOnBoard (result, initialTime, bolusAdded, timeRemaining) { //sho
         let timeRemaining = duration;
     }
 
+    if (timeRemaining === 0) {
+
+    }
+
     //initial settings update when bolus added, first 15 minutes the Insulin not subtracted
     if (timeRemaining >= (duration - 15000)) {
         currentInsulinStack = [...result[0].insulinOnBoard.currentInsulinStack];
@@ -107,9 +111,7 @@ function insulinOnBoard (result, initialTime, bolusAdded, timeRemaining) { //sho
     else if (timeRemaining < (duration/2)) { //second half
 
     }
-    else if (timeRemaining === 0) {
-
-    }//No insulin remaining
+//No insulin remaining
     else {//Catch errors
         console.log('Something went wrong in IOB');
         return false;
@@ -289,7 +291,7 @@ $(document).on('submit', '#login-form', (event) => {
                 data: JSON.stringify(loginUserObject),
                 contentType: 'application/json'
             })
-            .done(function (result) {
+            .done((result) => {
                 console.log(result);
                 $('#current-user-settings').val(`${result[0]._id}`);
                 //Set the HTML text to User's setting
@@ -412,23 +414,28 @@ $(document).on('submit', '#bolus-form', (event) => {
         $('form').hide();
         $('.dash-button').show();
 
+        const initialTime = (new Date()).getTime();
+
         //GET current Insulin on Board when new Bolus added & add new IOB
-        $.ajax({
-            type: 'GET',
-            url: `/settings/${bolusObject.loggedInUsername}`,
-            dataType: 'json',
-            contentType: 'application/json'
-        })
-        .done(function (result) {
-            console.log(result);
+//        $.ajax({
+//            type: 'GET',
+//            url: `/settings/${bolusObject.loggedInUsername}`,
+//            dataType: 'json',
+//            contentType: 'application/json'
+//        })
+//        .done(function (result) {
+//            console.log(result);
+//
+//            const initialTime = (new Date()).getTime();
+//
+//            insulinOnBoard(result, initialTime, bolusObject.bolusAmount);
+//        })
+//        .fail(function (jqXHR, error, errorThrown) {
+//            console.log(jqXHR, error, errorThrown);
+//        });
+        updateSettings({
 
-            const initialTime = (new Date()).getTime();
-
-            insulinOnBoard(result, initialTime, bolusObject.bolusAmount);
         })
-        .fail(function (jqXHR, error, errorThrown) {
-            console.log(jqXHR, error, errorThrown);
-        });
 
     })
     .fail(function (jqXHR, error, errorThrown) {
