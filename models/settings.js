@@ -24,13 +24,22 @@ const settingsSchema = new mongoose.Schema({
         type: Number,
         required: false
     },
+    insulinDuration: {
+        hours: {type: Number,
+                 required: false},
+        milliSec: {type: Number,
+                   required: false}
+    },
     insulinOnBoard: {
         amount: {type: Number,
                  required: false},
         timeLeft: {type: Number,
                    required: false},
-        currentEntries: [{
+        currentInsulinStack: [{
             entryAmount: {
+                type: Number
+            },
+            currentInsulin: {
                 type: Number
             },
             timeStart: {
