@@ -35,7 +35,7 @@ function updateSettings (payload) {
         data: JSON.stringify(payload),
         contentType: 'application/json'
     })
-        .done(function (result) {
+    .done(function (result) {
         console.log(result);
 
         $('.settings-div').hide();
@@ -151,7 +151,21 @@ function dateTimePopulate (event) {
     }
 
 }
+//function to render HTML for Logs on GET call
+function renderLogs(result) {
+    console.log(result);
+    let htmlString = ``;
+    let displayDate = results.inputDate.substring(0, 10);
+    let formattedDisplayDate = displayDate.split("-");
+    let formattedDisplayDateOutput = formattedDisplayDate[1] + "/" + formattedDisplayDate[2] + "/" + formattedDisplayDate[0];
 
+    htmlString += `<div class="entries-container" id="${results._id}">`;
+    //if Bolus
+
+    //if Basal
+    //if BG
+    //if A1c
+}
 
 
 ///////////////Document Ready Function///////////
@@ -292,7 +306,7 @@ $(document).on('submit', '#login-form', (event) => {
                 contentType: 'application/json'
             })
             .done((result) => {
-                console.log(result);
+
                 $('#current-user-settings').val(`${result[0]._id}`);
                 //Set the HTML text to User's setting
                 $('#i-o-b').text(`${result[0].insulinOnBoard.amount}`);
@@ -304,11 +318,8 @@ $(document).on('submit', '#login-form', (event) => {
 
                 //Carbs or Units Select
                 if (result[0].insulinMetric === 'carbs') {
-                    console.log('carbs selected');
-                    //                $('input[name=group1]:checked').attr('id');
                     $('#carbs').prop('checked', true);
                 } else if (result[0].insulinMetric === 'units') {
-                    console.log('units selected');
                     $('#units').prop('checked', true);
                 }
             })
@@ -417,25 +428,30 @@ $(document).on('submit', '#bolus-form', (event) => {
         const initialTime = (new Date()).getTime();
 
         //GET current Insulin on Board when new Bolus added & add new IOB
-//        $.ajax({
-//            type: 'GET',
-//            url: `/settings/${bolusObject.loggedInUsername}`,
-//            dataType: 'json',
-//            contentType: 'application/json'
-//        })
-//        .done(function (result) {
-//            console.log(result);
-//
-//            const initialTime = (new Date()).getTime();
-//
-//            insulinOnBoard(result, initialTime, bolusObject.bolusAmount);
-//        })
-//        .fail(function (jqXHR, error, errorThrown) {
-//            console.log(jqXHR, error, errorThrown);
-//        });
-        updateSettings({
-
+        $.ajax({
+            type: 'GET',
+            url: `/settings/${bolusObject.loggedInUsername}`,
+            dataType: 'json',
+            contentType: 'application/json'
         })
+        .done(function (result) {
+            console.log(result);
+
+            const initialTime = (new Date()).getTime();
+
+//            insulinOnBoard({
+//                currentInsulinStack: [...result[0].insulinOnBoard.currentInsulinStack],
+//                duration: result[0].insulinDuration,
+//                iobAmount: result[0].insulinOnBoard.amount,
+//                iobTime: result[0].insulinOnBoard.timeLeft,
+//                initialTime,
+//                newBolusAmount: bolusObject.bolusAmount
+//            });
+        })
+        .fail(function (jqXHR, error, errorThrown) {
+            console.log(jqXHR, error, errorThrown);
+        });
+
 
     })
     .fail(function (jqXHR, error, errorThrown) {
@@ -572,11 +588,28 @@ $(document).on('submit', '#a1c-form', (event) => {
 //Logs Section show
 $(document).on('click', '#logs-trigger', (event) => {
     event.preventDefault();
+
+    const username = $("#signup-username").val();
     console.log('Logs Trigger working');
     //Get call for Bolus, Basal, BG & A1c logs
+    $.ajax({
+        type: 'GET',
+        url: `/logs/${username}`,
+        dataType: 'json',
+        contentType: 'application/json'
+    })
+    .done(function (result) {
+        console.log(result);
 
-    $('#user-dashboard').hide();
-    $('#logs').show();
+        $('#user-dashboard').hide();
+        $('#logs').show();
+    })
+    .fail(function (jqXHR, error, errorThrown) {
+        console.log(jqXHR);
+        console.log(error);
+        console.log(errorThrown);
+    });
+
 });
 
 ////////////////////////////////////////

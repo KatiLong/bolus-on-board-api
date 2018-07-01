@@ -3,6 +3,8 @@
 const mongoose = require('mongoose');
 // const bcrypt = require('bcryptjs');
 
+// discrimators
+
 const basalSchema = new mongoose.Schema({
     insulinType: {
         type: String,

@@ -324,22 +324,37 @@ app.get('/settings/:user', (req, res) => {
             loggedInUsername: req.params.user
         })
         .then((settings) => {
-//            let settingsOutput = settings.find( (setting) =>(setting.loggedInUsername == req.params.user));
-//            res.json({
-//                settingsOutput
-//            });
             res.status(201).json(settings)
         })
         .catch(function (err) {
-        console.error(err);
-        res.status(500).json({
-            message: 'Internal server error'
-        });
+            console.error(err);
+            res.status(500).json({
+                message: 'Internal server error'
+            });
     });
 });
 
 // accessing all of a user's entries
-app.get('/bolus-logs/:user', (req, res) => {
+app.get('/logs/:user', (req, res) => {
+
+    Bolus
+        .find({
+            loggedInUsername: req.params.user
+        })
+        .then(settings => {
+            res.status(201).json(settings)
+        })
+        .catch(function (err) {
+            console.error(err);
+            res.status(500).json({
+                message: 'Internal server error'
+        });
+    });
+
+});
+
+// accessing all of a user's entries
+app.get('/logs-bolus/:user', (req, res) => {
 
     Bolus
         .find({
@@ -357,7 +372,7 @@ app.get('/bolus-logs/:user', (req, res) => {
 
 });
 
-app.get('/bg-logs/:user', (req, res) => {
+app.get('/logs-bg/:user', (req, res) => {
     bloodGlucose
         .find({
             loggedInUsername: req.params.user
@@ -372,7 +387,7 @@ app.get('/bg-logs/:user', (req, res) => {
         });
     });
 })
-app.get('/basal-logs/:user', (req, res) => {
+app.get('/logs-basal/:user', (req, res) => {
     Basal
         .find({
             loggedInUsername: req.params.user
@@ -387,7 +402,7 @@ app.get('/basal-logs/:user', (req, res) => {
             });
         });
 })
-app.get('/a1c-logs/:user', (req, res) => {
+app.get('/logs-a1c/:user', (req, res) => {
     A1c
         .find({
             loggedInUsername: req.params.user
@@ -419,7 +434,7 @@ app.put('/settings/:id', (req, res) => {
     Settings
         .findByIdAndUpdate(req.params.id, {
             $set: toUpdate
-        }).then(function (achievement) {
+        }).then((achievement) => {
             return res.status(204).end();
         }).catch(function (err) {
             return res.status(500).json({
