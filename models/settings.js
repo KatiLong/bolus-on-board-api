@@ -44,6 +44,9 @@ const settingsSchema = new mongoose.Schema({
             },
             timeStart: {
                 type: Number
+            },
+            timeRemaining:{
+                type: Number
             }
         }]
     },
