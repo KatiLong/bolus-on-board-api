@@ -68,54 +68,73 @@ function updateIobHtml () {
 }
 
 //Just updating insulinStack and Total IOB amounts (insulin & time)
-function insulinOnBoard (result, initialTime, bolusAdded, timeRemaining) { //should update iob via formula & PUT call
+function insulinOnBoard (result, initialTime, bolusAdded, timeRemaining, lastStackLength) { //should update iob via formula & PUT call
 
     console.log('IOB function ran', bolusAdded, currentIOBAmount, currentIOBTime);
     let currentInsulinStack, insulinRemaining, totalIOBAmount, totalIOBTime, bolusRate, duration;
 
-    //Initialize Time Remaining, 4hours->milliseconds
-    if (!timeRemaining) {
+    //Rethink Time Remaining - not a parameter but calculated from timeStart
+
+    //Initialize Entry
+    if (!timeRemaining || !lastStackLength) {
         let timeRemaining = duration;
+        currentInsulinStack = [...result[0].insulinOnBoard.currentInsulinStack, {
+            entryAmount: bolusAdded,
+            currentInsulin: bolusAdded,
+            timeStart: initialTime //Need to change format?
+        }];
     }
 
-    if (timeRemaining === 0) {
-
+    if (lastStackLength < currentInsulinStack.length) {
+        console.log('Insulin Stack thread ended');
+        return;
     }
 
-    //initial settings update when bolus added, first 15 minutes the Insulin not subtracted
-    if (timeRemaining >= (duration - 15000)) {
-        currentInsulinStack = [...result[0].insulinOnBoard.currentInsulinStack];
-        insulinRemaining = bolusAdded;
-        bolusRate = 0;
-        duration = result[0].insulinDuration;
-
-        totalIOBAmount = result[0].insulinOnBoard.amount + insulinRemaining;
-        totalIOBTime = result[0].insulinOnBoard.timeLeft + timeRemaining;
-
-        setTimeout(() => {
-            //call to Update IOB Setting
-            let result = updateSettings({
-                insulinOnBoard: {
-                    amount: totalIOBAmount,
-                    timeLeft: totalIOBTime,
-                    currentInsulinStack
-                },
-                settingId: $('#current-user-settings').val()
-            })
-            insulinOnBoard(result, initialTime, (insulinRemaining - bolusRate), (timeRemaining-300000)); //recursively call
-        }, 300000); //5 minute intervals
-    } // x = insulinAmount/135300000
-    else if (timeRemaining >= (duration/2)) { //first half
-        bolusRate = bolus/((duration/2)-15000)
-    }//Insulin on board
-    else if (timeRemaining < (duration/2)) { //second half
-
+    if (currentInsulinStack.length === 0) {
+        console.log('No entries in Insulin stack');
+        return;
     }
-//No insulin remaining
-    else {//Catch errors
-        console.log('Something went wrong in IOB');
-        return false;
-    }
+
+    currentInsulinStack.map((el) => {
+        //First 15 minutes the Insulin not subtracted
+        if (timeRemaining >= (duration - 15000)) {
+            insulinRemaining = bolusAdded;
+            bolusRate = 0;
+            duration = result[0].insulinDuration;
+
+            totalIOBAmount = result[0].insulinOnBoard.amount + insulinRemaining;
+            totalIOBTime = result[0].insulinOnBoard.timeLeft + timeRemaining;
+
+            setTimeout(() => {
+                //call to Update IOB Setting
+                let result = updateSettings({
+                    insulinOnBoard: {
+                        amount: totalIOBAmount,
+                        timeLeft: totalIOBTime,
+                        currentInsulinStack
+                    },
+                    settingId: $('#current-user-settings').val()
+                })
+                insulinOnBoard(result, initialTime, (insulinRemaining - bolusRate), (timeRemaining-300000)); //recursively call
+            }, 300000); //5 minute intervals
+        } // x = insulinAmount/135300000
+        else if (timeRemaining >= (duration/2)) { //first half
+            bolusRate = bolus/((duration/2)-15000)
+        }//Insulin on board
+        else if (timeRemaining < (duration/2)) { //second half
+
+        }
+        //When all entries have 0 time remaining, stop recursively calling
+        else if (timeRemaining === 0) {
+                //update everything to 0
+            }
+        //No insulin remaining
+        else {//Catch errors
+            console.log('Something went wrong in IOB');
+            return false;
+        }
+
+    })
 }
 
 function bolusCalculator () {

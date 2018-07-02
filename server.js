@@ -335,23 +335,23 @@ app.get('/settings/:user', (req, res) => {
 });
 
 // accessing all of a user's entries
-app.get('/logs/:user', (req, res) => {
-
-    Bolus
-        .find({
-            loggedInUsername: req.params.user
-        })
-        .then(settings => {
-            res.status(201).json(settings)
-        })
-        .catch(function (err) {
-            console.error(err);
-            res.status(500).json({
-                message: 'Internal server error'
-        });
-    });
-
-});
+//app.get('/logs/:user', (req, res) => {
+//
+//    Bolus
+//        .find({
+//            loggedInUsername: req.params.user
+//        })
+//        .then(settings => {
+//            res.status(201).json(settings)
+//        })
+//        .catch(function (err) {
+//            console.error(err);
+//            res.status(500).json({
+//                message: 'Internal server error'
+//        });
+//    });
+//
+//});
 
 // accessing all of a user's entries
 app.get('/logs-bolus/:user', (req, res) => {
