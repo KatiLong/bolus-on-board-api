@@ -1,5 +1,7 @@
 'use strict';
 
+let timeoutThread;
+
 const dataToTrackList = {
     name: 'Carmen',
     username: 'CarmenSD',
@@ -57,6 +59,11 @@ function updateSettings (payload) {
     //display combined totals
 //Every 5 minutes function rerun and API update call
 //if 0 minutes remain,
+function iobLoginCalculator () {
+    //GET settings -  current insulin stack
+    //At end calls insulinOnBoardCalculator loop
+    console.log('When user logs in')
+}
 
 //Just updating insulinStack and Total IOB amounts (insulin & time)
 function insulinOnBoardCalculator (iobObject, lastStackLength) { //should update iob via formula & PUT call
@@ -68,7 +75,8 @@ function insulinOnBoardCalculator (iobObject, lastStackLength) { //should update
     let duration = iobObject.duration.milliSec;
 
     //Rethink Time Remaining - not a parameter but calculated from timeStart
-
+//    if (!timeoutThread) console.log('Timeout thread undefined');
+//    else clearTimeout(timeoutThread);
     //Initialize Entry - the first time function is invoked will not pass in lastStackLength parameter
     if (!lastStackLength) {
         console.log('New Insulin stack thread initialized');
@@ -139,16 +147,19 @@ function insulinOnBoardCalculator (iobObject, lastStackLength) { //should update
         }
         //first half of entry duration
         else if (el.timeRemaining >= (duration/2)) {
-            bolusRate = (entryAmount/2)/((duration/2)-900000)
+            bolusRate = ((el.entryAmount/2)/((duration-900000)/2))*300000; //5 minute increments
+//            el.currentInsulin = Math.max((el.currentInsulin - bolusRate), 0);
             el.currentInsulin -= bolusRate;
-            totalIOBAmount = Math.max((totalIOBAmount - bolusRate), 0);
+            totalIOBAmount -= bolusRate;
+            console.log('First Half rate', bolusRate);
         }
         //second half of entry duration
         else if (el.timeRemaining < (duration/2)) {
-            bolusRate = (entryAmount/2)/((duration/2));
+            bolusRate = ((el.entryAmount/2)/((duration/2)))*300000; //5 minute increments
+//            el.currentInsulin = Math.max((el.currentInsulin - bolusRate), 0);
             el.currentInsulin -= bolusRate;
+            totalIOBAmount -= bolusRate;
             console.log('Second Half rate', bolusRate);
-            totalIOBAmount = Math.max((totalIOBAmount - bolusRate), 0);
         }
         //Catch errors
         else {
@@ -183,7 +194,7 @@ function insulinOnBoardCalculator (iobObject, lastStackLength) { //should update
         totalIOBTime = Math.min(Math.max((totalIOBTime - 300000), 0), duration);
 
         //recursively call insulinOnBoard in 5 minutes
-        setTimeout(() => {
+        timeoutThread = setTimeout(() => {
             console.log('Timeout over', totalIOBTime, totalIOBAmount);
             $('#i-o-b').text(totalIOBAmount);
             $('#iob-time').text(totalIOBTime);
@@ -195,13 +206,13 @@ function insulinOnBoardCalculator (iobObject, lastStackLength) { //should update
                 },
                 settingId: $('#current-user-settings').val()
             })
-//            insulinOnBoardCalculator({
-//                insulinStack: currentInsulinStack,
-//                duration: 4,
-//                iobAmount: 4,
-//                iobTime: 4,
-//                initialTime: 534444
-//            }, lastStackLength)
+            insulinOnBoardCalculator({
+                insulinStack: updatedInsulinStack,
+                duration: iobObject.duration,
+                iobAmount: totalIOBAmount,
+                iobTime: totalIOBTime,
+                initialTime: 534444
+            }, updatedInsulinStack.length)
         }, 5000);//300000
 
     }
