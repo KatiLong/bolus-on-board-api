@@ -67,17 +67,17 @@ function updateSettings (payload) {
 //    iobAmount: result[0].insulinOnBoard.amount,
 //    iobTime: result[0].insulinOnBoard.timeLeft,
 //    initialTime,
-//    newBolusAmount: bolusObject.bolusAmount,
-//    userSettingsId: result[0]._id
+//    newBolusAmount: bolusObject.bolusAmount
 //});
 //Just updating insulinStack and Total IOB amounts (insulin & time)
 function insulinOnBoardCalculator (iobObject, lastStackLength) { //should update iob via formula & PUT call
 
     console.log('IOB Calculator function ran');
-    console.log(iobObject, lastStackLength);
 
-    let insulinRemaining, totalIOBAmount, totalIOBTime, bolusRate, stackLength;
     let currentInsulinStack = [];
+    let totalIOBAmount, totalIOBTime, bolusRate, stackLength;
+    let duration = iobObject.duration.milliSec;
+
 
     //Rethink Time Remaining - not a parameter but calculated from timeStart
 
@@ -85,66 +85,87 @@ function insulinOnBoardCalculator (iobObject, lastStackLength) { //should update
     if (!lastStackLength) {
         console.log('New Insulin stack thread initialized');
 
+        totalIOBAmount = iobObject.iobAmount + iobObject.newBolusAmount; //previousEntryAmounts + newEntryAmount
+        totalIOBTime = iobObject.iobTime + duration; //previousEntryTimes + newEntryTime
+
+        //Adds new entry to the insulinStack array
         iobObject.insulinStack.push({
             entryAmount: iobObject.newBolusAmount,
             currentInsulin: iobObject.newBolusAmount,
             timeStart: iobObject.initialTime,
             timeRemaining: iobObject.duration.milliSec
         });
-        lastStackLength = iobObject.insulinStack.length;
 
+        //Updates server/DB with new entry and totals
         updateSettings({
             insulinOnBoard: {
-                amount: iobObject.iobAmount + iobObject.newBolusAmount,
-                timeLeft: iobObject.iobTime + iobObject.duration.milliSec,
+                amount: totalIOBAmount,
+                timeLeft: totalIOBTime,
                 currentInsulinStack: iobObject.insulinStack[0]
             },
             settingId: $('#current-user-settings').val()
         })
-
+        //Updates HTML with new totals
         $('#i-o-b').text(`${totalIOBAmount + iobObject.newBolusAmount}`);
         $('#iob-time').text(`${totalIOBTime + iobObject.duration.milliSec}`);
 
         console.log(iobObject.insulinStack, lastStackLength, $('#current-user-settings').val());
+        //lastStackLength = iobObject.insulinStack.length; ????needed
+    }
+    //not an Initial Entry, thread running
+    else {
+
+        totalIOBAmount = iobObject.iobAmount;
+        totalIOBTime = iobObject.iobTime;
+
+        console.log('Not a new Entry - insulinStack running', totalIOBAmount, totalIOBTime);
     }
     //In case of new Bolus Entry, end one thread - only ever one insulinOnBoard thread running at a time
 //    if (lastStackLength < currentInsulinStack.length || currentInsulinStack.length === 0) {
 //        console.log('Insulin Stack thread ended');
 //        return;
 //    }
+
+//    {
+//        entryAmount: iobObject.newBolusAmount,
+//        currentInsulin: iobObject.newBolusAmount,
+//        timeStart: iobObject.initialTime,
+//        timeRemaining: iobObject.duration.milliSec
+//    }
     //Updates Each Entry on insulin stack
-//    currentInsulinStack = iobObject.insulinStack.map((el, ind) => {
-//        //First 15 minutes the Insulin not subtracted
-//        if (timeRemaining >= (duration - 15000)) {
-//            insulinRemaining = bolusAdded;
-//            bolusRate = 0;
-//            duration = result[0].insulinDuration;
-//
-//            totalIOBAmount = result[0].insulinOnBoard.amount + insulinRemaining;
-//            totalIOBTime = result[0].insulinOnBoard.timeLeft + timeRemaining;
-//            //Set IOB display to correct totals
-//            $('#i-o-b').text(`${totalIOBAmount}`);
-//            $('#iob-time').text(`${totalIOBTime}`);
-//
-//
-//        } // x = insulinAmount/135300000
-//        else if (timeRemaining >= (duration/2)) { //first half
-//            bolusRate = bolus/((duration/2)-15000)
-//        }//Insulin on board
-//        else if (timeRemaining < (duration/2)) { //second half
-//
-//        }
-//        //When all entries have 0 time remaining, stop recursively calling
-//        else if (timeRemaining === 0) {
-//                //update everything to 0
-//            }
-//        //No insulin remaining
-//        else {//Catch errors
-//            console.log('Something went wrong in IOB');
-//            return false;
-//        }
-//
-//    }).filter((el)=> el.timeRemaining === 0); //Filter out entries that have zeroed out
+    currentInsulinStack = iobObject.insulinStack.map((el, ind) => {
+        //For each element...Subtract 5 minutes
+        el.timeRemaining -= 300000;
+        //When all entries have 0 time remaining, stop recursively calling
+        if (el.timeRemaining === 0) {
+            //update everything to 0
+            el.currentInsulin = 0;
+            console.log('Time @ 0');
+        }
+        //First 15 minutes - time changes, insulin amount does not
+        else if (el.timeRemaining >= (duration-900000)) {
+            //Minus 5 minutes
+            console.log('First 15 minutes', el.timeRemaining);
+        }
+        //first half of entry duration
+        else if (el.timeRemaining >= (duration/2)) {
+            console.log('First Half rate');
+            bolusRate = entryAmount/((duration/2)-900000)
+
+            el.currentInsulin -= bolusRate;
+        }
+        //second half of entry duration
+        else if (el.timeRemaining < (duration/2)) {
+            console.log('Second Half rate');
+            bolusRate = entryAmount/((duration/2))
+        }
+        //No insulin remaining
+        else {//Catch errors
+            console.log('Something went wrong in IOB');
+            return false;
+        }
+
+    }).filter((el)=> el.timeRemaining === 0); //Filter out entries that have zeroed out
 
     //Post updates to Server
 
@@ -175,7 +196,16 @@ function insulinOnBoardCalculator (iobObject, lastStackLength) { //should update
 //            iobAmount: 4,
 //            iobTime: 4,
 //            initialTime: 534444
-//        }, lastStackLength) }, 300000);
+        //        }, lastStackLength) }, 5000);//300000
+//        insulinRemaining = bolusAdded;
+//        bolusRate = 0;
+//        duration = result[0].insulinDuration;
+//
+//        totalIOBAmount = result[0].insulinOnBoard.amount + insulinRemaining;
+//        totalIOBTime = result[0].insulinOnBoard.timeLeft + timeRemaining;
+//        //Set IOB display to correct totals
+//        $('#i-o-b').text(`${totalIOBAmount}`);
+//        $('#iob-time').text(`${totalIOBTime}`);
     }
 }
 
