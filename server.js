@@ -324,8 +324,9 @@ app.get('/settings/:user', (req, res) => {
             loggedInUsername: req.params.user
         })
         .then((settings) => {
-            console.log(settings);
+
             res.status(201).json(settings)
+
         })
         .catch(function (err) {
             console.error(err);
@@ -336,23 +337,68 @@ app.get('/settings/:user', (req, res) => {
 });
 
 // accessing all of a user's entries
-//app.get('/logs/:user', (req, res) => {
-//
-//    Bolus
-//        .find({
-//            loggedInUsername: req.params.user
-//        })
-//        .then(settings => {
-//            res.status(201).json(settings)
-//        })
-//        .catch(function (err) {
-//            console.error(err);
-//            res.status(500).json({
-//                message: 'Internal server error'
-//        });
-//    });
-//
-//});
+app.get('/logs/:user', (req, res) => {
+
+    let output = {};
+
+    Bolus
+        .find({
+            loggedInUsername: req.params.user
+        })
+        .then(settings => {
+            output = Object.assign({settings}, output);
+        })
+        .catch(function (err) {
+            console.error(err);
+            res.status(500).json({
+                message: 'Internal server error'
+        });
+    });
+    console.log(output);
+    A1c
+        .find({
+        loggedInUsername: req.params.user
+    })
+        .then(settings => {
+        output = Object.assign({settings}, output);
+    })
+        .catch(function (err) {
+        console.error(err);
+        res.status(500).json({
+            message: 'Internal server error'
+        });
+    });
+    console.log(output);
+    Basal
+        .find({
+        loggedInUsername: req.params.user
+    })
+        .then(settings => {
+        output = Object.assign({settings}, output);
+    })
+        .catch(function (err) {
+        console.error(err);
+        res.status(500).json({
+            message: 'Internal server error'
+        });
+    });
+    console.log(output);
+    bloodGlucose
+        .find({
+        loggedInUsername: req.params.user
+    })
+        .then(settings => {
+        output = Object.assign({settings}, output);
+    })
+        .catch(function (err) {
+        console.error(err);
+        res.status(500).json({
+            message: 'Internal server error'
+        });
+    });
+    console.log(output);
+    return res.status(200).json(output);
+});
 
 // accessing all of a user's entries
 app.get('/logs-bolus/:user', (req, res) => {
@@ -431,8 +477,7 @@ app.put('/settings/:id', (req, res) => {
             toUpdate[field] = req.body[field];
         }
     });
-    console.log(toUpdate);
-    console.log(req.params);
+
     Settings
         .findByIdAndUpdate(req.params.id, {
             $set: toUpdate

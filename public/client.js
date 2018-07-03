@@ -103,21 +103,11 @@ function iobLoginCalculator (result) {
     //At end calls insulinOnBoardCalculator loop
 }
 
-//const initialTime = (new Date()).getTime();
-//
-//insulinOnBoardCalculator({
-//    insulinStack: [...result[0].insulinOnBoard.currentInsulinStack],
-//    duration: result[0].insulinDuration,
-//    iobAmount: result[0].insulinOnBoard.amount,
-//    iobTime: result[0].insulinOnBoard.timeLeft,
-//    initialTime,
-//    newBolusAmount: bolusObject.bolusAmount
-//});
 
 //Just updating insulinStack and Total IOB amounts (insulin & time)
 function insulinOnBoardCalculator (iobObject, lastStackLength) { //should update iob via formula & PUT call
 
-    console.log('IOB Calculator function ran');
+//    console.log('IOB Calculator function ran');
 
     let currentInsulinStack = [...iobObject.insulinStack];
     let totalIOBAmount, totalIOBTime, bolusRate, stackLength;
@@ -128,8 +118,8 @@ function insulinOnBoardCalculator (iobObject, lastStackLength) { //should update
 //    else clearTimeout(timeoutThread);
     //Initialize Entry - the first time function is invoked will not pass in lastStackLength parameter
     if (!lastStackLength) {
-        console.log('New Insulin stack thread initialized');
-        console.log(currentInsulinStack); //...WTF? Why is this printing the updated version?
+//        console.log('New Insulin stack thread initialized');
+//        console.log(currentInsulinStack);
 
         totalIOBAmount = iobObject.iobAmount + iobObject.newBolusAmount; //previousEntryAmounts + newEntryAmount
         totalIOBTime = Math.min(Math.max((iobObject.iobTime + duration), 0), duration); //previousEntryTimes + newEntryTime
@@ -141,7 +131,7 @@ function insulinOnBoardCalculator (iobObject, lastStackLength) { //should update
             timeStart: iobObject.initialTime,
             timeRemaining: iobObject.duration.milliSec
         });
-        console.log(currentInsulinStack);
+
         //Updates server/DB with new entry and totals
         updateSettings({
             insulinOnBoard: {
@@ -163,7 +153,6 @@ function insulinOnBoardCalculator (iobObject, lastStackLength) { //should update
         totalIOBAmount = iobObject.iobAmount;
         totalIOBTime = iobObject.iobTime;
 
-        console.log('Not a new Entry - insulinStack running', totalIOBAmount, totalIOBTime);
     }
     //In case of new Bolus Entry, end one thread - only ever one insulinOnBoard thread running at a time
 //    if (lastStackLength < currentInsulinStack.length || currentInsulinStack.length === 0) {
@@ -295,8 +284,9 @@ function bolusCalculator () {
         $('#suggested-bolus').val($('#bolus-units').val())
     })
     $(document).on('change', '#bolus-bg', (event) => {
-        let units = $('#bolus-bg').val();
-        $('#bolus-carbs').val(units*carbFactor);
+        let bg = $('#bolus-bg').val();
+        let units = $('#bolus-units').val();
+        $('#suggested-bolus').val(units + (bg-targetBG/corrFactor));
     })
     //correction factor
     //insulin remaining
@@ -307,14 +297,20 @@ function bolusCalculator () {
 function dateTimePopulate (event) {
     const currentDateTime = new Date();
     let currentDate, currentTime = '';
+    let month = currentDateTime.getMonth() + 1;
+    let day = currentDateTime.getDay() + 1;
+    let hour = currentDateTime.getHours();
+    let year = currentDateTime.getFullYear();
+    let minutes = currentDateTime.getMinutes();
 
-    let month = currentDateTime.getMonth()
     if (month < 10) month = "0" + month;
-    let day = currentDateTime.getDay()
     if (day < 10) day = "0" + day;
+    if (hour < 10) hour = "0" + hour;
 
-    currentDate = `${currentDateTime.getFullYear()}-${month}-${day}`;
-    currentTime = `${currentDateTime.getHours()}:${currentDateTime.getMinutes()}`;
+    currentDate = `${year}-${month}-${day}`;
+    currentTime = `${hour}:${minutes}`;
+    console.log(currentDate);
+    console.log(currentTime);
 
     $(event.currentTarget).next('form').find('.date-dash').val(currentDate);
 
@@ -614,14 +610,14 @@ $(document).on('submit', '#bolus-form', (event) => {
 
             const initialTime = (new Date()).getTime();
 
-            insulinOnBoardCalculator({
-                insulinStack: [...result[0].insulinOnBoard.currentInsulinStack],
-                duration: result[0].insulinDuration,
-                iobAmount: result[0].insulinOnBoard.amount,
-                iobTime: result[0].insulinOnBoard.timeLeft,
-                initialTime,
-                newBolusAmount: bolusObject.bolusAmount
-            });
+//            insulinOnBoardCalculator({
+//                insulinStack: [...result[0].insulinOnBoard.currentInsulinStack],
+//                duration: result[0].insulinDuration,
+//                iobAmount: result[0].insulinOnBoard.amount,
+//                iobTime: result[0].insulinOnBoard.timeLeft,
+//                initialTime,
+//                newBolusAmount: bolusObject.bolusAmount
+//            });
 
         })
         .fail(function (jqXHR, error, errorThrown) {
