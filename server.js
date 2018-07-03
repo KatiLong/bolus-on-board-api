@@ -423,7 +423,7 @@ app.get('/logs-a1c/:user', (req, res) => {
 app.put('/settings/:id', (req, res) => {
     let toUpdate = {};
 
-    let updateableFields = ['insulinMetric', 'insulinIncrement', 'carbRatio', 'correctionFactor', 'targetBG', 'insulinOnBoard', 'insulinDuration'];
+    let updateableFields = ['insulinMetric', 'insulinIncrement', 'carbRatio', 'correctionFactor', 'targetBG', 'insulinOnBoard', 'insulinDuration', 'entryAmount', 'currentInsulin', 'timeStart', 'timeRemaining'];
     updateableFields.forEach(function (field) {
         if (field in req.body) {
             toUpdate[field] = req.body[field];
