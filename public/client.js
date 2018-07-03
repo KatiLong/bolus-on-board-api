@@ -277,15 +277,30 @@ function insulinOnBoardCalculator (iobObject, lastStackLength) { //should update
 
 function bolusCalculator () {
     console.log('bolus calculator');
-    //insulin  OR
+    let carbFactor = $('#carb-ratio').val();
+    let corrFactor = $('#correction-factor').val();
+    let targetBG = $('#target-bg').val();
+
+    //ROUND to the increment
+    //insulin
     //carbs
+    $(document).on('change', '#bolus-units', (event) => {
+        let units = $('#bolus-units').val();
+        $('#bolus-carbs').val(units*carbFactor);
+        $('#suggested-bolus').val(units) //Plus BG...
+    })
+    $(document).on('change', '#bolus-carbs', (event) => {
+        let carbs = $('#bolus-carbs').val();
+        $('#bolus-units').val(carbs/carbFactor);
+        $('#suggested-bolus').val($('#bolus-units').val())
+    })
+    $(document).on('change', '#bolus-bg', (event) => {
+        let units = $('#bolus-bg').val();
+        $('#bolus-carbs').val(units*carbFactor);
+    })
     //correction factor
     //insulin remaining
 
-}
-
-function carbUnitCalculator () {
-    console.log('Carb-unit calculator');
 }
 
 //Populates current Date & Time for relevant forms
@@ -467,6 +482,11 @@ $(document).on('submit', '#login-form', (event) => {
                 $('#current-user-settings').val(`${result[0]._id}`);
                 //Set the HTML text to User's setting
                 $('#increment').val(`${result[0].insulinIncrement}`);
+                //Set Bolus Form insulin increment
+                $( "#bolus-units" ).attr( "step", `${result[0].insulinIncrement}` );
+                $( "#suggested-bolus" ).attr( "step", `${result[0].insulinIncrement}` );
+
+                $('#target-bg').val(result[0].targetBG);
                 $('#carb-ratio').val(`${result[0].carbRatio}`);
                 $('#correction-factor').val(`${result[0].correctionFactor}`);
                 $('#duration').val(`${result[0].insulinDuration.hours}`);
@@ -549,6 +569,7 @@ $(document).on('click', '.dash-back', (event) => {
 $(document).on('click', '#bolus-trigger', (event) => {
     event.preventDefault();
 
+    bolusCalculator()
     dateTimePopulate(event);
     $('.dash-button').hide();
     $('#bolus-form').show();
