@@ -324,6 +324,7 @@ app.get('/settings/:user', (req, res) => {
             loggedInUsername: req.params.user
         })
         .then((settings) => {
+            console.log(settings);
             res.status(201).json(settings)
         })
         .catch(function (err) {
@@ -361,6 +362,7 @@ app.get('/logs-bolus/:user', (req, res) => {
             loggedInUsername: req.params.user
         })
         .then(settings => {
+
             res.status(201).json(settings)
         })
         .catch(function (err) {

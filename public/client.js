@@ -59,11 +59,60 @@ function updateSettings (payload) {
     //display combined totals
 //Every 5 minutes function rerun and API update call
 //if 0 minutes remain,
-function iobLoginCalculator () {
-    //GET settings -  current insulin stack
+function iobLoginCalculator (result) {
+    console.log(result);
+    //Update time passage
+    console.log('When user logs in');
+    let currentInsulinStack = [...result[0].insulinOnBoard.currentInsulinStack];
+    const loginTime = (new Date()).getTime();
+    let bolusRate, totalIOBAmount;
+    let totalIOBTime = 0;
+
+    let updatedInsulinStack = currentInsulinStack.map((el, ind) => {
+
+        console.log('timeStart: ' + el.timeStart + 'loginTime: ' + loginTime);
+
+        let timeElapsed = el.timeStart - loginTime;
+        //If it's been longer than the User's set duration, zero out the element
+        if (timeElapsed >= duration) {
+            console.log('Zeroed out element', timeElapsed);
+            el.timeRemaining = 0;
+            el.currentInsulin = 0;
+            return el;
+        }
+
+        el.timeRemaining = Math.min(Math.max((el.timeRemaining - timeElapsed), 0), duration);
+        bolusRate = ((el.entryAmount)/(duration-900000))*timeElapsed
+        el.currentInsulin = Math.min(Math.max(el.currentInsulin - bolusRate, 0), duration);
+        totalIOBAmount = Math.min(Math.max(el.currentInsulin - bolusRate, 0), duration);
+
+        if (totalIOBTime < el.timeRemaining) totalIOBTime = el.timeRemaining
+
+        return el;
+
+    }).filter((el)=> !(el.timeRemaining === 0)); //Filter out entries that have zeroed out
+
+    console.log(updatedInsulinStack);
+    console.log(totalIOBTime);
+
+
+//    Math.min(Math.max((totalIOBTime - timeElapsed), 0), duration);
+
+    $('#i-o-b').text(`${totalIOBAmount}`);
+    $('#iob-time').text(`${totalIOBTime}`);
     //At end calls insulinOnBoardCalculator loop
-    console.log('When user logs in')
 }
+
+//const initialTime = (new Date()).getTime();
+//
+//insulinOnBoardCalculator({
+//    insulinStack: [...result[0].insulinOnBoard.currentInsulinStack],
+//    duration: result[0].insulinDuration,
+//    iobAmount: result[0].insulinOnBoard.amount,
+//    iobTime: result[0].insulinOnBoard.timeLeft,
+//    initialTime,
+//    newBolusAmount: bolusObject.bolusAmount
+//});
 
 //Just updating insulinStack and Total IOB amounts (insulin & time)
 function insulinOnBoardCalculator (iobObject, lastStackLength) { //should update iob via formula & PUT call
@@ -148,10 +197,9 @@ function insulinOnBoardCalculator (iobObject, lastStackLength) { //should update
         //first half of entry duration
         else if (el.timeRemaining >= (duration/2)) {
             bolusRate = ((el.entryAmount/2)/((duration-900000)/2))*300000; //5 minute increments
-//            el.currentInsulin = Math.max((el.currentInsulin - bolusRate), 0);
-            el.currentInsulin -= bolusRate;
+            el.currentInsulin = Math.max((el.currentInsulin - bolusRate), 0);
             totalIOBAmount -= bolusRate;
-            console.log('First Half rate', bolusRate);
+            console.log('First Half rate');
         }
         //second half of entry duration
         else if (el.timeRemaining < (duration/2)) {
@@ -197,7 +245,7 @@ function insulinOnBoardCalculator (iobObject, lastStackLength) { //should update
         timeoutThread = setTimeout(() => {
             console.log('Timeout over', totalIOBTime, totalIOBAmount);
             $('#i-o-b').text(totalIOBAmount);
-            $('#iob-time').text(totalIOBTime);
+            $('#iob-time').text(totalIOBTime/3600000);
             updateSettings({
                 insulinOnBoard: {
                     amount: totalIOBAmount,
@@ -413,11 +461,11 @@ $(document).on('submit', '#login-form', (event) => {
                 contentType: 'application/json'
             })
             .done((result) => {
+                console.log(result);
+                iobLoginCalculator(result);
 
                 $('#current-user-settings').val(`${result[0]._id}`);
                 //Set the HTML text to User's setting
-                $('#i-o-b').text(`${result[0].insulinOnBoard.amount}`);
-                $('#iob-time').text(`${result[0].insulinOnBoard.timeLeft}`);
                 $('#increment').val(`${result[0].insulinIncrement}`);
                 $('#carb-ratio').val(`${result[0].carbRatio}`);
                 $('#correction-factor').val(`${result[0].correctionFactor}`);
