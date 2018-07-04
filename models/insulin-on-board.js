@@ -8,7 +8,7 @@ const insulinOnBoardSchema = new mongoose.Schema({
         amount: {type: Number,
                  required: false},
         timeLeft: {type: Number,
-                   required: false},
+                   required: false}
     },
     currentInsulinStack: [{
         entryAmount: {

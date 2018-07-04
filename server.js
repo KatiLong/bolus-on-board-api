@@ -124,8 +124,23 @@ app.post('/users/create', (req, res) => {
 
                     //display the new user
                     console.log(`User \`${username}\` created.`);
-                    return res.status(201).json(item);
 
+                    Settings
+                        .create({
+                        insulinMetric: 'units',
+                        insulinIncrement: 1,
+                        carbRatio: 9,
+                        correctionFactor: 34,
+                        targetBG: 120,
+                        insulinDuration: {hours: 4.25, milliSec: (4.25*3600000)},
+                        loggedInUsername: item.username,
+                        userID: item._id
+                    })
+                        .then(settings => res.status(201).json(settings))
+                        .catch(err => {
+                        console.error(err);
+                        res.status(500).json({ error: 'Something went wrong' });
+                    });
                 }
             });
         });
@@ -192,28 +207,34 @@ app.post('/users/login', function (req, res) {
 });
 
 // Create User Settings & IOB
-app.post('/settings/create', (req, res) => {
-    const requiredFields = ['insulinMetric', 'insulinIncrement', 'carbRatio', 'correctionFactor', 'targetBG', 'insulinOnBoard', 'insulinDuration', ];
-    for (let i = 0; i < requiredFields.length; i++) {
-        const field = requiredFields[i];
-        if (!(field in req.body)) {
-            const message = `Missing required field - please fill out \`${field}\` in request body`;
-            return res.status(400).send(message);
-        }
-    }
-    Settings
+app.post('/iob/create', (req, res) => {
+    console.log(req);
+    insulinOnBoard
         .create({
-        insulinMetric: 'units',
-        insulinIncrement: 1,
-        carbRatio: 9,
-        correctionFactor: 34,
-        targetBG: 120,
-        insulinOnBoard: {amount: 0, timeLeft: 0},
-        insulinDuration: {hours: 4.25, milliSec: (4.25*3600000)},
-        loggedInUsername: item.username,
-        userID: item._id
-    })
+            insulinOnBoard: {
+                amount: 0,
+                timeLeft: 0
+            },
+            currentInsulinStack: [],
+            loggedInUsername: req.params.username
+        })
         .then(settings => res.status(201).json(settings))
+        .catch(err => {
+        console.error(err);
+        res.status(500).json({ error: 'Something went wrong' });
+    });
+})
+// Post entry to Insulin Stack
+app.post('/iob/insulin-stack', (req, res) => {
+    console.log(req);
+    insulinOnBoard
+        .find({
+            loggedInUsername: req.params.user
+        })
+        .then(settings => {
+            currentInsulinStack.push({})
+            res.status(201).json(settings)
+    })
         .catch(err => {
         console.error(err);
         res.status(500).json({ error: 'Something went wrong' });

@@ -411,6 +411,23 @@ $(document).on('submit', '#signup-form', (event) => {
                 if (errorThrown === 'Conflict') alert('User with that username already exists');
                 console.log(errorThrown);
             })
+            //Create IOB storage
+            $.ajax({
+                type: 'POST',
+                url: `iob/create`,
+                dataType: 'json',
+                data: JSON.stringify(newUserObject),
+                contentType: 'application/json'
+            })
+            //if call is succefull
+            .done(function (result) {
+                console.log('IOB created', result);
+                $('#current-user-iob').val(result._id);
+            })
+            //if the call is failing
+            .fail(function (jqXHR, error, errorThrown) {
+                console.log(jqXHR, error, errorThrown);
+            })
         }
     })
 
