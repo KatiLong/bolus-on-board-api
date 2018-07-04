@@ -30,26 +30,6 @@ const settingsSchema = new mongoose.Schema({
         milliSec: {type: Number,
                    required: false}
     },
-    insulinOnBoard: {
-        amount: {type: Number,
-                 required: false},
-        timeLeft: {type: Number,
-                   required: false},
-        currentInsulinStack: [{
-            entryAmount: {
-                type: Number
-            },
-            currentInsulin: {
-                type: Number
-            },
-            timeStart: {
-                type: Number
-            },
-            timeRemaining:{
-                type: Number
-            }
-        }]
-    },
     loggedInUsername: {
         type: String,
         required: false

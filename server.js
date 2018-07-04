@@ -5,6 +5,7 @@ const Bolus = require('./models/bolus');
 const Basal = require('./models/basal');
 const bloodGlucose = require('./models/blood-glucose');
 const A1c = require('./models/a1c');
+const insulinOnBoard = require('./models/insulin-on-board');
 
 const bodyParser = require('body-parser');
 const config = require('./config');
@@ -123,24 +124,8 @@ app.post('/users/create', (req, res) => {
 
                     //display the new user
                     console.log(`User \`${username}\` created.`);
+                    return res.status(201).json(item);
 
-                    Settings
-                        .create({
-                        insulinMetric: 'units',
-                        insulinIncrement: 1,
-                        carbRatio: 9,
-                        correctionFactor: 34,
-                        targetBG: 120,
-                        insulinOnBoard: {amount: 0, timeLeft: 0},
-                        insulinDuration: {hours: 4.25, milliSec: (4.25*3600000)},
-                        loggedInUsername: item.username,
-                        userID: item._id
-                    })
-                        .then(settings => res.status(201).json(settings))
-                        .catch(err => {
-                        console.error(err);
-                        res.status(500).json({ error: 'Something went wrong' });
-                    });
                 }
             });
         });
@@ -206,6 +191,34 @@ app.post('/users/login', function (req, res) {
     });
 });
 
+// Create User Settings & IOB
+app.post('/settings/create', (req, res) => {
+    const requiredFields = ['insulinMetric', 'insulinIncrement', 'carbRatio', 'correctionFactor', 'targetBG', 'insulinOnBoard', 'insulinDuration', ];
+    for (let i = 0; i < requiredFields.length; i++) {
+        const field = requiredFields[i];
+        if (!(field in req.body)) {
+            const message = `Missing required field - please fill out \`${field}\` in request body`;
+            return res.status(400).send(message);
+        }
+    }
+    Settings
+        .create({
+        insulinMetric: 'units',
+        insulinIncrement: 1,
+        carbRatio: 9,
+        correctionFactor: 34,
+        targetBG: 120,
+        insulinOnBoard: {amount: 0, timeLeft: 0},
+        insulinDuration: {hours: 4.25, milliSec: (4.25*3600000)},
+        loggedInUsername: item.username,
+        userID: item._id
+    })
+        .then(settings => res.status(201).json(settings))
+        .catch(err => {
+        console.error(err);
+        res.status(500).json({ error: 'Something went wrong' });
+    });
+})
 
 // POST Bolus Entry
 app.post('/bolus', (req, res) => {
@@ -336,6 +349,25 @@ app.get('/settings/:user', (req, res) => {
     });
 });
 
+// accessing User's insulin on board & stack
+app.get('/insulin-stack/:user', (req, res) => {
+
+    insulinOnBoard
+        .find({
+            loggedInUsername: req.params.user
+        })
+        .then((settings) => {
+
+            res.status(201).json(settings)
+
+        })
+        .catch(function (err) {
+            console.error(err);
+            res.status(500).json({
+                message: 'Internal server error'
+            });
+        });
+});
 // accessing all of a user's entries
 app.get('/logs/:user', (req, res) => {
 
