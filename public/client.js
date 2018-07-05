@@ -320,6 +320,7 @@ function dateTimePopulate (event) {
 
 }
 //function to render HTML for Logs on GET call
+
 function renderLogs(result) {
     console.log(result);
     let htmlString = ``;
@@ -381,7 +382,7 @@ $(document).on('submit', '#signup-form', (event) => {
                 username: username,
                 password: password
             };
-            console.log(newUserObject);
+
             //API call to create User
             $.ajax({
                 type: 'POST',
@@ -392,7 +393,7 @@ $(document).on('submit', '#signup-form', (event) => {
             })
             //if call is succefull
             .done(function (result) {
-                console.log(result);
+//                console.log(result);
                 $('#current-username-id').val(`${result.userID}`);
                 $('#current-username').val(`${result.loggedInUsername}`);
                 $('#current-user-settings').val(`${result._id}`);
@@ -403,6 +404,24 @@ $(document).on('submit', '#signup-form', (event) => {
                 $('#user-dashboard').show();
                 $('#iob-display').show();
 
+                //Create IOB storage
+                $.ajax({
+                    type: 'POST',
+                    url: `iob/create`,
+                    dataType: 'json',
+                    data: JSON.stringify(newUserObject),
+                    contentType: 'application/json'
+                })
+                //if call is succefull
+                .done(function (result) {
+                    console.log('IOB created', result);
+                    $('#current-user-iob').val(result._id);
+                })
+                //if the call is failing
+                .fail(function (jqXHR, error, errorThrown) {
+                    console.log(jqXHR, error, errorThrown);
+                })
+
             })
             //if the call is failing
             .fail(function (jqXHR, error, errorThrown) {
@@ -411,23 +430,7 @@ $(document).on('submit', '#signup-form', (event) => {
                 if (errorThrown === 'Conflict') alert('User with that username already exists');
                 console.log(errorThrown);
             })
-            //Create IOB storage
-            $.ajax({
-                type: 'POST',
-                url: `iob/create`,
-                dataType: 'json',
-                data: JSON.stringify(newUserObject),
-                contentType: 'application/json'
-            })
-            //if call is succefull
-            .done(function (result) {
-                console.log('IOB created', result);
-                $('#current-user-iob').val(result._id);
-            })
-            //if the call is failing
-            .fail(function (jqXHR, error, errorThrown) {
-                console.log(jqXHR, error, errorThrown);
-            })
+
         }
     })
 
@@ -490,7 +493,6 @@ $(document).on('submit', '#login-form', (event) => {
             })
             .done((result) => {
                 console.log(result);
-                iobLoginCalculator(result);
 
                 $('#current-user-settings').val(`${result[0]._id}`);
                 //Set the HTML text to User's setting
@@ -512,6 +514,26 @@ $(document).on('submit', '#login-form', (event) => {
                 }
             })
             .fail(function (jqXHR, error, errorThrown) {
+                console.log(jqXHR);
+                console.log(error);
+                console.log(errorThrown);
+            });
+
+            // Get IOB settings
+            $.ajax({
+                type: 'GET',
+                url: `/insulin-stack/${username}`,
+                dataType: 'json',
+                data: JSON.stringify(loginUserObject),
+                contentType: 'application/json'
+            })
+                .done((result) => {
+                console.log(result);
+                $('#current-user-iob').val(result._id);
+                //                iobLoginCalculator(result);
+
+            })
+                .fail(function (jqXHR, error, errorThrown) {
                 console.log(jqXHR);
                 console.log(error);
                 console.log(errorThrown);
@@ -616,25 +638,53 @@ $(document).on('submit', '#bolus-form', (event) => {
 
         const initialTime = (new Date()).getTime();
 
-        //GET current Insulin on Board when new Bolus added & add new IOB
+//        //GET current Insulin on Board when new Bolus added & add new IOB
+//        $.ajax({
+//            type: 'GET',
+//            url: `/settings/${bolusObject.loggedInUsername}`,
+//            dataType: 'json',
+//            contentType: 'application/json'
+//        })
+//        .done(function (result) {
+//
+//            const initialTime = (new Date()).getTime();
+//
+//
+//
+////            insulinOnBoardCalculator({
+////                insulinStack: [...result[0].insulinOnBoard.currentInsulinStack],
+////                duration: result[0].insulinDuration,
+////                iobAmount: result[0].insulinOnBoard.amount,
+////                iobTime: result[0].insulinOnBoard.timeLeft,
+////                initialTime,
+////                newBolusAmount: bolusObject.bolusAmount
+////            });
+//
+//        })
+//        .fail(function (jqXHR, error, errorThrown) {
+//            console.log(jqXHR, error, errorThrown);
+//        });
+        let iobId =  $('#current-user-iob').val();
+        console.log(iobId);
+        let insulinStackObject = {
+            entry: {
+                entryAmount: 6,
+                currentInsulin: 6,
+                timeStart: 13000000,
+                timeRemaining: 13000000
+            }
+        }
+
+        //POST insulin type
         $.ajax({
-            type: 'GET',
-            url: `/settings/${bolusObject.loggedInUsername}`,
+            type: 'POST',
+            url: `/iob/insulin-stack/${iobId}`,
             dataType: 'json',
+            data: JSON.stringify(insulinStackObject),
             contentType: 'application/json'
         })
         .done(function (result) {
-
-            const initialTime = (new Date()).getTime();
-
-//            insulinOnBoardCalculator({
-//                insulinStack: [...result[0].insulinOnBoard.currentInsulinStack],
-//                duration: result[0].insulinDuration,
-//                iobAmount: result[0].insulinOnBoard.amount,
-//                iobTime: result[0].insulinOnBoard.timeLeft,
-//                initialTime,
-//                newBolusAmount: bolusObject.bolusAmount
-//            });
+            console.log(result);
 
         })
         .fail(function (jqXHR, error, errorThrown) {

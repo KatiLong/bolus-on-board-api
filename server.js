@@ -208,7 +208,7 @@ app.post('/users/login', function (req, res) {
 
 // Create User Settings & IOB
 app.post('/iob/create', (req, res) => {
-    console.log(req);
+    console.log(req.body.username);
     insulinOnBoard
         .create({
             insulinOnBoard: {
@@ -218,27 +218,36 @@ app.post('/iob/create', (req, res) => {
             currentInsulinStack: [],
             loggedInUsername: req.params.username
         })
-        .then(settings => res.status(201).json(settings))
+        .then(settings => {
+        console.log('iob: ' + settings);
+            res.status(201).json(settings)
+
+        })
         .catch(err => {
-        console.error(err);
-        res.status(500).json({ error: 'Something went wrong' });
-    });
+            console.error(err);
+            res.status(500).json({ error: 'Something went wrong' });
+        });
 })
 // Post entry to Insulin Stack
-app.post('/iob/insulin-stack', (req, res) => {
-    console.log(req);
+app.post('/iob/insulin-stack/:id', (req, res) => {
+    console.log(req.body);
     insulinOnBoard
-        .find({
-            loggedInUsername: req.params.user
-        })
+//        .findByIdAndUpdate(req.params.id, {
+//        $set: toUpdate
+//    }).then((achievement) => {
+//        return res.status(204).end();
+//    })
+        .findById(req.params.id)
         .then(settings => {
-            currentInsulinStack.push({})
-            res.status(201).json(settings)
-    })
+            console.log(settings);
+            console.log(req.body);
+//            settings.currentInsulinStack.push(req.body.entry);
+            res.status(201).json(settings);
+        })
         .catch(err => {
-        console.error(err);
-        res.status(500).json({ error: 'Something went wrong' });
-    });
+            console.error(err);
+            res.status(500).json({ error: 'Something went wrong' });
+        });
 })
 
 // POST Bolus Entry
