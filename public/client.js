@@ -306,6 +306,7 @@ function dateTimePopulate (event) {
     if (month < 10) month = "0" + month;
     if (day < 10) day = "0" + day;
     if (hour < 10) hour = "0" + hour;
+    if (minutes < 10) minutes = "0" + minutes;
 
     currentDate = `${year}-${month}-${day}`;
     currentTime = `${hour}:${minutes}`;
@@ -638,32 +639,32 @@ $(document).on('submit', '#bolus-form', (event) => {
 
         const initialTime = (new Date()).getTime();
 
-//        //GET current Insulin on Board when new Bolus added & add new IOB
-//        $.ajax({
-//            type: 'GET',
-//            url: `/settings/${bolusObject.loggedInUsername}`,
-//            dataType: 'json',
-//            contentType: 'application/json'
-//        })
-//        .done(function (result) {
-//
-//            const initialTime = (new Date()).getTime();
-//
-//
-//
-////            insulinOnBoardCalculator({
-////                insulinStack: [...result[0].insulinOnBoard.currentInsulinStack],
-////                duration: result[0].insulinDuration,
-////                iobAmount: result[0].insulinOnBoard.amount,
-////                iobTime: result[0].insulinOnBoard.timeLeft,
-////                initialTime,
-////                newBolusAmount: bolusObject.bolusAmount
-////            });
-//
-//        })
-//        .fail(function (jqXHR, error, errorThrown) {
-//            console.log(jqXHR, error, errorThrown);
-//        });
+        //GET current Insulin on Board when new Bolus added & add new IOB
+        $.ajax({
+            type: 'GET',
+            url: `/settings/${bolusObject.loggedInUsername}`,
+            dataType: 'json',
+            contentType: 'application/json'
+        })
+        .done(function (result) {
+            console.log(result);
+            const initialTime = (new Date()).getTime();
+
+
+
+//            insulinOnBoardCalculator({
+//                insulinStack: [...result[0].insulinOnBoard.currentInsulinStack],
+//                duration: result[0].insulinDuration,
+//                iobAmount: result[0].insulinOnBoard.amount,
+//                iobTime: result[0].insulinOnBoard.timeLeft,
+//                initialTime,
+//                newBolusAmount: bolusObject.bolusAmount
+//            });
+
+        })
+        .fail(function (jqXHR, error, errorThrown) {
+            console.log(jqXHR, error, errorThrown);
+        });
         let iobId =  $('#current-user-iob').val();
         console.log(iobId);
         let insulinStackObject = {
