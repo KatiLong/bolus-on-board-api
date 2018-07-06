@@ -551,14 +551,14 @@ app.put('/settings/:id', (req, res) => {
 app.put('/insulin-on-board/:id', (req, res) => {
     let toUpdate = {};
 
-    let updateableFields = ['insulinOnBoard', 'currentInsulinStack', 'amount', 'entryAmount', 'currentInsulin', 'timeStart', 'timeRemaining'];
+    let updateableFields = ['insulinOnBoard', 'amount', 'timeLeft'];
 
     updateableFields.forEach((field) => {
         if (field in req.body) {
             toUpdate[field] = req.body[field];
         }
     });
-
+    console.log(req.params.id);
     insulinOnBoard
         .findByIdAndUpdate(req.params.id, {
             $set: toUpdate
@@ -574,7 +574,7 @@ app.put('/insulin-on-board/:id', (req, res) => {
 app.put('/insulin-stack-entry/:id', (req, res) => {
     let toUpdate = {};
 
-    let updateableFields = ['entryAmount', 'currentInsulin', 'timeStart', 'timeRemaining'];
+    let updateableFields = ['currentInsulinStack', 'entryAmount', 'currentInsulin', 'timeStart', 'timeRemaining'];
 
     updateableFields.forEach((field) => {
         if (field in req.body) {
