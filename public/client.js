@@ -388,13 +388,17 @@ function dateTimePopulate (event) {
 //function to render HTML for Logs on GET call
 
 function renderLogs(result) {
-    console.log(result);
-    let htmlString = ``;
-    let displayDate = results.inputDate.substring(0, 10);
-    let formattedDisplayDate = displayDate.split("-");
-    let formattedDisplayDateOutput = formattedDisplayDate[1] + "/" + formattedDisplayDate[2] + "/" + formattedDisplayDate[0];
+    //Test cases:
+    // all have entries
+    // one or more empty
 
-    htmlString += `<div class="entries-container" id="${results._id}">`;
+    console.log(result);
+//    let htmlString = ``;
+//    let displayDate = results.inputDate.substring(0, 10);
+//    let formattedDisplayDate = displayDate.split("-");
+//    let formattedDisplayDateOutput = formattedDisplayDate[1] + "/" + formattedDisplayDate[2] + "/" + formattedDisplayDate[0];
+//
+//    htmlString += `<div class="entries-container" id="${results._id}">`;
     //if Bolus
 
     //if Basal
@@ -863,31 +867,14 @@ $(document).on('submit', '#a1c-form', (event) => {
     });
 
 });
-////////////////////////////////////////
+///////////////////////////////////////
+
 //Logs Section show
 $(document).on('click', '#logs-trigger', (event) => {
     event.preventDefault();
 
     const username = $("#signup-username").val();
     console.log('Logs Trigger working');
-//    //Get call for Bolus, Basal, BG & A1c logs
-//    $.ajax({
-//        type: 'GET',
-//        url: `/logs/${username}`,
-//        dataType: 'json',
-//        contentType: 'application/json'
-//    })
-//    .done(function (result) {
-//        console.log(result);
-//
-//        $('#user-dashboard').hide();
-//        $('#logs').show();
-//    })
-//    .fail(function (jqXHR, error, errorThrown) {
-//        console.log(jqXHR);
-//        console.log(error);
-//        console.log(errorThrown);
-//    });
 
     let bolusGET = $.ajax({
         type: 'GET',
@@ -900,7 +887,7 @@ $(document).on('click', '#logs-trigger', (event) => {
             url: `/logs-basal/${username}`,
             dataType: 'json',
             contentType: 'application/json'
-    }),
+        }),
         bgGET = $.ajax({
             type: 'GET',
             url: `/logs-bg/${username}`,
@@ -915,16 +902,99 @@ $(document).on('click', '#logs-trigger', (event) => {
         });
 
     $.when(bolusGET, basalGET, bgGET, a1cGET).done(function(bolus, basal, bg, a1c) {
-        console.log(bolus);
-        console.log(basal);
-        console.log(bg);
-        console.log(a1c);
+        console.log(bolus[0]);
+        console.log(basal[0]);
+        console.log(bg[0]);
+        console.log(a1c[0]);
+
+        renderLogs({
+            bolus: [...bolus[0]],
+            basal: [...basal[0]],
+            bg: [...bg[0]],
+            a1c: [...a1c[0]]
+        })
 
         $('#user-dashboard').hide();
         $('#logs').show();
     }).fail(function (jqXHR, error, errorThrown) {
         console.log(jqXHR, error, errorThrown);
     });
+
+});
+
+$(document).on('click', '#bolus-logs', (event) => {
+    event.preventDefault();
+    const username = $("#signup-username").val();
+    $.ajax({
+        type: 'GET',
+        url: `/logs-bolus/${username}`,
+        dataType: 'json',
+        contentType: 'application/json'
+    }).done((results) => {
+        console.log(results);
+        renderLogs({
+            bolus: [...results]
+        })
+    }).fail((jqXHR, error, errorThrown) => {
+        console.log(jqXHR, error, errorThrown)
+    })
+
+});
+
+$(document).on('click', '#basal-logs', (event) => {
+    event.preventDefault();
+    const username = $("#signup-username").val();
+    $.ajax({
+        type: 'GET',
+        url: `/logs-basal/${username}`,
+        dataType: 'json',
+        contentType: 'application/json'
+    }).done((results) => {
+        console.log(results);
+        renderLogs({
+            basal: [...results]
+        })
+    }).fail((jqXHR, error, errorThrown) => {
+        console.log(jqXHR, error, errorThrown)
+    })
+
+});
+
+$(document).on('click', '#bg-logs', (event) => {
+    event.preventDefault();
+    const username = $("#signup-username").val();
+    $.ajax({
+        type: 'GET',
+        url: `/logs-bg/${username}`,
+        dataType: 'json',
+        contentType: 'application/json'
+    }).done((results) => {
+        console.log(results);
+        renderLogs({
+            bg: [...results]
+        })
+    }).fail((jqXHR, error, errorThrown) => {
+        console.log(jqXHR, error, errorThrown)
+    })
+
+});
+
+$(document).on('click', '#a1c-logs', (event) => {
+    event.preventDefault();
+    const username = $("#signup-username").val();
+    $.ajax({
+        type: 'GET',
+        url: `/logs-a1c/${username}`,
+        dataType: 'json',
+        contentType: 'application/json'
+    }).done((results) => {
+        console.log(results);
+        renderLogs({
+            a1c: [...results]
+        })
+    }).fail((jqXHR, error, errorThrown) => {
+        console.log(jqXHR, error, errorThrown)
+    })
 
 });
 
