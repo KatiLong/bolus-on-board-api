@@ -26,9 +26,64 @@ const dataToTrackList = {
     }
 }
 
+//AJAX call declarations
+
+//POST new Entry to Insulin Stack
+
+//POST insulin type
+function postInsulinStack (iobId, insulinStackObject) {
+    $.ajax({
+        type: 'POST',
+        url: `/iob/insulin-stack/${iobId}`,
+        dataType: 'json',
+        data: JSON.stringify(insulinStackObject),
+        contentType: 'application/json'
+    })
+    .done(function (result) {
+        console.log(result.currentInsulinStack);
+
+    })
+    .fail(function (jqXHR, error, errorThrown) {
+        console.log(jqXHR, error, errorThrown);
+    });
+}
+//UPDATE insulin stack entry
+function updateStackEntry (entryId, entryObject) {
+    $.ajax({
+        type: 'PUT',
+        url: `/insulin-stack-entry/${entryId}`,
+        dataType: 'json',
+        data: JSON.stringify(entryObject),
+        contentType: 'application/json'
+    })
+    .done(function (result) {
+        console.log('entry posted to insulin stack' + result);
+
+    })
+    .fail(function (jqXHR, error, errorThrown) {
+        console.log(jqXHR, error, errorThrown);
+    });
+}
+//Update IOB
+function updateIob (settingId, payload) {
+
+    $.ajax({
+        type: 'PUT',
+        url: `/insulin-on-board/${settingId}`,
+        dataType: 'json',
+        data: JSON.stringify(payload),
+        contentType: 'application/json'
+    })
+    .done(function (result) {
+        console.log('IOB updated, ' + result);
+    })
+        .fail(function (jqXHR, error, errorThrown) {
+        console.log(jqXHR, error, errorThrown);
+    });
+
+}
 //Update setting
 function updateSettings (payload) {
-    console.log(payload);
 
     $.ajax({
         type: 'PUT',
@@ -60,10 +115,14 @@ function updateSettings (payload) {
 //Every 5 minutes function rerun and API update call
 //if 0 minutes remain,
 function iobLoginCalculator (result) {
-    console.log(result);
-    //Update time passage
-    console.log('When user logs in');
-    let currentInsulinStack = [...result[0].insulinOnBoard.currentInsulinStack];
+
+    if (result[0].currentInsulinStack.length === 0  || !result[0].currentInsulinStack) {
+        $('#i-o-b').text(`0`);
+        $('#iob-time').text(`0`);
+        return;
+    }
+
+    let currentInsulinStack = [...result[0].currentInsulinStack];
     const loginTime = (new Date()).getTime();
     let bolusRate, totalIOBAmount;
     let totalIOBTime = 0;
@@ -93,8 +152,6 @@ function iobLoginCalculator (result) {
     }).filter((el)=> !(el.timeRemaining === 0)); //Filter out entries that have zeroed out
 
     console.log(updatedInsulinStack);
-    console.log(totalIOBTime);
-
 
 //    Math.min(Math.max((totalIOBTime - timeElapsed), 0), duration);
 
@@ -105,154 +162,164 @@ function iobLoginCalculator (result) {
 
 
 //Just updating insulinStack and Total IOB amounts (insulin & time)
-function insulinOnBoardCalculator (iobObject, lastStackLength) { //should update iob via formula & PUT call
+function insulinOnBoardCalculator (iobObject, initialEntry) { //should update iob via formula & PUT call
 
 //    console.log('IOB Calculator function ran');
 
-    let currentInsulinStack = [...iobObject.insulinStack];
+    let currentInsulinStack;
     let totalIOBAmount, totalIOBTime, bolusRate, stackLength;
     let duration = iobObject.duration.milliSec;
-
-    //Rethink Time Remaining - not a parameter but calculated from timeStart
+    let iobId =  $('#current-user-iob').val();
+    let settingId = $('#current-user-settings').val();
 //    if (!timeoutThread) console.log('Timeout thread undefined');
 //    else clearTimeout(timeoutThread);
     //Initialize Entry - the first time function is invoked will not pass in lastStackLength parameter
-    if (!lastStackLength) {
-//        console.log('New Insulin stack thread initialized');
-//        console.log(currentInsulinStack);
+    if (initialEntry) {
 
         totalIOBAmount = iobObject.iobAmount + iobObject.newBolusAmount; //previousEntryAmounts + newEntryAmount
         totalIOBTime = Math.min(Math.max((iobObject.iobTime + duration), 0), duration); //previousEntryTimes + newEntryTime
-        //Adds new entry to the insulinStack array
 
-        currentInsulinStack.push({
+        //Updates local array
+//        currentInsulinStack.push({
+//            entryAmount: iobObject.newBolusAmount,
+//            currentInsulin: iobObject.newBolusAmount,
+//            timeStart: iobObject.initialTime,
+//            timeRemaining: iobObject.duration.milliSec
+//        });
+
+        //Adds new entry to the insulinStack on server
+        let insulinStackObject = {
             entryAmount: iobObject.newBolusAmount,
             currentInsulin: iobObject.newBolusAmount,
             timeStart: iobObject.initialTime,
             timeRemaining: iobObject.duration.milliSec
-        });
+        }
 
-        //Updates server/DB with new entry and totals
-        updateSettings({
+        $.ajax({
+            type: 'POST',
+            url: `/iob/insulin-stack/${iobId}`,
+            dataType: 'json',
+            data: JSON.stringify(insulinStackObject),
+            contentType: 'application/json'
+        })
+            .done(function (result) {
+            console.log(result);
+            currentInsulinStack = [...result.currentInsulinStack];
+        })
+            .fail(function (jqXHR, error, errorThrown) {
+            console.log(jqXHR, error, errorThrown);
+        });
+        console.log(currentInsulinStack);
+        updateIob(settingId, {
             insulinOnBoard: {
                 amount: totalIOBAmount,
-                timeLeft: totalIOBTime,
-                currentInsulinStack: currentInsulinStack
-            },
-            settingId: $('#current-user-settings').val()
+                timeLeft: totalIOBTime
+            }
         })
         //Updates HTML with new totals
         $('#i-o-b').text(`${totalIOBAmount}`);
         $('#iob-time').text(`${totalIOBTime/3600000}`); //Convert to Hours
 
-        //lastStackLength = iobObject.insulinStack.length; ????needed
     }
     //not an Initial Entry, thread running
     else {
-
+        currentInsulinStack = [...iobObject.insulinStack];
         totalIOBAmount = iobObject.iobAmount;
         totalIOBTime = iobObject.iobTime;
 
     }
-    //In case of new Bolus Entry, end one thread - only ever one insulinOnBoard thread running at a time
-//    if (lastStackLength < currentInsulinStack.length || currentInsulinStack.length === 0) {
-//        console.log('Insulin Stack thread ended');
-//        return;
-//    }
 
-//    {
-//        entryAmount: iobObject.newBolusAmount,
-//        currentInsulin: iobObject.newBolusAmount,
-//        timeStart: iobObject.initialTime,
-//        timeRemaining: iobObject.duration.milliSec
-//    }
     //Updates Each Entry on insulin stack
-    let updatedInsulinStack = currentInsulinStack.map((el, ind) => {
-        //For each element...Subtract 5 minutes, min = 0 and max = set duration
-        el.timeRemaining = Math.min(Math.max((el.timeRemaining - 300000), 0), duration);
-
-        //When all entries have 0 time remaining, stop recursively calling
-        if (el.timeRemaining === 0) {
-            //update everything to 0
-
-            el.currentInsulin = 0;
-            console.log('Time @ 0');
-        }
-        //First 15 minutes - time changes, insulin amount does not
-        else if (el.timeRemaining >= (duration-900000)) {
-            //Minus 5 minutes
-            console.log('First 15 minutes', el.timeRemaining);
-        }
-        //first half of entry duration
-        else if (el.timeRemaining >= (duration/2)) {
-            bolusRate = ((el.entryAmount/2)/((duration-900000)/2))*300000; //5 minute increments
-            el.currentInsulin = Math.max((el.currentInsulin - bolusRate), 0);
-            totalIOBAmount -= bolusRate;
-            console.log('First Half rate');
-        }
-        //second half of entry duration
-        else if (el.timeRemaining < (duration/2)) {
-            bolusRate = ((el.entryAmount/2)/((duration/2)))*300000; //5 minute increments
+//    let updatedInsulinStack = currentInsulinStack.map((el, ind) => {
+//        //For each element...Subtract 5 minutes, min = 0 and max = set duration
+//        el.timeRemaining = Math.min(Math.max((el.timeRemaining - 300000), 0), duration);
+//
+//        //When all entries have 0 time remaining, stop recursively calling
+//        if (el.timeRemaining === 0) {
+//            //update everything to 0
+//
+//            el.currentInsulin = 0;
+//            console.log('Time @ 0');
+//        }
+//        //First 15 minutes - time changes, insulin amount does not
+//        else if (el.timeRemaining >= (duration-900000)) {
+//            //Minus 5 minutes
+//            console.log('First 15 minutes', el.timeRemaining);
+//        }
+//        //first half of entry duration
+//        else if (el.timeRemaining >= (duration/2)) {
+//            bolusRate = ((el.entryAmount/2)/((duration-900000)/2))*300000; //5 minute increments
 //            el.currentInsulin = Math.max((el.currentInsulin - bolusRate), 0);
-            el.currentInsulin -= bolusRate;
-            totalIOBAmount -= bolusRate;
-            console.log('Second Half rate', bolusRate);
-        }
-        //Catch errors
-        else {
-            console.log('Something went wrong in IOB');
-            return false;
-        }
-        return el;
-
-    }).filter((el)=> !(el.timeRemaining === 0)); //Filter out entries that have zeroed out
-    console.log(updatedInsulinStack);
+//            totalIOBAmount -= bolusRate;
+//            console.log('First Half rate');
+//        }
+//        //second half of entry duration
+//        else if (el.timeRemaining < (duration/2)) {
+//            bolusRate = ((el.entryAmount/2)/((duration/2)))*300000; //5 minute increments
+////            el.currentInsulin = Math.max((el.currentInsulin - bolusRate), 0);
+//            el.currentInsulin -= bolusRate;
+//            totalIOBAmount -= bolusRate;
+//            console.log('Second Half rate', bolusRate);
+//        }
+//        //Catch errors
+//        else {
+//            console.log('Something went wrong in IOB');
+//            return false;
+//        }
+//
+////        updateIob(settingId, payload);
+//        updateStackEntry(el.entryId, el)
+//        return el;
+//
+//    }).filter((el)=> !(el.timeRemaining === 0)); //Filter out entries that have zeroed out
+//    console.log(updatedInsulinStack);
     //Post updates to Server
 
     //If no entries left on stack, end recursive call
-    if (updatedInsulinStack.length === 0 || totalIOBAmount === 0 || totalIOBTime === 0) {
-        console.log('No entries in Insulin stack');
+//    if (updatedInsulinStack.length === 0 || totalIOBAmount === 0 || totalIOBTime === 0) {
+//        console.log('No entries in Insulin stack');
 
-        updateSettings({
-            insulinOnBoard: {
-                amount: 0,
-                timeLeft: 0,
-                currentInsulinStack: updatedInsulinStack
-            },
-            settingId: $('#current-user-settings').val()
-        })
-        $('#i-o-b').text(`0`);
-        $('#iob-time').text(`0`);
+//        updateSettings({
+//            insulinOnBoard: {
+//                amount: 0,
+//                timeLeft: 0,
+//                currentInsulinStack: updatedInsulinStack
+//            },
+//            settingId: $('#current-user-settings').val()
+//        })
+//        $('#i-o-b').text(`0`);
+//        $('#iob-time').text(`0`);
+//
+//
+//    }
+//        else {
+//        console.log('Where insulinOnBoard called again')
+//        //call to Update IOB Setting
+//        totalIOBTime = Math.min(Math.max((totalIOBTime - 300000), 0), duration);
+//
+//        //recursively call insulinOnBoard in 5 minutes
+//        timeoutThread = setTimeout(() => {
+//            console.log('Timeout over', totalIOBTime, totalIOBAmount);
+//            $('#i-o-b').text(totalIOBAmount);
+//            $('#iob-time').text(totalIOBTime/3600000);
+//            updateSettings({
+//                insulinOnBoard: {
+//                    amount: totalIOBAmount,
+//                    timeLeft: totalIOBTime,
+//                    currentInsulinStack: updatedInsulinStack
+//                },
+//                settingId: $('#current-user-settings').val()
+//            })
+//            insulinOnBoardCalculator({
+//                insulinStack: updatedInsulinStack,
+//                duration: iobObject.duration,
+//                iobAmount: totalIOBAmount,
+//                iobTime: totalIOBTime,
+//                initialTime: 534444
+//            })
+//        }, 5000);//300000
 
-
-    } else {
-        console.log('Where insulinOnBoard called again')
-        //call to Update IOB Setting
-        totalIOBTime = Math.min(Math.max((totalIOBTime - 300000), 0), duration);
-
-        //recursively call insulinOnBoard in 5 minutes
-        timeoutThread = setTimeout(() => {
-            console.log('Timeout over', totalIOBTime, totalIOBAmount);
-            $('#i-o-b').text(totalIOBAmount);
-            $('#iob-time').text(totalIOBTime/3600000);
-            updateSettings({
-                insulinOnBoard: {
-                    amount: totalIOBAmount,
-                    timeLeft: totalIOBTime,
-                    currentInsulinStack: updatedInsulinStack
-                },
-                settingId: $('#current-user-settings').val()
-            })
-            insulinOnBoardCalculator({
-                insulinStack: updatedInsulinStack,
-                duration: iobObject.duration,
-                iobAmount: totalIOBAmount,
-                iobTime: totalIOBTime,
-                initialTime: 534444
-            }, updatedInsulinStack.length)
-        }, 5000);//300000
-
-    }
+//    }
 }
 
 //insulinOnBoardCalculator({
@@ -394,7 +461,7 @@ $(document).on('submit', '#signup-form', (event) => {
             })
             //if call is succefull
             .done(function (result) {
-//                console.log(result);
+                console.log('User Created');
                 $('#current-username-id').val(`${result.userID}`);
                 $('#current-username').val(`${result.loggedInUsername}`);
                 $('#current-user-settings').val(`${result._id}`);
@@ -528,13 +595,13 @@ $(document).on('submit', '#login-form', (event) => {
                 data: JSON.stringify(loginUserObject),
                 contentType: 'application/json'
             })
-                .done((result) => {
+            .done((result) => {
                 console.log(result);
-                $('#current-user-iob').val(result._id);
-                //                iobLoginCalculator(result);
 
+                $('#current-user-iob').val(result[0]._id);
+                iobLoginCalculator(result);
             })
-                .fail(function (jqXHR, error, errorThrown) {
+            .fail(function (jqXHR, error, errorThrown) {
                 console.log(jqXHR);
                 console.log(error);
                 console.log(errorThrown);
@@ -615,6 +682,7 @@ $(document).on('click', '#bolus-trigger', (event) => {
 $(document).on('submit', '#bolus-form', (event) => {
     event.preventDefault();
     // POST Bolus entry to Server
+    let username = $('#current-username').val();
     const bolusObject = {
         insulinType: $('#insulin-type').find(":selected").text(),
         bloodGlucose: Number($('#bolus-bg').val()),
@@ -623,7 +691,7 @@ $(document).on('submit', '#bolus-form', (event) => {
         bolusDate: $('#bolus-date').val(),
         bolusTime: $('#bolus-time').val(),
         bolusAmount: Number($('#suggested-bolus').val()),
-        loggedInUsername: $('#current-username').val()
+        loggedInUsername: username
     }
 
     $.ajax({
@@ -637,60 +705,58 @@ $(document).on('submit', '#bolus-form', (event) => {
         $('form').hide();
         $('.dash-button').show();
 
-        const initialTime = (new Date()).getTime();
+        let settingsGET = $.ajax({
+            type: 'GET',
+            url: `/settings/${username}`,
+            dataType: 'json',
+            contentType: 'application/json'
+        }),
+            iobGET = $.ajax({
+                type: 'GET',
+                url: `/insulin-stack/${username}`,
+                dataType: 'json',
+                contentType: 'application/json'
+            });
+
+        $.when(settingsGET, iobGET).done(function(r1, r2) {
+            console.log(r1);
+            console.log(r2);
+            const initialTime = (new Date()).getTime();
+            let insulinStack;
+
+
+            if (r2[0][0].currentInsulinStack.length === 0) insulinStack = []
+            else insulinStack = [...r2[0][0].currentInsulinStack]
+
+            insulinOnBoardCalculator({
+                insulinStack,
+                duration: r1[0][0].insulinDuration,
+                iobAmount: r2[0][0].insulinOnBoard.amount,
+                iobTime: r2[0][0].insulinOnBoard.timeLeft,
+                initialTime,
+                newBolusAmount: bolusObject.bolusAmount
+            }, true);
+
+        }).fail(function (jqXHR, error, errorThrown) {
+            console.log(jqXHR, error, errorThrown);
+        });
+
 
         //GET current Insulin on Board when new Bolus added & add new IOB
-        $.ajax({
-            type: 'GET',
-            url: `/settings/${bolusObject.loggedInUsername}`,
-            dataType: 'json',
-            contentType: 'application/json'
-        })
-        .done(function (result) {
-            console.log(result);
-            const initialTime = (new Date()).getTime();
-
-
-
-//            insulinOnBoardCalculator({
-//                insulinStack: [...result[0].insulinOnBoard.currentInsulinStack],
-//                duration: result[0].insulinDuration,
-//                iobAmount: result[0].insulinOnBoard.amount,
-//                iobTime: result[0].insulinOnBoard.timeLeft,
-//                initialTime,
-//                newBolusAmount: bolusObject.bolusAmount
-//            });
-
-        })
-        .fail(function (jqXHR, error, errorThrown) {
-            console.log(jqXHR, error, errorThrown);
-        });
-        let iobId =  $('#current-user-iob').val();
-        console.log(iobId);
-        let insulinStackObject = {
-            entry: {
-                entryAmount: 6,
-                currentInsulin: 6,
-                timeStart: 13000000,
-                timeRemaining: 13000000
-            }
-        }
-
-        //POST insulin type
-        $.ajax({
-            type: 'POST',
-            url: `/iob/insulin-stack/${iobId}`,
-            dataType: 'json',
-            data: JSON.stringify(insulinStackObject),
-            contentType: 'application/json'
-        })
-        .done(function (result) {
-            console.log(result);
-
-        })
-        .fail(function (jqXHR, error, errorThrown) {
-            console.log(jqXHR, error, errorThrown);
-        });
+//        $.ajax({
+//            type: 'GET',
+//            url: `/settings/${bolusObject.loggedInUsername}`,
+//            dataType: 'json',
+//            contentType: 'application/json'
+//        })
+//        .done(function (result) {
+//            console.log(result);
+//
+//
+//        })
+//        .fail(function (jqXHR, error, errorThrown) {
+//            console.log(jqXHR, error, errorThrown);
+//        });
 
 
     })

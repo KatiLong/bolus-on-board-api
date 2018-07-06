@@ -4,6 +4,10 @@ const mongoose = require('mongoose');
 // const bcrypt = require('bcryptjs');
 
 const insulinOnBoardSchema = new mongoose.Schema({
+    loggedInUsername: {
+        type: String,
+        required: false
+    },
     insulinOnBoard: {
         amount: {type: Number,
                  required: false},
@@ -24,10 +28,6 @@ const insulinOnBoardSchema = new mongoose.Schema({
             type: Number
         }
     }],
-    loggedInUsername: {
-        type: String,
-        required: false
-    },
     iobId: {
         type: String,
     }

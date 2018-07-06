@@ -208,7 +208,6 @@ app.post('/users/login', function (req, res) {
 
 // Create User Settings & IOB
 app.post('/iob/create', (req, res) => {
-    console.log(req.body.username);
     insulinOnBoard
         .create({
             insulinOnBoard: {
@@ -216,10 +215,10 @@ app.post('/iob/create', (req, res) => {
                 timeLeft: 0
             },
             currentInsulinStack: [],
-            loggedInUsername: req.params.username
+            loggedInUsername: req.body.username
         })
         .then(settings => {
-        console.log('iob: ' + settings);
+
             res.status(201).json(settings)
 
         })
@@ -229,18 +228,20 @@ app.post('/iob/create', (req, res) => {
         });
 })
 // Post entry to Insulin Stack
+
 app.post('/iob/insulin-stack/:id', (req, res) => {
-    console.log(req.body);
+    console.log(req.body, req.params.id)
     insulinOnBoard
 //        .findByIdAndUpdate(req.params.id, {
 //        $set: toUpdate
 //    }).then((achievement) => {
 //        return res.status(204).end();
 //    })
-        .findById(req.params.id)
+        .findByIdAndUpdate(req.params.id, {
+            $push: {currentInsulinStack: req.body}
+        })
         .then(settings => {
             console.log(settings);
-            console.log(req.body);
 //            settings.currentInsulinStack.push(req.body.entry);
             res.status(201).json(settings);
         })
@@ -416,7 +417,7 @@ app.get('/logs/:user', (req, res) => {
                 message: 'Internal server error'
         });
     });
-    console.log(output);
+//    console.log(output);
     A1c
         .find({
         loggedInUsername: req.params.user
@@ -430,7 +431,7 @@ app.get('/logs/:user', (req, res) => {
             message: 'Internal server error'
         });
     });
-    console.log(output);
+//    console.log(output);
     Basal
         .find({
         loggedInUsername: req.params.user
@@ -444,7 +445,7 @@ app.get('/logs/:user', (req, res) => {
             message: 'Internal server error'
         });
     });
-    console.log(output);
+//    console.log(output);
     bloodGlucose
         .find({
         loggedInUsername: req.params.user
@@ -458,7 +459,7 @@ app.get('/logs/:user', (req, res) => {
             message: 'Internal server error'
         });
     });
-    console.log(output);
+//    console.log(output);
     return res.status(200).json(output);
 });
 
@@ -533,7 +534,7 @@ app.get('/logs-a1c/:user', (req, res) => {
 app.put('/settings/:id', (req, res) => {
     let toUpdate = {};
 
-    let updateableFields = ['insulinMetric', 'insulinIncrement', 'carbRatio', 'correctionFactor', 'targetBG', 'insulinOnBoard', 'insulinDuration', 'entryAmount', 'currentInsulin', 'timeStart', 'timeRemaining'];
+    let updateableFields = ['insulinMetric', 'insulinIncrement', 'carbRatio', 'correctionFactor', 'targetBG', 'insulinDuration'];
     updateableFields.forEach(function (field) {
         if (field in req.body) {
             toUpdate[field] = req.body[field];
@@ -552,6 +553,51 @@ app.put('/settings/:id', (req, res) => {
         });
 });
 
+app.put('/insulin-on-board/:id', (req, res) => {
+    let toUpdate = {};
+
+    let updateableFields = ['insulinOnBoard', 'currentInsulinStack', 'amount', 'entryAmount', 'currentInsulin', 'timeStart', 'timeRemaining'];
+
+    updateableFields.forEach((field) => {
+        if (field in req.body) {
+            toUpdate[field] = req.body[field];
+        }
+    });
+
+    insulinOnBoard
+        .findByIdAndUpdate(req.params.id, {
+            $set: toUpdate
+        }).then((achievement) => {
+        return res.status(204).end();
+        }).catch(function (err) {
+            return res.status(500).json({
+                message: 'Internal Server Error'
+            });
+        });
+});
+
+app.put('/insulin-stack-entry/:id', (req, res) => {
+    let toUpdate = {};
+
+    let updateableFields = ['entryAmount', 'currentInsulin', 'timeStart', 'timeRemaining'];
+
+    updateableFields.forEach((field) => {
+        if (field in req.body) {
+            toUpdate[field] = req.body[field];
+        }
+    });
+    insulinOnBoard
+        .findByIdAndUpdate(req.params.id, {
+            $push: {currentInsulinStack: toUpdate}
+        }).then((results) => {
+            console.log('IOB PUT: ' + results)
+            return res.status(204).end();
+        }).catch(function (err) {
+            return res.status(500).json({
+                message: 'Internal Server Error'
+            });
+        });
+});
 
 // MISC ------------------------------------------
 // catch-all endpoint if client makes request to non-existent endpoint
