@@ -30,23 +30,23 @@ const dataToTrackList = {
 
 //POST new Entry to Insulin Stack
 
-//POST insulin type
-function postInsulinStack (iobId, insulinStackObject) {
-    $.ajax({
-        type: 'POST',
-        url: `/iob/insulin-stack/${iobId}`,
-        dataType: 'json',
-        data: JSON.stringify(insulinStackObject),
-        contentType: 'application/json'
-    })
-    .done(function (result) {
-        console.log(result.currentInsulinStack);
-
-    })
-    .fail(function (jqXHR, error, errorThrown) {
-        console.log(jqXHR, error, errorThrown);
-    });
-}
+////POST insulin type
+//function postInsulinStack (iobId, insulinStackObject) {
+//    $.ajax({
+//        type: 'POST',
+//        url: `/iob/insulin-stack/${iobId}`,
+//        dataType: 'json',
+//        data: JSON.stringify(insulinStackObject),
+//        contentType: 'application/json'
+//    })
+//    .done(function (result) {
+//        console.log(result.currentInsulinStack);
+//
+//    })
+//    .fail(function (jqXHR, error, errorThrown) {
+//        console.log(jqXHR, error, errorThrown);
+//    });
+//}
 //UPDATE insulin stack entry
 function updateStackEntry (entryId, entryObject) {
     $.ajax({
@@ -103,17 +103,6 @@ function updateSettings (payload) {
 
 }
 
-//Insulin on Board caclulation
-//setInterval(function(){ alert("Hello"); }, 300000); //5 minute intervals
-//clearInterval() //When Insulin equals 0
-//getTime() milliseconds since January 1, 1970
-//When bolus is submitted & clock starts
-
-//if 15 minutes from bolus time hold (displayed but not calculated)
-//if Entry input, run function and API update IOB call
-    //display combined totals
-//Every 5 minutes function rerun and API update call
-//if 0 minutes remain,
 function iobLoginCalculator (result) {
 
     if (result[0].currentInsulinStack.length === 0  || !result[0].currentInsulinStack) {
@@ -160,13 +149,12 @@ function iobLoginCalculator (result) {
     //At end calls insulinOnBoardCalculator loop
 }
 
-
 //Just updating insulinStack and Total IOB amounts (insulin & time)
 function insulinOnBoardCalculator (iobObject, initialEntry) { //should update iob via formula & PUT call
 
 //    console.log('IOB Calculator function ran');
 
-    let currentInsulinStack;
+    let currentInsulinStack = [];
     let totalIOBAmount, totalIOBTime, bolusRate, stackLength;
     let duration = iobObject.duration.milliSec;
     let iobId =  $('#current-user-iob').val();
@@ -194,7 +182,7 @@ function insulinOnBoardCalculator (iobObject, initialEntry) { //should update io
             timeStart: iobObject.initialTime,
             timeRemaining: iobObject.duration.milliSec
         }
-
+        console.log(insulinStackObject);
         $.ajax({
             type: 'POST',
             url: `/iob/insulin-stack/${iobId}`,
@@ -202,11 +190,11 @@ function insulinOnBoardCalculator (iobObject, initialEntry) { //should update io
             data: JSON.stringify(insulinStackObject),
             contentType: 'application/json'
         })
-            .done(function (result) {
+        .done(function (result) {
             console.log(result);
             currentInsulinStack = [...result.currentInsulinStack];
         })
-            .fail(function (jqXHR, error, errorThrown) {
+        .fail(function (jqXHR, error, errorThrown) {
             console.log(jqXHR, error, errorThrown);
         });
         console.log(currentInsulinStack);
@@ -332,14 +320,12 @@ function insulinOnBoardCalculator (iobObject, initialEntry) { //should update io
 //});
 
 function bolusCalculator () {
-    console.log('bolus calculator');
     let carbFactor = $('#carb-ratio').val();
     let corrFactor = $('#correction-factor').val();
     let targetBG = $('#target-bg').val();
 
     //ROUND to the increment
-    //insulin
-    //carbs
+
     $(document).on('change', '#bolus-units', (event) => {
         let units = $('#bolus-units').val();
         $('#bolus-carbs').val(units*carbFactor);
@@ -355,8 +341,6 @@ function bolusCalculator () {
         let units = $('#bolus-units').val();
         $('#suggested-bolus').val(units + (bg-targetBG/corrFactor));
     })
-    //correction factor
-    //insulin remaining
 
 }
 
@@ -377,8 +361,6 @@ function dateTimePopulate (event) {
 
     currentDate = `${year}-${month}-${day}`;
     currentTime = `${hour}:${minutes}`;
-    console.log(currentDate);
-    console.log(currentTime);
 
     $(event.currentTarget).next('form').find('.date-dash').val(currentDate);
 
@@ -693,7 +675,7 @@ $(document).on('submit', '#bolus-form', (event) => {
         bolusAmount: Number($('#suggested-bolus').val()),
         loggedInUsername: username
     }
-
+    //POST Bolus Entry
     $.ajax({
         type: 'POST',
         url: '/bolus',
@@ -704,7 +686,7 @@ $(document).on('submit', '#bolus-form', (event) => {
     .done(function (result) {
         $('form').hide();
         $('.dash-button').show();
-
+        //GET user Settings and Insulin on Board info
         let settingsGET = $.ajax({
             type: 'GET',
             url: `/settings/${username}`,
@@ -719,15 +701,20 @@ $(document).on('submit', '#bolus-form', (event) => {
             });
 
         $.when(settingsGET, iobGET).done(function(r1, r2) {
-            console.log(r1);
-            console.log(r2);
             const initialTime = (new Date()).getTime();
             let insulinStack;
-
 
             if (r2[0][0].currentInsulinStack.length === 0) insulinStack = []
             else insulinStack = [...r2[0][0].currentInsulinStack]
 
+            console.log({
+                insulinStack,
+                duration: r1[0][0].insulinDuration,
+                iobAmount: r2[0][0].insulinOnBoard.amount,
+                iobTime: r2[0][0].insulinOnBoard.timeLeft,
+                initialTime,
+                newBolusAmount: bolusObject.bolusAmount
+            });
             insulinOnBoardCalculator({
                 insulinStack,
                 duration: r1[0][0].insulinDuration,

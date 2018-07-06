@@ -227,19 +227,14 @@ app.post('/iob/create', (req, res) => {
             res.status(500).json({ error: 'Something went wrong' });
         });
 })
-// Post entry to Insulin Stack
 
+// Post entry to Insulin Stack using IOB id
 app.post('/iob/insulin-stack/:id', (req, res) => {
     console.log(req.body, req.params.id)
     insulinOnBoard
-//        .findByIdAndUpdate(req.params.id, {
-//        $set: toUpdate
-//    }).then((achievement) => {
-//        return res.status(204).end();
-//    })
         .findByIdAndUpdate(req.params.id, {
-            $push: {currentInsulinStack: req.body}
-        })
+            $push: { currentInsulinStack: req.body }
+        }, { 'new': true})
         .then(settings => {
             console.log(settings);
 //            settings.currentInsulinStack.push(req.body.entry);
