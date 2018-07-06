@@ -394,69 +394,6 @@ app.get('/insulin-stack/:user', (req, res) => {
             });
         });
 });
-// accessing all of a user's entries
-app.get('/logs/:user', (req, res) => {
-
-    let output = {};
-
-    Bolus
-        .find({
-            loggedInUsername: req.params.user
-        })
-        .then(settings => {
-            output = Object.assign({settings}, output);
-        })
-        .catch(function (err) {
-            console.error(err);
-            res.status(500).json({
-                message: 'Internal server error'
-        });
-    });
-//    console.log(output);
-    A1c
-        .find({
-        loggedInUsername: req.params.user
-    })
-        .then(settings => {
-        output = Object.assign({settings}, output);
-    })
-        .catch(function (err) {
-        console.error(err);
-        res.status(500).json({
-            message: 'Internal server error'
-        });
-    });
-//    console.log(output);
-    Basal
-        .find({
-        loggedInUsername: req.params.user
-    })
-        .then(settings => {
-        output = Object.assign({settings}, output);
-    })
-        .catch(function (err) {
-        console.error(err);
-        res.status(500).json({
-            message: 'Internal server error'
-        });
-    });
-//    console.log(output);
-    bloodGlucose
-        .find({
-        loggedInUsername: req.params.user
-    })
-        .then(settings => {
-        output = Object.assign({settings}, output);
-    })
-        .catch(function (err) {
-        console.error(err);
-        res.status(500).json({
-            message: 'Internal server error'
-        });
-    });
-//    console.log(output);
-    return res.status(200).json(output);
-});
 
 // accessing all of a user's entries
 app.get('/logs-bolus/:user', (req, res) => {

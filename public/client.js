@@ -152,9 +152,14 @@ function iobLoginCalculator (result) {
 //Just updating insulinStack and Total IOB amounts (insulin & time)
 function insulinOnBoardCalculator (iobObject, initialEntry) { //should update iob via formula & PUT call
 
-//    console.log('IOB Calculator function ran');
+    //CURRENT issues:
+    //Either need to make function for ONE array element at a Time OR
+    //Find a way to clear all but one Set-timeout at a time
+
 
     let currentInsulinStack = [...iobObject.insulinStack];
+    let currentEntry, currentEntryId;
+
     let totalIOBAmount, totalIOBTime, bolusRate, stackLength;
     let duration = iobObject.duration.milliSec;
     let iobId =  $('#current-user-iob').val();
@@ -162,6 +167,13 @@ function insulinOnBoardCalculator (iobObject, initialEntry) { //should update io
 
     //Initialize Entry if it was just added from Bolus Submit
     if (initialEntry) {
+
+        //NOT WORKING
+        if (!timeoutThread) console.log('Timeout undefined');
+        else {
+            window.clearTimeout(timeoutThread);
+            console.log('Timeout cleared?')
+        }
 
         totalIOBAmount = iobObject.iobAmount + iobObject.newBolusAmount; //previousEntryAmounts + newEntryAmount
         totalIOBTime = Math.min(Math.max((iobObject.iobTime + duration), 0), duration); //previousEntryTimes + newEntryTime
@@ -201,6 +213,7 @@ function insulinOnBoardCalculator (iobObject, initialEntry) { //should update io
         $('#i-o-b').text(`${totalIOBAmount}`);
         $('#iob-time').text(`${totalIOBTime/3600000}`); //Convert to Hours
 
+
     }
     //not an Initial Entry, thread running
     else {
@@ -208,6 +221,12 @@ function insulinOnBoardCalculator (iobObject, initialEntry) { //should update io
         totalIOBAmount = iobObject.iobAmount;
         totalIOBTime = iobObject.iobTime;
 
+        //    let insulinStackObject = {
+        //        entryAmount: iobObject.newBolusAmount,
+        //        currentInsulin: iobObject.newBolusAmount,
+        //        timeStart: iobObject.initialTime,
+        //        timeRemaining: iobObject.duration.milliSec
+        //    }
     }
 
     //Updates Each Entry on insulin stack
@@ -261,7 +280,7 @@ function insulinOnBoardCalculator (iobObject, initialEntry) { //should update io
 
         updateIob(iobId, {
             insulinOnBoard: { amount: 0, timeLeft: 0},
-            currentInsulinStack: []
+            currentInsulinStack: [...updatedInsulinStack] //need to delete each entry?
         });
 
         $('#i-o-b').text(`0`);
@@ -851,23 +870,60 @@ $(document).on('click', '#logs-trigger', (event) => {
 
     const username = $("#signup-username").val();
     console.log('Logs Trigger working');
-    //Get call for Bolus, Basal, BG & A1c logs
-    $.ajax({
+//    //Get call for Bolus, Basal, BG & A1c logs
+//    $.ajax({
+//        type: 'GET',
+//        url: `/logs/${username}`,
+//        dataType: 'json',
+//        contentType: 'application/json'
+//    })
+//    .done(function (result) {
+//        console.log(result);
+//
+//        $('#user-dashboard').hide();
+//        $('#logs').show();
+//    })
+//    .fail(function (jqXHR, error, errorThrown) {
+//        console.log(jqXHR);
+//        console.log(error);
+//        console.log(errorThrown);
+//    });
+
+    let bolusGET = $.ajax({
         type: 'GET',
-        url: `/logs/${username}`,
+        url: `/logs-bolus/${username}`,
         dataType: 'json',
         contentType: 'application/json'
-    })
-    .done(function (result) {
-        console.log(result);
+    }),
+        basalGET = $.ajax({
+            type: 'GET',
+            url: `/logs-basal/${username}`,
+            dataType: 'json',
+            contentType: 'application/json'
+    }),
+        bgGET = $.ajax({
+            type: 'GET',
+            url: `/logs-bg/${username}`,
+            dataType: 'json',
+            contentType: 'application/json'
+        }),
+        a1cGET = $.ajax({
+            type: 'GET',
+            url: `/logs-a1c/${username}`,
+            dataType: 'json',
+            contentType: 'application/json'
+        });
+
+    $.when(bolusGET, basalGET, bgGET, a1cGET).done(function(bolus, basal, bg, a1c) {
+        console.log(bolus);
+        console.log(basal);
+        console.log(bg);
+        console.log(a1c);
 
         $('#user-dashboard').hide();
         $('#logs').show();
-    })
-    .fail(function (jqXHR, error, errorThrown) {
-        console.log(jqXHR);
-        console.log(error);
-        console.log(errorThrown);
+    }).fail(function (jqXHR, error, errorThrown) {
+        console.log(jqXHR, error, errorThrown);
     });
 
 });
