@@ -383,7 +383,7 @@ app.get('/insulin-stack/:user', (req, res) => {
             loggedInUsername: req.params.user
         })
         .then((settings) => {
-
+            console.log(settings);
             res.status(201).json(settings)
 
         })
