@@ -1,230 +1,5 @@
 'use strict';
 
-let timeoutThread;
-
-///////////////////////////////////////////////////////////
-//AJAX call declarations
-
-//UPDATE insulin stack entry
-function updateStackEntry (entryId, entryObject) {
-    $.ajax({
-        type: 'PUT',
-        url: `/insulin-stack-entry/${entryId}`,
-        dataType: 'json',
-        data: JSON.stringify(entryObject),
-        contentType: 'application/json'
-    })
-    .done(function (result) {
-        console.log('entry posted to insulin stack' + result);
-
-    })
-    .fail(function (jqXHR, error, errorThrown) {
-        console.log(jqXHR, error, errorThrown);
-    });
-}
-//DELETE insulin stack entry
-function deleteStackEntry (userId, entryId) {
-    $.ajax({
-        type: 'DELETE',
-        url: `/iob/insulin-stack/${userId}/${entryId}`,
-        dataType: 'json',
-        contentType: 'application/json'
-    })
-    .done(function (result) {
-        console.log('entry deleted from insulin stack');
-
-    })
-    .fail(function (jqXHR, error, errorThrown) {
-        console.log(jqXHR, error, errorThrown);
-    });
-}
-//Update IOB
-function updateIob (settingId, payload) {
-
-    $.ajax({
-        type: 'PUT',
-        url: `/insulin-on-board/${settingId}`,
-        dataType: 'json',
-        data: JSON.stringify(payload),
-        contentType: 'application/json'
-    })
-    .done(function (result) {
-        console.log('IOB updated');
-    })
-        .fail(function (jqXHR, error, errorThrown) {
-        console.log(jqXHR, error, errorThrown);
-    });
-
-}
-//Update setting
-function updateSettings (payload) {
-
-    $.ajax({
-        type: 'PUT',
-        url: `/settings/${payload.settingId}`,
-        dataType: 'json',
-        data: JSON.stringify(payload),
-        contentType: 'application/json'
-    })
-    .done(function (result) {
-
-        $('.settings-div').hide();
-        $('.setting-button').show();
-    })
-        .fail(function (jqXHR, error, errorThrown) {
-        console.log(jqXHR, error, errorThrown);
-    });
-
-}
-//GET all Logs
-function getAllLogs () {
-    const username = $("#signup-username").val();
-
-    let bolusGET = $.ajax({
-        type: 'GET',
-        url: `/logs-bolus/${username}`,
-        dataType: 'json',
-        contentType: 'application/json'
-    }),
-        basalGET = $.ajax({
-            type: 'GET',
-            url: `/logs-basal/${username}`,
-            dataType: 'json',
-            contentType: 'application/json'
-        }),
-        bgGET = $.ajax({
-            type: 'GET',
-            url: `/logs-bg/${username}`,
-            dataType: 'json',
-            contentType: 'application/json'
-        }),
-        a1cGET = $.ajax({
-            type: 'GET',
-            url: `/logs-a1c/${username}`,
-            dataType: 'json',
-            contentType: 'application/json'
-        });
-
-    $.when(bolusGET, basalGET, bgGET, a1cGET).done(function(bolus, basal, bg, a1c) {
-        console.log(bolus[0]);
-        console.log(basal[0]);
-        console.log(bg[0]);
-        console.log(a1c[0]);
-
-        renderLogs({
-            bolus: [...bolus[0]],
-            basal: [...basal[0]],
-            bg: [...bg[0]],
-            a1c: [...a1c[0]]
-        })
-
-        $('#user-dashboard').hide();
-        $('#logs').show();
-
-    }).fail(function (jqXHR, error, errorThrown) {
-        console.log(jqXHR, error, errorThrown);
-    });
-}
-
-//Populates current Date & Time for relevant forms
-function dateTimePopulate (event) {
-    const currentDateTime = new Date();
-    let currentDate, currentTime = '';
-    let month = currentDateTime.getMonth() + 1;
-    let day = currentDateTime.getDay() + 1;
-    let hour = currentDateTime.getHours();
-    let year = currentDateTime.getFullYear();
-    let minutes = currentDateTime.getMinutes();
-
-    if (month < 10) month = "0" + month;
-    if (day < 10) day = "0" + day;
-    if (hour < 10) hour = "0" + hour;
-    if (minutes < 10) minutes = "0" + minutes;
-
-    currentDate = `${year}-${month}-${day}`;
-    currentTime = `${hour}:${minutes}`;
-
-    $(event.currentTarget).next('form').find('.date-dash').val(currentDate);
-
-    if ($(event.currentTarget).next('form').find('.time-dash')) {
-        $(event.currentTarget).next('form').find('.time-dash').val(currentTime);
-    }
-
-}
-//function to render HTML for Logs on GET call
-
-function displayDate (dateString) {
-    let formattedDate = dateString.substring(0, 10).split("-");
-    return formattedDate[1] + "/" + formattedDate[2] + "/" + formattedDate[0];
-}
-
-function renderLogs(logObject) {
-    console.log(logObject);
-
-    let htmlString = ``;
-
-    if(logObject.bolus.length > 0) {
-        logObject.bolus.forEach((el) => {
-            //Add Time Formatting
-            htmlString += `
-                <div class="log-div type-bolus">
-                    <span class="type log-col">Bolus</span>
-                    <div class="readings log-col">
-                        <span class="insulin-amount">Insulin: ${el.bolusUnits} units</span>
-                        <span class="carbs-amount">Carbs: ${el.bolusCarbs} carbs</span>
-                        <span class="bg">BG: ${el.bloodGlucose} mg/dL</span>
-                    </div>
-                    <div class="date-time log-col">
-                        <span class="date">Date: ${displayDate(el.bolusDate)}</span>
-                        <span class="time">Time: ${el.bolusTime}</span>
-                    </div>
-                </div>`;
-        })
-    }
-    if(logObject.basal.length > 0) {
-        logObject.basal.forEach((el) => {
-            //HTML appendage
-            htmlString += `
-                <div class="log-div type-basal">
-                    <span class="type log-col">Basal</span>
-                    <span class="insulin-amount log-col readings">Insulin: ${el.insulinUnits} units</span>
-                    <div class="date-time log-col">
-                        <span class="date">Date: ${displayDate(el.basalDate)}</span>
-                        <span class="time">Time: ${el.basalTime}</span>
-                    </div>
-                </div>`;
-        })
-    }
-    if(logObject.bg.length > 0) {
-        logObject.bg.forEach((el) => {
-            //HTML appendage
-            htmlString += `
-                <div class="log-div type-bg">
-                    <span class="type log-col">BG</span>
-                    <span class="bg-reading log-col readings">${el.bloodGlucose} mg/dL</span>
-                    <div class="date-time log-col">
-                        <span class="date">Date: ${displayDate(el.bgDate)} </span>
-                        <span class="time">Time: ${el.bgTime} </span>
-                    </div>
-                </div>`;
-        })
-    }
-    if(logObject.a1c.length > 0) {
-        logObject.a1c.forEach((el) => {
-            //HTML appendage
-            htmlString += `
-                <div class="log-div type-a1c">
-                    <span class="type log-col">A1c</span>
-                    <span class="a1c-reading log-col readings">${el.a1cNumber}</span>
-                    <span class="date log-col">Date: ${displayDate(el.a1cDate)}</span>
-                </div>`;
-        })
-    }
-
-    $('#log-entries').html(htmlString);
-}
-
-
 ///////////////Document Ready Function///////////
 
 $(document).ready(function(){
@@ -407,7 +182,7 @@ $(document).on('submit', '#login-form', (event) => {
             // Get IOB settings
             $.ajax({
                 type: 'GET',
-                url: `/insulin-stack/${username}`,
+                url: `/iob-stack/${username}`,
                 dataType: 'json',
                 data: JSON.stringify(loginUserObject),
                 contentType: 'application/json'
@@ -501,6 +276,7 @@ $(document).on('submit', '#bolus-form', (event) => {
     let bolusDate = $('#bolus-date').val();
     let bolusTime = $('#bolus-time').val();
     let inputDateTime = bolusDate.substring(0, 11) + 'T' + bolusTime;
+    let duration = $('#duration').val();
 
     const bolusObject = {
         insulinType: $('#insulin-type').find(":selected").text(),
@@ -521,38 +297,30 @@ $(document).on('submit', '#bolus-form', (event) => {
         data: JSON.stringify(bolusObject),
         contentType: 'application/json'
     })
-    .done(function (result) {
+    .done((result) => {
         $('form').hide();
         $('.dash-button').show();
         //GET user Settings and Insulin on Board info
-        let settingsGET = $.ajax({
-            type: 'GET',
-            url: `/settings/${username}`,
-            dataType: 'json',
-            contentType: 'application/json'
-        }),
-            iobGET = $.ajax({
+        $.ajax({
                 type: 'GET',
-                url: `/insulin-stack/${username}`,
+                url: `/iob-stack/${username}`,
                 dataType: 'json',
                 contentType: 'application/json'
-            });
-
-        $.when(settingsGET, iobGET).done(function(r1, r2) {
+        }).done((result) => {
             const initialTime = (new Date()).getTime();
             let insulinStack;
 
-            if (r2[0][0].currentInsulinStack.length === 0) insulinStack = []
-            else insulinStack = [...r2[0][0].currentInsulinStack]
+            if (result[0][0].currentInsulinStack.length === 0) insulinStack = [];
+            else insulinStack = [...result[0][0].currentInsulinStack];
 
-//            insulinOnBoardCalculator({
-//                insulinStack,
-//                duration: r1[0][0].insulinDuration,
-//                iobAmount: r2[0][0].insulinOnBoard.amount,
-//                iobTime: r2[0][0].insulinOnBoard.timeLeft,
-//                initialTime,
-//                newBolusAmount: bolusObject.bolusAmount
-//            }, true);
+            newBolusEntry({
+                insulinStack,
+                duration,
+                iobAmount: result[0][0].insulinOnBoard.amount,
+                iobTime: result[0][0].insulinOnBoard.timeLeft,
+                initialTime,
+                newBolusAmount: bolusObject.bolusAmount
+            });
 
         }).fail(function (jqXHR, error, errorThrown) {
             console.log(jqXHR, error, errorThrown);

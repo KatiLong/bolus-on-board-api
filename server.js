@@ -380,7 +380,7 @@ app.get('/settings/:user', (req, res) => {
 });
 
 // accessing User's insulin on board & stack
-app.get('/insulin-stack/:user', (req, res) => {
+app.get('/iob-stack/:user', (req, res) => {
 
     insulinOnBoard
         .find({

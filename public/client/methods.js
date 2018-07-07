@@ -1,3 +1,5 @@
+'use strict';
+
 function iobLoginCalculator (result) {
     let currentInsulinStack = [...result[0].currentInsulinStack];
     const loginTime = (new Date()).getTime();
@@ -19,7 +21,6 @@ function iobLoginCalculator (result) {
         })
         return;
     }
-
 
     let updatedInsulinStack = currentInsulinStack.map((el, ind) => {
         let timeElapsed = loginTime - el.timeStart;
@@ -64,19 +65,76 @@ function iobLoginCalculator (result) {
             amount: totalIOBAmount,
             timeLeft: totalIOBTime
         }
-    })
+    });
+
     $('#i-o-b').text(`${Math.round(totalIOBAmount * 100) / 100}`);
     $('#iob-time').text(`${Math.round((totalIOBTime/3600000) * 100) / 100}`);
-    //At end calls insulinOnBoardCalculator loop
 
-    //            insulinOnBoardCalculator({
-    //                insulinStack,
-    //                duration: r1[0][0].insulinDuration,
-    //                iobAmount: r2[0][0].insulinOnBoard.amount,
-    //                iobTime: r2[0][0].insulinOnBoard.timeLeft,
-    //                initialTime,
-    //                newBolusAmount: bolusObject.bolusAmount
-    //            });
+
+    //At end calls insulinOnBoardCalculator loop
+    //GET user Settings and Insulin on Board info
+    $.ajax({
+        type: 'GET',
+        url: `/insulin-stack/${username}`,
+        dataType: 'json',
+        contentType: 'application/json'
+    }).done((result) => {
+        const initialTime = (new Date()).getTime();
+        let insulinStack;
+
+        if (result[0][0].currentInsulinStack.length === 0) insulinStack = [];
+        else insulinStack = [...result[0][0].currentInsulinStack];
+            insulinOnBoardCalculator({
+                insulinStack,
+                duration: r1[0][0].insulinDuration,
+                iobAmount: r2[0][0].insulinOnBoard.amount,
+                iobTime: r2[0][0].insulinOnBoard.timeLeft,
+                initialTime,
+                newBolusAmount: bolusObject.bolusAmount,
+                loginTime
+            });
+
+    }).fail(function (jqXHR, error, errorThrown) {
+        console.log(jqXHR, error, errorThrown);
+    });
+
+}
+
+function newBolusEntry(iobObject) {
+    totalIOBAmount = iobObject.iobAmount + iobObject.newBolusAmount; //previousEntryAmounts + newEntryAmount
+    totalIOBTime = Math.min(Math.max((iobObject.iobTime + duration), 0), duration); //previousEntryTimes + newEntryTime
+
+    //Adds new entry to the insulinStack on server
+    let insulinStackObject = {
+        entryAmount: iobObject.newBolusAmount,
+        currentInsulin: iobObject.newBolusAmount,
+        timeStart: iobObject.initialTime,
+        timeRemaining: iobObject.duration.milliSec
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: `/iob/insulin-stack/${iobId}`,
+        dataType: 'json',
+        data: JSON.stringify(insulinStackObject),
+        contentType: 'application/json'
+    })
+    .done(function (result) {
+        console.log(result);
+    })
+    .fail(function (jqXHR, error, errorThrown) {
+        console.log(jqXHR, error, errorThrown);
+    });
+
+    updateIob(iobId, {
+        insulinOnBoard: {
+            amount: totalIOBAmount,
+            timeLeft: totalIOBTime
+        }
+    })
+    //Updates HTML with new totals
+    $('#i-o-b').text(`${totalIOBAmount}`);
+    $('#iob-time').text(`${totalIOBTime/3600000}`); //Convert to Hours
 }
 
 //Just updating insulinStack and Total IOB amounts (insulin & time)
@@ -95,61 +153,9 @@ function insulinOnBoardCalculator (iobObject, initialEntry) { //should update io
     let iobId =  $('#current-user-iob').val();
     let settingId = $('#current-user-settings').val();
 
-    //Initialize Entry if it was just added from Bolus Submit
-    if (initialEntry) {
 
-        //NOT WORKING
-        if (!timeoutThread) console.log('Timeout undefined');
-        else {
-            window.clearTimeout(timeoutThread);
-            console.log('Timeout cleared?')
-        }
-
-        totalIOBAmount = iobObject.iobAmount + iobObject.newBolusAmount; //previousEntryAmounts + newEntryAmount
-        totalIOBTime = Math.min(Math.max((iobObject.iobTime + duration), 0), duration); //previousEntryTimes + newEntryTime
-
-        //Adds new entry to the insulinStack on server
-        let insulinStackObject = {
-            entryAmount: iobObject.newBolusAmount,
-            currentInsulin: iobObject.newBolusAmount,
-            timeStart: iobObject.initialTime,
-            timeRemaining: iobObject.duration.milliSec
-        }
-
-        $.ajax({
-            type: 'POST',
-            url: `/iob/insulin-stack/${iobId}`,
-            dataType: 'json',
-            data: JSON.stringify(insulinStackObject),
-            contentType: 'application/json'
-        })
-            .done(function (result) {
-            console.log(result);
-            //Add new entry + Id to local array
-            let length = result.currentInsulinStack.length;
-            currentInsulinStack.push(result.currentInsulinStack[length - 1]);
-        })
-            .fail(function (jqXHR, error, errorThrown) {
-            console.log(jqXHR, error, errorThrown);
-        });
-
-        updateIob(iobId, {
-            insulinOnBoard: {
-                amount: totalIOBAmount,
-                timeLeft: totalIOBTime
-            }
-        })
-        //Updates HTML with new totals
-        $('#i-o-b').text(`${totalIOBAmount}`);
-        $('#iob-time').text(`${totalIOBTime/3600000}`); //Convert to Hours
-
-
-    }
-    //not an Initial Entry, thread running
-    else {
-
-        totalIOBAmount = iobObject.iobAmount;
-        totalIOBTime = iobObject.iobTime;
+    totalIOBAmount = iobObject.iobAmount;
+    totalIOBTime = iobObject.iobTime;
 
         //    let insulinStackObject = {
         //        entryAmount: iobObject.newBolusAmount,
@@ -157,7 +163,6 @@ function insulinOnBoardCalculator (iobObject, initialEntry) { //should update io
         //        timeStart: iobObject.initialTime,
         //        timeRemaining: iobObject.duration.milliSec
         //    }
-    }
 
     //Updates Each Entry on insulin stack
     //    let updatedInsulinStack = currentInsulinStack.map((el, ind) => {
@@ -330,3 +335,104 @@ function tddCalculator () {
             }, 0)
             console.log(tddBasal);
 }
+
+let timeoutThread;
+
+//Populates current Date & Time for relevant forms
+function dateTimePopulate (event) {
+    const currentDateTime = new Date();
+    let currentDate, currentTime = '';
+    let month = currentDateTime.getMonth() + 1;
+    let day = currentDateTime.getDay() + 1;
+    let hour = currentDateTime.getHours();
+    let year = currentDateTime.getFullYear();
+    let minutes = currentDateTime.getMinutes();
+
+    if (month < 10) month = "0" + month;
+    if (day < 10) day = "0" + day;
+    if (hour < 10) hour = "0" + hour;
+    if (minutes < 10) minutes = "0" + minutes;
+
+    currentDate = `${year}-${month}-${day}`;
+    currentTime = `${hour}:${minutes}`;
+
+    $(event.currentTarget).next('form').find('.date-dash').val(currentDate);
+
+    if ($(event.currentTarget).next('form').find('.time-dash')) {
+        $(event.currentTarget).next('form').find('.time-dash').val(currentTime);
+    }
+
+}
+//function to render HTML for Logs on GET call
+
+function displayDate (dateString) {
+    let formattedDate = dateString.substring(0, 10).split("-");
+    return formattedDate[1] + "/" + formattedDate[2] + "/" + formattedDate[0];
+}
+
+function renderLogs(logObject) {
+    console.log(logObject);
+
+    let htmlString = ``;
+
+    if(logObject.bolus.length > 0) {
+        logObject.bolus.forEach((el) => {
+            //Add Time Formatting
+            htmlString += `
+                <div class="log-div type-bolus">
+                    <span class="type log-col">Bolus</span>
+                    <div class="readings log-col">
+                        <span class="insulin-amount">Insulin: ${el.bolusUnits} units</span>
+                        <span class="carbs-amount">Carbs: ${el.bolusCarbs} carbs</span>
+                        <span class="bg">BG: ${el.bloodGlucose} mg/dL</span>
+                    </div>
+                    <div class="date-time log-col">
+                        <span class="date">Date: ${displayDate(el.bolusDate)}</span>
+                        <span class="time">Time: ${el.bolusTime}</span>
+                    </div>
+                </div>`;
+        })
+    }
+    if(logObject.basal.length > 0) {
+        logObject.basal.forEach((el) => {
+            //HTML appendage
+            htmlString += `
+                <div class="log-div type-basal">
+                    <span class="type log-col">Basal</span>
+                    <span class="insulin-amount log-col readings">Insulin: ${el.insulinUnits} units</span>
+                    <div class="date-time log-col">
+                        <span class="date">Date: ${displayDate(el.basalDate)}</span>
+                        <span class="time">Time: ${el.basalTime}</span>
+                    </div>
+                </div>`;
+        })
+    }
+    if(logObject.bg.length > 0) {
+        logObject.bg.forEach((el) => {
+            //HTML appendage
+            htmlString += `
+                <div class="log-div type-bg">
+                    <span class="type log-col">BG</span>
+                    <span class="bg-reading log-col readings">${el.bloodGlucose} mg/dL</span>
+                    <div class="date-time log-col">
+                        <span class="date">Date: ${displayDate(el.bgDate)} </span>
+                        <span class="time">Time: ${el.bgTime} </span>
+                    </div>
+                </div>`;
+        })
+    }
+    if(logObject.a1c.length > 0) {
+        logObject.a1c.forEach((el) => {
+            //HTML appendage
+            htmlString += `
+                <div class="log-div type-a1c">
+                    <span class="type log-col">A1c</span>
+                    <span class="a1c-reading log-col readings">${el.a1cNumber}</span>
+                    <span class="date log-col">Date: ${displayDate(el.a1cDate)}</span>
+                </div>`;
+        })
+    }
+
+    $('#log-entries').html(htmlString);
+}
+
