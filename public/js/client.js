@@ -90,16 +90,10 @@ function getAllLogs () {
         });
 
     $.when(bolusGET, basalGET, bgGET, a1cGET).done(function(bolus, basal, bg, a1c) {
-        //        console.log(bolus[0]);
-        //        console.log(basal[0]);
-        //        console.log(bg[0]);
-        //        console.log(a1c[0]);
-
-        //TDD calculations?
-        //        let tddBolus = bolus[0].reduce((acc, currentVal, currentIndex) => {
-        //            console.log(acc.bolusAmount, currentVal.bolusAmount);
-        //            return acc.bolusAmount + currentVal.bolusAmount;
-        //        })
+        console.log(bolus[0]);
+        console.log(basal[0]);
+        console.log(bg[0]);
+        console.log(a1c[0]);
 
         renderLogs({
             bolus: [...bolus[0]],
@@ -108,10 +102,9 @@ function getAllLogs () {
             a1c: [...a1c[0]]
         })
 
-        //        renderLogsByDate([...bolus[0], ...basal[0]])
-
         $('#user-dashboard').hide();
         $('#logs').show();
+
     }).fail(function (jqXHR, error, errorThrown) {
         console.log(jqXHR, error, errorThrown);
     });
@@ -149,11 +142,8 @@ function displayDate (dateString) {
     return formattedDate[1] + "/" + formattedDate[2] + "/" + formattedDate[0];
 }
 
-function renderLogsByDate (logObject) {
-
-}
-
 function renderLogs(logObject) {
+    console.log(logObject);
 
     let htmlString = ``;
 
@@ -702,6 +692,7 @@ $(document).on('click', '#logs-trigger', (event) => {
 
 });
 //////////////////////////////////////////////////////
+
 //Phased out for current version - will reimplement in future app
 //Logs sort by Type
 //$(document).on('click', '#type-sort', (event) => {

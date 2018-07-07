@@ -254,3 +254,44 @@ function bolusCalculator () {
     })
 
 }
+
+//To be Implemented Fully in future version
+function tddCalculator () {
+    const username = $("#signup-username").val();
+
+    let bolusGET = $.ajax({
+        type: 'GET',
+        url: `/logs-bolus/${username}`,
+        dataType: 'json',
+        contentType: 'application/json'
+    }),
+        basalGET = $.ajax({
+            type: 'GET',
+            url: `/logs-basal/${username}`,
+            dataType: 'json',
+            contentType: 'application/json'
+        })
+
+    $.when(bolusGET, basalGET).done(function(bolus, basal) {
+        console.log(bolus[0]);
+        console.log(basal[0]);
+
+        //Update average TDD per 24hrs on screen
+
+        $('#user-dashboard').hide();
+        $('#logs').show();
+    }).fail(function (jqXHR, error, errorThrown) {
+        console.log(jqXHR, error, errorThrown);
+    });
+    //TDD calculations?
+            let tddBolus = bolus[0].reduce((acc, currentVal, currentIndex) => {
+                console.log(acc, currentVal.bolusAmount);
+                return acc + currentVal.bolusAmount;
+            }, 0)
+            console.log(tddBolus);
+            let tddBasal = basal[0].reduce((acc, currentVal, currentIndex) => {
+                console.log(acc, currentVal.insulinUnits);
+                return acc + currentVal.insulinUnits;
+            }, 0)
+            console.log(tddBasal);
+}
