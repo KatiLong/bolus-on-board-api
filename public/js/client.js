@@ -22,6 +22,22 @@ function updateStackEntry (entryId, entryObject) {
         console.log(jqXHR, error, errorThrown);
     });
 }
+//DELETE insulin stack entry
+function deleteStackEntry (userId, entryId) {
+    $.ajax({
+        type: 'DELETE',
+        url: `/iob/insulin-stack/${userId}/${entryId}`,
+        dataType: 'json',
+        contentType: 'application/json'
+    })
+    .done(function (result) {
+        console.log('entry deleted from insulin stack');
+
+    })
+    .fail(function (jqXHR, error, errorThrown) {
+        console.log(jqXHR, error, errorThrown);
+    });
+}
 //Update IOB
 function updateIob (settingId, payload) {
 
@@ -33,7 +49,7 @@ function updateIob (settingId, payload) {
         contentType: 'application/json'
     })
     .done(function (result) {
-        console.log('IOB updated, ' + result);
+        console.log('IOB updated');
     })
         .fail(function (jqXHR, error, errorThrown) {
         console.log(jqXHR, error, errorThrown);

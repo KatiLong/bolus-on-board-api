@@ -1,47 +1,82 @@
 function iobLoginCalculator (result) {
-
-    if (result[0].currentInsulinStack.length === 0) {
-        $('#i-o-b').text(`0`);
-        $('#iob-time').text(`0`);
-        return;
-    }
-
     let currentInsulinStack = [...result[0].currentInsulinStack];
-
     const loginTime = (new Date()).getTime();
     let bolusRate;
     let duration = ($('#duration').val())*3600000;
     let totalIOBAmount = result[0].insulinOnBoard.amount;
     let totalIOBTime = result[0].insulinOnBoard.timeLeft;
+    let iobId =  $('#current-user-iob').val();
+
+    //If no entries, update TotalIob Displays and return
+    if (result[0].currentInsulinStack.length === 0) {
+        $('#i-o-b').text(`0`);
+        $('#iob-time').text(`0`);
+        updateIob(iobId, {
+            insulinOnBoard: {
+                amount: 0,
+                timeLeft: 0
+            }
+        })
+        return;
+    }
+
 
     let updatedInsulinStack = currentInsulinStack.map((el, ind) => {
-
         let timeElapsed = loginTime - el.timeStart;
 
         //If it's been longer than the User's set duration, zero out the element
         if (timeElapsed >= duration) {
-            console.log('Zeroed out element', timeElapsed);
+            console.log('Element Zeroed Out', timeElapsed);
+
+            totalIOBAmount = Math.min(Math.max((totalIOBAmount - el.currentInsulin), 0), duration);
+            totalIOBTime = Math.min(Math.max((totalIOBTime - el.timeRemaining), 0), duration);
             el.timeRemaining = 0;
             el.currentInsulin = 0;
+
             return el;
         }
+        //Updating totals for Element and Global Totals
+        bolusRate = ((el.entryAmount)/(duration-900000))*timeElapsed
 
         el.timeRemaining = Math.min(Math.max((el.timeRemaining - timeElapsed), 0), duration);
-        bolusRate = ((el.entryAmount)/(duration-900000))*timeElapsed
         el.currentInsulin = Math.min(Math.max(el.currentInsulin - bolusRate, 0), duration);
-        totalIOBAmount = Math.min(Math.max(el.currentInsulin - bolusRate, 0), duration);
 
+        totalIOBAmount = Math.min(Math.max(totalIOBAmount - bolusRate, 0), duration);
+
+        //Setting Total IOB Time to highest Time Remaining of an Entry
         if (totalIOBTime < el.timeRemaining) totalIOBTime = el.timeRemaining
 
+        //Update the Entry on the server
+        updateStackEntry(el._id, el);
+        //Updating local Entry
         return el;
 
-    }).filter((el)=> !(el.timeRemaining === 0)); //Filter out entries that have zeroed out
+    }).filter((el)=> {
+        console.log(el);
+        if (el.timeRemaining === 0) deleteStackEntry(iobId, el._id);
+        return !(el.timeRemaining === 0);
+    }); //Filter out entries that have zeroed out
 
     //    Math.min(Math.max((totalIOBTime - timeElapsed), 0), duration);
 
+    updateIob(iobId, {
+        insulinOnBoard: {
+            amount: totalIOBAmount,
+            timeLeft: totalIOBTime
+        }
+    })
     $('#i-o-b').text(`${Math.round(totalIOBAmount * 100) / 100}`);
     $('#iob-time').text(`${Math.round((totalIOBTime/3600000) * 100) / 100}`);
     //At end calls insulinOnBoardCalculator loop
+
+    //            insulinOnBoardCalculator({
+    //                insulinStack,
+    //                duration: r1[0][0].insulinDuration,
+    //                iobAmount: r2[0][0].insulinOnBoard.amount,
+    //                iobTime: r2[0][0].insulinOnBoard.timeLeft,
+    //                initialTime,
+    //                newBolusAmount: bolusObject.bolusAmount
+    //            });
 }
 
 //Just updating insulinStack and Total IOB amounts (insulin & time)

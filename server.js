@@ -499,12 +499,12 @@ app.put('/insulin-on-board/:id', (req, res) => {
             toUpdate[field] = req.body[field];
         }
     });
-    console.log(req.params.id);
     insulinOnBoard
         .findByIdAndUpdate(req.params.id, {
             $set: toUpdate
-        }).then((achievement) => {
-        return res.status(204).end();
+        }).then((results) => {
+            console.log('IOB PUT' + results);
+            return res.status(204).end();
         }).catch(function (err) {
             return res.status(500).json({
                 message: 'Internal Server Error'
@@ -526,7 +526,7 @@ app.put('/insulin-stack-entry/:id', (req, res) => {
         .findByIdAndUpdate(req.params.id, {
             $push: {currentInsulinStack: toUpdate}
         }).then((results) => {
-            console.log('IOB PUT: ' + results)
+            console.log('IOB stack entry PUT: ' + results)
             return res.status(204).end();
         }).catch(function (err) {
             return res.status(500).json({
@@ -534,6 +534,41 @@ app.put('/insulin-stack-entry/:id', (req, res) => {
             });
         });
 });
+
+// DELETE ----------------------------------------
+// deleting an achievement by id
+app.delete('/iob/insulin-stack/:user/:id', (req, res) => {
+    console.log("Insulin Stack Delete Id:" + req.params.id);
+    insulinOnBoard
+        .findByIdAndUpdate(req.params.user, {
+            $pull: {currentInsulinStack: { _id: req.params.id}}
+        }, { 'new': true})
+        .then((entry) => {
+            console.log(entry);
+            return res.status(204).end();
+        }).catch((err) => {
+            return res.status(500).json({
+                message: 'Internal Server Error'
+            });
+        });
+});
+
+app.post('/iob/insulin-stack/:id', (req, res) => {
+    console.log(req.body, req.params.id)
+    insulinOnBoard
+        .findByIdAndUpdate(req.params.id, {
+        $push: { currentInsulinStack: req.body }
+    }, { 'new': true})
+        .then(settings => {
+        console.log(settings);
+        //            settings.currentInsulinStack.push(req.body.entry);
+        res.status(201).json(settings);
+    })
+        .catch(err => {
+        console.error(err);
+        res.status(500).json({ error: 'Something went wrong' });
+    });
+})
 
 // MISC ------------------------------------------
 // catch-all endpoint if client makes request to non-existent endpoint
