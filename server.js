@@ -248,7 +248,7 @@ app.post('/iob/insulin-stack/:id', (req, res) => {
 
 // POST Bolus Entry
 app.post('/bolus', (req, res) => {
-    const requiredFields = ['bolusCarbs', 'bolusUnits', 'insulinType', 'bolusTime', 'bolusDate', 'bolusAmount', 'loggedInUsername'];
+    const requiredFields = ['bolusCarbs', 'bolusUnits', 'insulinType', 'bolusTime', 'bolusDate', 'bolusAmount', 'loggedInUsername', 'inputDateTime'];
     for (let i = 0; i < requiredFields.length; i++) {
         const field = requiredFields[i];
         if (!(field in req.body)) {
@@ -265,6 +265,7 @@ app.post('/bolus', (req, res) => {
             bolusDate: req.body.bolusDate,
             bolusTime: req.body.bolusTime,
             bolusAmount: req.body.bolusAmount,
+            inputDateTime: req.body.inputDateTime,
             loggedInUsername: req.body.loggedInUsername
         })
         .then(settings => {
@@ -277,7 +278,7 @@ app.post('/bolus', (req, res) => {
 })
 // POST blood sugar
 app.post('/blood-glucose', (req, res) => {
-    const requiredFields = ['bloodGlucose', 'bgDate', 'bgTime', 'loggedInUsername'];
+    const requiredFields = ['bloodGlucose', 'bgDate', 'bgTime', 'loggedInUsername', 'inputDateTime'];
     for (let i = 0; i < requiredFields.length; i++) {
         const field = requiredFields[i];
         if (!(field in req.body)) {
@@ -290,6 +291,7 @@ app.post('/blood-glucose', (req, res) => {
             bloodGlucose: req.body.bloodGlucose,
             bgDate: req.body.bgDate,
             bgTime: req.body.bgTime,
+            inputDateTime: req.body.inputDateTime,
             loggedInUsername: req.body.loggedInUsername
         })
         .then(settings => {
@@ -303,7 +305,7 @@ app.post('/blood-glucose', (req, res) => {
 // POST Basal Entry
 app.post('/basal', (req, res) => {
     console.log(req.body);
-    const requiredFields = ['insulinType', 'insulinUnits', 'basalDate', 'basalTime', 'loggedInUsername'];
+    const requiredFields = ['insulinType', 'insulinUnits', 'basalDate', 'basalTime', 'loggedInUsername', 'inputDateTime'];
     for (let i = 0; i < requiredFields.length; i++) {
         const field = requiredFields[i];
         if (!(field in req.body)) {
@@ -317,6 +319,7 @@ app.post('/basal', (req, res) => {
             insulinUnits: req.body.insulinUnits,
             basalDate: req.body.basalDate,
             basalTime: req.body.basalTime,
+            inputDateTime: req.body.inputDateTime,
             loggedInUsername: req.body.loggedInUsername
         })
         .then(settings => {
@@ -330,7 +333,7 @@ app.post('/basal', (req, res) => {
 // POST A1c Entry
 app.post('/a1c', (req, res) => {
     console.log(req.body);
-    const requiredFields = ['a1cNumber', 'a1cDate', 'loggedInUsername'];
+    const requiredFields = ['a1cNumber', 'a1cDate', 'loggedInUsername', 'inputDateTime'];
     for (let i = 0; i < requiredFields.length; i++) {
         const field = requiredFields[i];
         if (!(field in req.body)) {
@@ -342,6 +345,7 @@ app.post('/a1c', (req, res) => {
         .create({
             a1cNumber: req.body.a1cNumber,
             a1cDate: req.body.a1cDate,
+            inputDateTime: req.body.inputDateTime,
             loggedInUsername: req.body.loggedInUsername
         })
         .then(settings => {

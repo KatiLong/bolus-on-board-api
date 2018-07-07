@@ -32,6 +32,10 @@ const bolusSchema = new mongoose.Schema({
         type: Number,
         required: false
     },
+    inputDateTime: {
+        type: String,
+        required: false
+    },
     loggedInUsername: {
         type: String,
         required: false

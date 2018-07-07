@@ -407,7 +407,6 @@ $(document).on('submit', '#login-form', (event) => {
                 contentType: 'application/json'
             })
             .done((result) => {
-                console.log(result);
                 $('#current-user-iob').val(result[0]._id);
                 iobLoginCalculator(result);
             })
@@ -493,14 +492,19 @@ $(document).on('submit', '#bolus-form', (event) => {
     event.preventDefault();
     // POST Bolus entry to Server
     let username = $('#current-username').val();
+    let bolusDate = $('#bolus-date').val();
+    let bolusTime = $('#bolus-time').val();
+    let inputDateTime = bolusDate.substring(0, 11) + 'T' + bolusTime;
+
     const bolusObject = {
         insulinType: $('#insulin-type').find(":selected").text(),
         bloodGlucose: Number($('#bolus-bg').val()),
         bolusUnits: Number($('#bolus-units').val()),
         bolusCarbs: Number($('#bolus-carbs').val()),
-        bolusDate: $('#bolus-date').val(),
-        bolusTime: $('#bolus-time').val(),
+        bolusDate,
+        bolusTime,
         bolusAmount: Number($('#suggested-bolus').val()),
+        inputDateTime,
         loggedInUsername: username
     }
     //POST Bolus Entry
@@ -571,10 +575,15 @@ $(document).on('click', '#bg-trigger', (event) => {
 $(document).on('submit', '#blood-glucose-form',  (event) => {
     event.preventDefault();
 
+    let bgDate = $('#bg-date').val();
+    let bgTime = $('#bg-time').val();
+    let inputDateTime = bgDate.substring(0, 11) + 'T' + bgTime;
+
     const bgObject = {
         bloodGlucose: Number($('#bg-input').val()),
-        bgDate: $('#bg-date').val(),
-        bgTime: $('#bg-time').val(),
+        bgDate,
+        bgTime,
+        inputDateTime,
         loggedInUsername: $('#current-username').val()
     }
 
@@ -612,11 +621,16 @@ $(document).on('click', '#basal-trigger', (event) => {
 $(document).on('submit', '#basal-form', (event) => {
     event.preventDefault();
 
+    let basalDate = $('#basal-date').val();
+    let basalTime = $('#basal-time').val();
+    let inputDateTime = basalDate.substring(0, 11) + 'T' + basalTime;
+
     const basalObject = {
         insulinType: $('#basal-insulin-type').find(":selected").text(),
         insulinUnits: Number($('#basal-units').val()),
-        basalDate: $('#basal-date').val(),
-        basalTime: $('#basal-time').val(),
+        basalDate,
+        basalTime,
+        inputDateTime,
         loggedInUsername: $('#current-username').val()
     }
     console.log(basalObject);
@@ -656,6 +670,7 @@ $(document).on('submit', '#a1c-form', (event) => {
     const a1cObject = {
         a1cNumber: Number($('#a1c-entry').val()),
         a1cDate: $('#a1c-date').val(),
+        inputDateTime: $('#a1c-date').val(),
         loggedInUsername: $('#current-username').val()
     }
     $.ajax({
@@ -686,71 +701,74 @@ $(document).on('click', '#logs-trigger', (event) => {
     getAllLogs();
 
 });
+//////////////////////////////////////////////////////
+//Phased out for current version - will reimplement in future app
 //Logs sort by Type
-$(document).on('click', '#type-sort', (event) => {
-    event.preventDefault();
-    getAllLogs();
-})
+//$(document).on('click', '#type-sort', (event) => {
+//    event.preventDefault();
+//    getAllLogs();
+//})
 //Logs sort by Date
-$(document).on('click', '#date-sort', (event) => {
-    event.preventDefault();
-
-    const username = $("#signup-username").val();
-
-    let bolusGET = $.ajax({
-        type: 'GET',
-        url: `/logs-bolus/${username}`,
-        dataType: 'json',
-        contentType: 'application/json'
-        }),
-        basalGET = $.ajax({
-            type: 'GET',
-            url: `/logs-basal/${username}`,
-            dataType: 'json',
-            contentType: 'application/json'
-        }),
-        bgGET = $.ajax({
-            type: 'GET',
-            url: `/logs-bg/${username}`,
-            dataType: 'json',
-            contentType: 'application/json'
-        }),
-        a1cGET = $.ajax({
-            type: 'GET',
-            url: `/logs-a1c/${username}`,
-            dataType: 'json',
-            contentType: 'application/json'
-        });
-
-    $.when(bolusGET, basalGET, bgGET, a1cGET).done(function(bolus, basal, bg, a1c) {
-
-        let allLogs = [...bolus[0], ...basal[0], ...bg[0], ...a1c[0]];
-
-        allLogs.sort((a, b) => {
-            console.log(a.createdAt, b.createdAt);
-
-            if (a.createdAt < b.createdAt) {
-                return -1;
-            }
-            if (a.createdAt > b.createdAt) {
-                return 1;
-            }
-            // names must be equal
-            return 0;
-        });
-        console.log(allLogs);
-
-//        renderLogsByDate(allLogs)
-
-
-        $('#user-dashboard').hide();
-        $('#logs').show();
-    }).fail(function (jqXHR, error, errorThrown) {
-        console.log(jqXHR, error, errorThrown);
-    });
-
-})
-
+//$(document).on('click', '#date-sort', (event) => {
+//    event.preventDefault();
+//
+//    const username = $("#signup-username").val();
+//
+//    let bolusGET = $.ajax({
+//        type: 'GET',
+//        url: `/logs-bolus/${username}`,
+//        dataType: 'json',
+//        contentType: 'application/json'
+//        }),
+//        basalGET = $.ajax({
+//            type: 'GET',
+//            url: `/logs-basal/${username}`,
+//            dataType: 'json',
+//            contentType: 'application/json'
+//        }),
+//        bgGET = $.ajax({
+//            type: 'GET',
+//            url: `/logs-bg/${username}`,
+//            dataType: 'json',
+//            contentType: 'application/json'
+//        }),
+//        a1cGET = $.ajax({
+//            type: 'GET',
+//            url: `/logs-a1c/${username}`,
+//            dataType: 'json',
+//            contentType: 'application/json'
+//        });
+//
+//    $.when(bolusGET, basalGET, bgGET, a1cGET).done(function(bolus, basal, bg, a1c) {
+//
+//        let allLogs = [...bolus[0], ...basal[0], ...bg[0], ...a1c[0]];
+//        console.log(allLogs);
+//        allLogs.sort((a, b) => {
+//
+//            if (a.inputDateTime < b.inputDateTime) {
+//                console.log('a is less');
+//                return -1;
+//            }
+//            if (a.inputDateTime > b.inputDateTime) {
+//                console.log('a is less');
+//                return 1;
+//            }
+//            // names must be equal
+//            return 0;
+//        });
+//        console.log(allLogs);
+//
+////        renderLogsByDate(allLogs)
+//
+//
+//        $('#user-dashboard').hide();
+//        $('#logs').show();
+//    }).fail(function (jqXHR, error, errorThrown) {
+//        console.log(jqXHR, error, errorThrown);
+//    });
+//
+//})
+//////////////////////////////////////////////////////////
 //Bolus only
 $(document).on('click', '#bolus-logs', (event) => {
     event.preventDefault();

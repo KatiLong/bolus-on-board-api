@@ -12,6 +12,10 @@ const a1cSchema = new mongoose.Schema({
         type: Date,
         required: false
     },
+    inputDateTime: {
+        type: String,
+        required: false
+    },
     loggedInUsername: {
         type: String,
         required: false

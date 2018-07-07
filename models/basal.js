@@ -21,7 +21,7 @@ const basalSchema = new mongoose.Schema({
         required: false
     },
     inputDateTime: {
-        type: Number,
+        type: String,
         required: false
     },
     loggedInUsername: {
