@@ -25,28 +25,9 @@ const dataToTrackList = {
         iobTimeRemainFormat: () => console.log('Display hours and minutes')
     }
 }
-
+///////////////////////////////////////////////////////////
 //AJAX call declarations
 
-//POST new Entry to Insulin Stack
-
-////POST insulin type
-//function postInsulinStack (iobId, insulinStackObject) {
-//    $.ajax({
-//        type: 'POST',
-//        url: `/iob/insulin-stack/${iobId}`,
-//        dataType: 'json',
-//        data: JSON.stringify(insulinStackObject),
-//        contentType: 'application/json'
-//    })
-//    .done(function (result) {
-//        console.log(result.currentInsulinStack);
-//
-//    })
-//    .fail(function (jqXHR, error, errorThrown) {
-//        console.log(jqXHR, error, errorThrown);
-//    });
-//}
 //UPDATE insulin stack entry
 function updateStackEntry (entryId, entryObject) {
     $.ajax({
@@ -387,23 +368,78 @@ function dateTimePopulate (event) {
 }
 //function to render HTML for Logs on GET call
 
-function renderLogs(result) {
-    //Test cases:
-    // all have entries
-    // one or more empty
+function displayDate (dateString) {
+    let formattedDate = dateString.substring(0, 10).split("-");
+    return formattedDate[1] + "/" + formattedDate[2] + "/" + formattedDate[0];
+}
 
-    console.log(result);
-//    let htmlString = ``;
+function renderLogs(logObject) {
+    let htmlString = ``;
+//
 //    let displayDate = results.inputDate.substring(0, 10);
 //    let formattedDisplayDate = displayDate.split("-");
 //    let formattedDisplayDateOutput = formattedDisplayDate[1] + "/" + formattedDisplayDate[2] + "/" + formattedDisplayDate[0];
-//
-//    htmlString += `<div class="entries-container" id="${results._id}">`;
-    //if Bolus
 
-    //if Basal
-    //if BG
-    //if A1c
+    if(logObject.bolus.length > 0) {
+        logObject.bolus.forEach((el) => {
+            //Add Time Formatting
+            //HTML appendage
+            htmlString += `
+                <div class="log-div type-bolus">
+                    <span class="type log-col">Bolus</span>
+                    <div class="readings log-col">
+                        <span class="insulin-amount">Insulin: ${el.bolusUnits} units</span>
+                        <span class="carbs-amount">Carbs: ${el.bolusCarbs} carbs</span>
+                        <span class="bg">BG: ${el.bloodGlucose} mg/dL</span>
+                    </div>
+                    <div class="date-time log-col">
+                        <span class="date">Date: ${displayDate(el.bolusDate)}</span>
+                        <span class="time">Time: ${el.bolusTime}</span>
+                    </div>
+                </div>`;
+        })
+    }
+    if(logObject.basal.length > 0) {
+        logObject.basal.forEach((el) => {
+            //HTML appendage
+            htmlString += `
+                <div class="log-div type-basal">
+                    <span class="type log-col">Basal</span>
+                    <span class="insulin-amount log-col readings">Insulin: ${el.insulinUnits} units</span>
+                    <div class="date-time log-col">
+                        <span class="date">Date: ${displayDate(el.basalDate)}</span>
+                        <span class="time">Time: ${el.basalTime}</span>
+                    </div>
+                </div>`;
+        })
+    }
+    if(logObject.bg.length > 0) {
+        logObject.bg.forEach((el) => {
+            //HTML appendage
+            htmlString += `
+                <div class="log-div type-bg">
+                    <span class="type log-col">BG</span>
+                    <span class="bg-reading log-col readings">${el.bloodGlucose} mg/dL</span>
+                    <div class="date-time log-col">
+                        <span class="date">Date: ${displayDate(el.bgDate)} </span>
+                        <span class="time">Time: ${el.bgTime} </span>
+                    </div>
+                </div>`;
+        })
+    }
+    if(logObject.a1c.length > 0) {
+        logObject.a1c.forEach((el) => {
+            //HTML appendage
+            htmlString += `
+                <div class="log-div type-a1c">
+                    <span class="type log-col">A1c</span>
+                    <span class="a1c-reading log-col readings">${el.a1cNumber}</span>
+                    <span class="date log-col">Date: ${displayDate(el.a1cDate)}</span>
+                </div>`;
+        })
+    }
+
+    $('#log-entries').html(htmlString);
 }
 
 
@@ -846,7 +882,6 @@ $(document).on('submit', '#a1c-form', (event) => {
         a1cDate: $('#a1c-date').val(),
         loggedInUsername: $('#current-username').val()
     }
-    console.log(a1cObject);
     $.ajax({
         type: 'POST',
         url: '/a1c',
@@ -874,7 +909,6 @@ $(document).on('click', '#logs-trigger', (event) => {
     event.preventDefault();
 
     const username = $("#signup-username").val();
-    console.log('Logs Trigger working');
 
     let bolusGET = $.ajax({
         type: 'GET',
@@ -902,10 +936,16 @@ $(document).on('click', '#logs-trigger', (event) => {
         });
 
     $.when(bolusGET, basalGET, bgGET, a1cGET).done(function(bolus, basal, bg, a1c) {
-        console.log(bolus[0]);
-        console.log(basal[0]);
-        console.log(bg[0]);
-        console.log(a1c[0]);
+//        console.log(bolus[0]);
+//        console.log(basal[0]);
+//        console.log(bg[0]);
+//        console.log(a1c[0]);
+
+        //TDD calculations?
+//        let tddBolus = bolus[0].reduce((acc, currentVal, currentIndex) => {
+//            console.log(acc.bolusAmount, currentVal.bolusAmount);
+//            return acc.bolusAmount + currentVal.bolusAmount;
+//        })
 
         renderLogs({
             bolus: [...bolus[0]],
@@ -914,6 +954,8 @@ $(document).on('click', '#logs-trigger', (event) => {
             a1c: [...a1c[0]]
         })
 
+        renderLogsByDate([...bolus[0], ...basal[0]])
+
         $('#user-dashboard').hide();
         $('#logs').show();
     }).fail(function (jqXHR, error, errorThrown) {
@@ -921,7 +963,7 @@ $(document).on('click', '#logs-trigger', (event) => {
     });
 
 });
-
+//Bolus only
 $(document).on('click', '#bolus-logs', (event) => {
     event.preventDefault();
     const username = $("#signup-username").val();
@@ -940,7 +982,7 @@ $(document).on('click', '#bolus-logs', (event) => {
     })
 
 });
-
+//Basal only
 $(document).on('click', '#basal-logs', (event) => {
     event.preventDefault();
     const username = $("#signup-username").val();
@@ -959,7 +1001,7 @@ $(document).on('click', '#basal-logs', (event) => {
     })
 
 });
-
+//BG only
 $(document).on('click', '#bg-logs', (event) => {
     event.preventDefault();
     const username = $("#signup-username").val();
@@ -978,7 +1020,7 @@ $(document).on('click', '#bg-logs', (event) => {
     })
 
 });
-
+//A1c only
 $(document).on('click', '#a1c-logs', (event) => {
     event.preventDefault();
     const username = $("#signup-username").val();
@@ -997,6 +1039,8 @@ $(document).on('click', '#a1c-logs', (event) => {
     })
 
 });
+
+//TDD get
 
 ////////////////////////////////////////
 //Settings Section show
