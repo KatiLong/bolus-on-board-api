@@ -45,7 +45,7 @@ function updateIob (settingId, payload) {
         data: JSON.stringify(payload),
         contentType: 'application/json'
     })
-        .done(function (result) {
+    .done(function (result) {
         console.log('IOB updated');
     })
         .fail(function (jqXHR, error, errorThrown) {

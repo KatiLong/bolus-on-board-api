@@ -218,7 +218,7 @@ app.post('/iob/create', (req, res) => {
             loggedInUsername: req.body.username
         })
         .then(settings => {
-
+            console.log('IOB Create:' + settings);
             res.status(201).json(settings)
 
         })
@@ -387,7 +387,7 @@ app.get('/iob-stack/:user', (req, res) => {
             loggedInUsername: req.params.user
         })
         .then((settings) => {
-            console.log(settings);
+            console.log('Iob GET: ' + settings);
             res.status(201).json(settings)
 
         })
@@ -552,23 +552,6 @@ app.delete('/iob/insulin-stack/:user/:id', (req, res) => {
             });
         });
 });
-
-app.post('/iob/insulin-stack/:id', (req, res) => {
-    console.log(req.body, req.params.id)
-    insulinOnBoard
-        .findByIdAndUpdate(req.params.id, {
-        $push: { currentInsulinStack: req.body }
-    }, { 'new': true})
-        .then(settings => {
-        console.log(settings);
-        //            settings.currentInsulinStack.push(req.body.entry);
-        res.status(201).json(settings);
-    })
-        .catch(err => {
-        console.error(err);
-        res.status(500).json({ error: 'Something went wrong' });
-    });
-})
 
 // MISC ------------------------------------------
 // catch-all endpoint if client makes request to non-existent endpoint

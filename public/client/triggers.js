@@ -77,6 +77,16 @@ $(document).on('submit', '#signup-form', (event) => {
                 //if call is succefull
                 .done(function (result) {
                     $('#current-user-iob').val(result._id);
+                    //call Iob on Login
+                    //setTimeout(() => {
+                    //    insulinOnBoardCalculator({
+                    //        insulinStack,
+                    //        duration,
+                    //        iobAmount: result[0].insulinOnBoard.amount,
+                    //        iobTime: result[0].insulinOnBoard.timeLeft,
+                    //        initialTime
+                    //    });
+                    //}, 10000);//300000
                 })
                 //if the call is failing
                 .fail(function (jqXHR, error, errorThrown) {
@@ -188,6 +198,7 @@ $(document).on('submit', '#login-form', (event) => {
                 contentType: 'application/json'
             })
             .done((result) => {
+                console.log(result);
                 $('#current-user-iob').val(result[0]._id);
                 iobLoginCalculator(result);
             })
@@ -307,19 +318,22 @@ $(document).on('submit', '#bolus-form', (event) => {
                 dataType: 'json',
                 contentType: 'application/json'
         }).done((result) => {
+
+            console.log(result);
+
             const initialTime = (new Date()).getTime();
             let insulinStack;
 
-            if (result[0][0].currentInsulinStack.length === 0) insulinStack = [];
-            else insulinStack = [...result[0][0].currentInsulinStack];
+            if (result[0].currentInsulinStack.length === 0) insulinStack = [];
+            else insulinStack = [...result[0].currentInsulinStack];
 
             newBolusEntry({
                 insulinStack,
                 duration,
-                iobAmount: result[0][0].insulinOnBoard.amount,
-                iobTime: result[0][0].insulinOnBoard.timeLeft,
+                iobAmount: result[0].insulinOnBoard.amount,
+                iobTime: result[0].insulinOnBoard.timeLeft,
                 initialTime,
-                newBolusAmount: bolusObject.bolusAmount
+                newBolusAmount: Number($('#suggested-bolus').val())
             });
 
         }).fail(function (jqXHR, error, errorThrown) {
