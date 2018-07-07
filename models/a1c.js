@@ -1,7 +1,7 @@
 "use strict";
 
 const mongoose = require('mongoose');
-// const bcrypt = require('bcryptjs');
+var timestamps = require('mongoose-timestamp');
 
 const a1cSchema = new mongoose.Schema({
     a1cNumber: {
@@ -18,6 +18,7 @@ const a1cSchema = new mongoose.Schema({
     }
 });
 
+a1cSchema.plugin(timestamps);
 const A1c = mongoose.model('A1c', a1cSchema);
 
 module.exports = A1c;

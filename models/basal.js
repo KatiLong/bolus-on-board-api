@@ -1,9 +1,7 @@
 "use strict";
 
 const mongoose = require('mongoose');
-// const bcrypt = require('bcryptjs');
-
-// discrimators
+var timestamps = require('mongoose-timestamp');
 
 const basalSchema = new mongoose.Schema({
     insulinType: {
@@ -22,12 +20,17 @@ const basalSchema = new mongoose.Schema({
         type: String,
         required: false
     },
+    inputDateTime: {
+        type: Number,
+        required: false
+    },
     loggedInUsername: {
         type: String,
         required: false
     }
 });
 
+basalSchema.plugin(timestamps);
 const Basal = mongoose.model('Basal', basalSchema);
 
 module.exports = Basal;

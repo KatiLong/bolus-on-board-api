@@ -1,6 +1,7 @@
 "use strict";
 
 const mongoose = require('mongoose');
+var timestamps = require('mongoose-timestamp');
 
 const bolusSchema = new mongoose.Schema({
     insulinType: {
@@ -36,6 +37,8 @@ const bolusSchema = new mongoose.Schema({
         required: false
     }
 });
+
+bolusSchema.plugin(timestamps);
 
 const Bolus = mongoose.model('Bolus', bolusSchema);
 
