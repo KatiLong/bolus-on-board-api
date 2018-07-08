@@ -22,7 +22,7 @@ body {
 /*///////////Forms Section///////////*/
 form {
     margin: 0 auto;
-    max-width: 900px;
+    max-width: 600px;
     width: 100%;
     padding: 0 1rem;
     background-color: #fff;
@@ -106,6 +106,7 @@ button:hover {
 }
 #change-form-signup:hover, #change-form-login:hover {
     color: #53bfe2;
+    cursor: pointer;
 }
 
 h1 {
@@ -149,20 +150,7 @@ ul {
     font-size: 1.2rem;
     line-height: 4rem;
 }
-#user-dashboard {
-    min-height: 55vh;
-    padding: 25px;
-    background-color: rgba(55, 40, 70, 0.1);
-}
 
-#iob-display {
-    background-color: #66339945;
-    border-radius: 10px;
-    width: 75%;
-    margin: 10 auto 10;
-    padding: 10px;
-    margin: 10px auto;
-}
 
 #disclaimer-background {
     width: 100%;
@@ -181,7 +169,84 @@ ul {
     width: 100%;
     text-align: center;
 }
+/*/////////////////////////////////////////////////////////////////////*/
+/*///////////User Dashboard///////////*/
 
+#user-dashboard {
+    min-height: 55vh;
+    /*    background-color: rgba(55, 40, 70, 0.1);*/
+    background-color: #fff;
+    width: 100%;
+}
+#user-dashboard h3 {
+    font-size: 2rem;
+    line-height: 4.5rem;
+}
+#current-user {
+    line-height: 2rem;
+    margin-bottom: 30px;
+
+}
+#iob-display {
+    background-color: rgba(223, 109, 194, 0.1);
+    width: 100%;
+    padding: 10px;
+    margin: 10px auto 45px;
+}
+
+#iob-display h4, span {
+    display: inline-block;
+}
+#user-dashboard button {
+    color: whitesmoke;
+}
+.dash-4 {
+    margin-bottom: 10px;
+    width: 135px;
+    height: 80px;
+    margin: 0 auto;
+    box-shadow: 0 0 10px rgba(100, 100, 100, 0.2) inset, 1px 1px 1px #CCC;
+    display: inline-block;
+    margin: 1px;
+    border-radius: 3px;
+    vertical-align: top;
+}
+#bolus-trigger {
+    background-color:#00c08b;
+}#bg-trigger {
+    background-color:#ea5080;
+}#basal-trigger {
+    background-color:#53bfe2;
+}#a1c-trigger {
+    background-color:#f8c54d;
+}
+.row-1 {
+
+}.row-2 {
+    margin-bottom: 30px;
+}
+.lower-dash-buttons {
+    width: 100%;
+    max-width: 368px;
+    margin: 0 auto;
+    border-top: 3px rgba(100, 100, 100, 0.2) solid;
+}
+.dash-2 {
+    width: 135px;
+    height: 50px;
+    list-style: none;
+    box-shadow: 0 0 10px rgba(100, 100, 100, 0.2) inset, 1px 1px 1px #CCC;
+    display: inline-block;
+    line-height: 1;
+    margin: 35px 5px;
+    border-radius: 3px;
+    vertical-align: top;
+    background-color: #df6dc2;
+}
+.button-decoration {
+    display: inline-block;
+
+}
 /*/////////////////////////////////////////////////////////////////////*/
 /*///////////Logs Section///////////*/
 

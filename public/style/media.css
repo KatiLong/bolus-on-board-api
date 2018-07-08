@@ -17,8 +17,16 @@
         color: green;
     }
     .demo-info  {
-        width: 55%;
-        margin-left: 30%;
+        margin-left: 18%;
+        font-size: 1.2rem;
+        line-height: 3rem;
+    }
+    legend {
+        line-height: 5rem;
+    }
+    .dash-4 {
+        width: 90px;
+        height: 70px;
     }
 
 }

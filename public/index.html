@@ -7,10 +7,10 @@
         <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css">
 <!--        <link type="text/css" rel="stylesheet" href="./style/load.css">-->
 <!--        <link type="text/css" rel="stylesheet" href="./style/metal.css">-->
-        <link type="text/css" rel="stylesheet" href="./style/style.css">
-        <link type="text/css" rel="stylesheet" href="./style/media.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.css">
         <link type="text/css" rel="stylesheet" href="./style/reset.css">
+        <link type="text/css" rel="stylesheet" href="./style/style.css">
+        <link type="text/css" rel="stylesheet" href="./style/media.css">
         <title>Bolus on Board</title>
     </head>
     <body>
@@ -100,7 +100,7 @@
                                 If you have a medical emergency, call 911 immediately.
                             </p>
                             <span id="disclaimer-buttons">
-                                <button type="button" id="disclaimer-accept">I AGREE</button>
+                                <button type="button" class="submit-button" id="disclaimer-accept">I AGREE</button>
                                 <button type="button" id="cancel-disclaimer">Cancel</button>
                             </span>
                         </div>
@@ -120,7 +120,7 @@
                         <span>Time Remaining: <span id="iob-time"></span></span>
                     </section>
 
-                    <button type="button" id="bolus-trigger" class="dash-button">Bolus</button>
+                    <button type="button" id="bolus-trigger" class="dash-button dash-4 row-1">Bolus</button>
 
                     <form id="bolus-form" action="#root">
 
@@ -158,13 +158,13 @@
                            <p>Suggested Total: {Exact calculation rounded to nearest whole number.}</p>
                            <p>Info Toggle explaining Insulin Calculations: "Insulin Total Suggestions are calculated and rounded to nearest unit of insulin."</p>
 
-                           <button type="submit" class="waves-effect waves-light btn">Add Bolus</button>
+                           <button type="submit" class="submit-button">Add Bolus</button>
 
                            <button type="button" class="dash-back">Back</button>
                        </fieldset>
                     </form>
 
-                    <button type="button" id="bg-trigger" class="dash-button">BG</button>
+                    <button type="button" id="bg-trigger" class="dash-button dash-4 row-1">Blood Sugar</button>
                     <form action="" id="blood-glucose-form">
                         <fieldset>
                             <legend>Blood Glucose</legend>
@@ -175,13 +175,13 @@
                             <input type="date" class="date-dash" id="bg-date">
                             <label for="bg-time">Time</label>
                             <input type="time" class="time-dash" id="bg-time">
-                            <button type="submit" class="waves-effect waves-light btn">Add BG</button>
+                            <button type="submit" class="submit-button">Add BG</button>
 
                             <button type="button" class="dash-back">Back</button>
                         </fieldset>
                     </form>
 
-                    <button type="button" id="basal-trigger" class="dash-button">BASAL</button>
+                    <button type="button" id="basal-trigger" class="dash-button dash-4 row-2">Basal</button>
                     <form action="" id="basal-form">
                        <fieldset>
                             <legend>Basal</legend>
@@ -202,11 +202,11 @@
 
                             <button type="submit">Add Basal</button>
 
-                           <button type="button" class="dash-back">Back</button>
+                           <button type="button" class="submit-button">Back</button>
                         </fieldset>
                     </form>
 
-                    <button type="button" id="a1c-trigger" class="dash-button">A1c</button>
+                    <button type="button" id="a1c-trigger" class="dash-button dash-4 row-2">A1c</button>
                     <form action="" id="a1c-form">
                         <fieldset>
                             <legend>A1c</legend>
@@ -217,14 +217,15 @@
                             <label for="a1c-date">Date</label>
                             <input type="date" class="date-dash" id="a1c-date" required>
 
-                            <button type="submit" class="waves-effect waves-light btn">Add A1c</button>
+                            <button type="submit" class="submit-button">Add A1c</button>
                             <button type="button" class="dash-back">Back</button>
                         </fieldset>
                     </form>
+                    <div class="lower-dash-buttons">
+                        <button type="button" id="settings-trigger" class="dash-button dash-2">Settings</button>
+                        <button type="button" id="logs-trigger" class="dash-button dash-2">Logs</button>
+                    </div>
 
-                    <button type="button" id="settings-trigger" class="dash-button">Settings</button>
-
-                    <button type="button" id="logs-trigger" class="dash-button">Logs</button>
                 </section>
 
                 <section id="logs">
