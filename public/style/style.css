@@ -98,13 +98,14 @@ button:hover {
     line-height: 1;
     margin: 1px;
     border-radius: 3px;
+    padding: 5px;
 }
 
-#change-form-signup {
+#change-form-signup, #change-form-login {
 
 }
-#change-form-login {
-
+#change-form-signup:hover, #change-form-login:hover {
+    color: #53bfe2;
 }
 
 h1 {
@@ -130,6 +131,7 @@ ul {
     margin: 10px auto;
     text-align: center;
     border: 1px solid skyblue;
+    margin: 30px auto;
 }
 .demo-info  {
     text-align: left;
@@ -144,6 +146,7 @@ ul {
 }
 */
 .demo-account h6 {
+    font-size: 1.2rem;
     line-height: 4rem;
 }
 #user-dashboard {
