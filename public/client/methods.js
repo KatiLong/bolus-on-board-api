@@ -214,10 +214,12 @@ function insulinOnBoardCalculator (iobObject) { //should update iob via formula 
     $('#i-o-b').text(`${Math.round(totalIOBAmount * 100) / 100}`);
     $('#iob-time').text(`${Math.round((totalIOBTime/3600000) * 100) / 100}`);
 
-    //Update each entry on insulin Stack
-    updatedInsulinStack.map((el) => {
-        updateStackEntry(el._id, el);
-    })
+    if (updatedInsulinStack.length === 0 || !updatedInsulinStack) {
+        //Update each entry on insulin Stack
+        updatedInsulinStack.map((el) => {
+            updateStackEntry(el._id, el);
+        })
+    }
     //Update IOB Totals
     updateIob(iobId, {
         insulinOnBoard: {

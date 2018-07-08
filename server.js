@@ -503,7 +503,6 @@ app.put('/insulin-on-board/:id', (req, res) => {
         .findByIdAndUpdate(req.params.id, {
             $set: toUpdate
         }).then((results) => {
-            console.log('IOB PUT' + results);
             return res.status(204).end();
         }).catch(function (err) {
             return res.status(500).json({
@@ -538,13 +537,11 @@ app.put('/insulin-stack-entry/:id', (req, res) => {
 // DELETE ----------------------------------------
 // deleting an achievement by id
 app.delete('/iob/insulin-stack/:user/:id', (req, res) => {
-    console.log("Insulin Stack Delete Id:" + req.params.id);
     insulinOnBoard
         .findByIdAndUpdate(req.params.user, {
             $pull: {currentInsulinStack: { _id: req.params.id}}
         }, { 'new': true})
         .then((entry) => {
-            console.log(entry);
             return res.status(204).end();
         }).catch((err) => {
             return res.status(500).json({
