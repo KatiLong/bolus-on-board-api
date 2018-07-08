@@ -16,7 +16,10 @@
     body {
         color: green;
     }
-
+    .demo-info  {
+        width: 55%;
+        margin-left: 30%;
+    }
 
 }
 

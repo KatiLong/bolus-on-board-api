@@ -1,5 +1,6 @@
 /*Google Fonts*/
 @import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/css?family=Fjalla+One|PT+Serif|Ubuntu+Condensed');
 
 /*Main Body styling*/
 html {
@@ -12,29 +13,109 @@ body {
 /*    font-family: 'Roboto', sans-serif;*/
     text-align: center;
     color: #3a3a3a;
-    background: #fff;
-    font-family: "colfax-web",sans-serif;
-    font-size: 16px;
+    background-color: #fafafa;
+/*    font-family: "colfax-web",sans-serif;*/
+    font-family: 'PT Serif', sans-serif;
+    font-size: 22px;
 }
-
+/*/////////////////////////////////////////////////////////////////////*/
+/*///////////Forms Section///////////*/
 form {
-    margin: auto;
+    margin: 0 auto;
     max-width: 900px;
     width: 100%;
+    padding: 0 1rem;
+    background-color: #fff;
 }
 
 fieldset {
     border-radius: 10px;
+    border: none;
+}
+legend {
+    line-height: 3.5rem;
 }
 
 input {
     margin: 10px;
+    font-family: 'PT Serif', sans-serif;
+}
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAJCAYAAAA/33wPAAAAvklEQVQoFY2QMQqEMBBFv7ERa/EMXkGw11K8QbDXzuN4BHv7QO6ifUgj7v4UAdlVM8Uwf+b9YZJISnlqrfEUZVlinucnBGKaJgghbiHOyLyFKIoCbdvecpyReYvo/Ma2bajrGtbaC58kCdZ1RZ7nl/4/4d5EsO/7nzl7IUtodBexMMagaRrs+06JLMvcNWmaOv2W/C/TMAyD58dxROgSmvxFFMdxoOs6lliWBXEcuzokXRbRoJRyvqqqQvye+QDMDz1D6yuj9wAAAABJRU5ErkJggg==) 100% no-repeat;
+    line-height: 1;
 }
 
+header {
+    margin: 30px 0px;
+}
+
+[type=color],
+[type=date],
+[type=datetime],
+[type=datetime-local],
+[type=email],
+[type=month],
+[type=number],
+[type=password],
+[type=search],
+[type=tel],
+[type=text],
+[type=url],
+[type=week],
+[type=time],
+select,
+textarea {
+    display: block;
+    padding: .5rem;
+    background: transparent;
+    vertical-align: middle;
+    width: 100%;
+    max-width: 100%;
+    border: 1px solid #cdcdcd;
+    border-radius: 4px;
+    font-size: .95rem;
+}
+
+label {
+    display: block;
+    margin: .5rem 0;
+    font-size: 1.2rem;
+}
+
+button {
+    font-family: 'PT Serif', sans-serif;
+}
 button:hover {
     cursor: pointer;
     background-color: azure;
 }
+.submit-button {
+    background-color:#53bfe2; /*#2884a2*/
+    color: whitesmoke;
+    box-shadow: 0 0 10px rgba(100, 100, 100, 0.2) inset,1px 1px 1px #CCC;
+    line-height: 1;
+    margin: 1px;
+    border-radius: 3px;
+}
+
+#change-form-signup {
+
+}
+#change-form-login {
+
+}
+
+h1 {
+    font-size: 2.6em;
+    margin: 0.67em 0;
+    line-height: 1.5rem;
+}
+h4 {
+    font-size: 1.1rem;
+}
+/*/////////////////////////////////////////////////////////////////////*/
 ul {
     width: 50%;
     margin: 0 auto;
@@ -44,18 +125,26 @@ ul {
     padding: 0;
 }
 .demo-account {
-    width: 50%;
+    width: 95%;
+    max-width: 600px;
     margin: 10px auto;
     text-align: center;
     border: 1px solid skyblue;
 }
-.demo-account p {
+.demo-info  {
     text-align: left;
-    margin-left: 20%;
+    width: 95%;
+    margin: 0 auto;
+    font-size: .95rem;
+    line-height: 2.5rem;
 }
+/*
+.demo-account p {
+    margin-left: 2.5%;
+}
+*/
 .demo-account h6 {
-    font-size: 1rem;
-    margin: 10px;
+    line-height: 4rem;
 }
 #user-dashboard {
     min-height: 55vh;
@@ -89,6 +178,9 @@ ul {
     width: 100%;
     text-align: center;
 }
+
+/*/////////////////////////////////////////////////////////////////////*/
+/*///////////Logs Section///////////*/
 
 #total-daily-dose {
     background: rgba(125, 0, 125, 0.2);

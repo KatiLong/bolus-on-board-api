@@ -9,6 +9,8 @@
 <!--        <link type="text/css" rel="stylesheet" href="./style/metal.css">-->
         <link type="text/css" rel="stylesheet" href="./style/style.css">
         <link type="text/css" rel="stylesheet" href="./style/media.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.css">
+        <link type="text/css" rel="stylesheet" href="./style/reset.css">
         <title>Bolus on Board</title>
     </head>
     <body>
@@ -36,12 +38,15 @@
                           <br>
                           <button type="submit" class="submit-button waves-effect waves-light btn" id="login-button">Sign In</button>
                           <br>
-                          <span>Need to <button id="change-form-signup">Sign-up</button>?</span>
+                          <span>Need to <span id="change-form-signup">Sign-up</span>?</span>
 
                           <div class="demo-account">
-                            <h6>Demo Account</h6>
-                            <p>Username: carmen@gmail.com</p>
-                            <p>Password: where2018</p>
+                              <h6>Demo Account</h6>
+                              <div class="demo-info">
+                                  <p>Username: carmen@gmail.com</p>
+                                  <br>
+                                  <p>Password: where2018</p>
+                              </div>
                           </div>
                       </fieldset>
                     </form>
@@ -61,12 +66,15 @@
                            <br>
                            <button type="submit" class="submit-button waves-effect waves-light btn">Sign In</button>
                            <br>
-                           <p id="signup-p">Have an account? <button id="change-form-login">Login</button></p>
+                           <p id="signup-p">Have an account? <span id="change-form-login">Login</span></p>
 
                            <div class="demo-account">
                                <h6>Demo Account</h6>
-                               <p>Username: carmen@gmail.com</p>
-                               <p>Password: where2018</p>
+                               <div class="demo-info">
+                                   <p>Username: carmen@gmail.com</p>
+                                   <br>
+                                   <p>Password: where2018</p>
+                               </div>
                            </div>
                        </fieldset>
                     </form>
