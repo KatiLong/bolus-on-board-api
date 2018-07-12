@@ -33,6 +33,6 @@ const insulinOnBoardSchema = new mongoose.Schema({
     }
 });
 
-const insulinOnBoard = mongoose.model('Insulin on Board', insulinOnBoardSchema);
+const insulinOnBoard = mongoose.model('insulinOnBoard', insulinOnBoardSchema);
 
 module.exports = insulinOnBoard;

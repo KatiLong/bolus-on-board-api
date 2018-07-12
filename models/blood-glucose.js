@@ -27,6 +27,6 @@ const bloodGlucoseSchema = new mongoose.Schema({
 });
 
 bloodGlucoseSchema.plugin(timestamps);
-const bloodGlucose = mongoose.model('Blood Glucose', bloodGlucoseSchema);
+const bloodGlucose = mongoose.model('bloodGlucose', bloodGlucoseSchema);
 
 module.exports = bloodGlucose;

@@ -24,6 +24,7 @@ $(document).on('submit', '#signup-form', (event) => {
         const username = $("#signup-username").val();
         const password = $("#signup-password").val();
 
+
         //Set displayed Insulin on Board to zero
         $("#i-o-b").text("0");
         $("#iob-time").text("0:00");
@@ -56,6 +57,8 @@ $(document).on('submit', '#signup-form', (event) => {
             })
             //if call is succefull
             .done(function (result) {
+                console.log(result);
+
                 $('#current-username-id').val(`${result.userID}`);
                 $('#current-username').val(`${result.loggedInUsername}`);
                 $('#current-user-settings').val(`${result._id}`);
@@ -69,24 +72,25 @@ $(document).on('submit', '#signup-form', (event) => {
                 //Create IOB storage
                 $.ajax({
                     type: 'POST',
-                    url: `iob/create`,
+                    url: `/iob/create`,
                     dataType: 'json',
                     data: JSON.stringify(newUserObject),
                     contentType: 'application/json'
                 })
                 //if call is succefull
                 .done(function (result) {
+                    const duration = $('#duration').val();
+                    console.log(result);
                     $('#current-user-iob').val(result._id);
                     //call Iob on Login
-                    //setTimeout(() => {
-                    //    insulinOnBoardCalculator({
-                    //        insulinStack,
-                    //        duration,
-                    //        iobAmount: result[0].insulinOnBoard.amount,
-                    //        iobTime: result[0].insulinOnBoard.timeLeft,
-                    //        initialTime
-                    //    });
-                    //}, 10000);//300000
+                    setTimeout(() => {
+                        insulinOnBoardCalculator({
+                            insulinStack: [...result.currentInsulinStack],
+                            duration,
+                            iobAmount: result.insulinOnBoard.amount,
+                            iobTime: result.insulinOnBoard.timeLeft
+                        });
+                    }, 5000);//300000
                 })
                 //if the call is failing
                 .fail(function (jqXHR, error, errorThrown) {

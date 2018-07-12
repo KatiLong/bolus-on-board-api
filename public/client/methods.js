@@ -83,15 +83,15 @@ function iobLoginCalculator (result) {
         if (result[0].currentInsulinStack.length === 0) insulinStack = [];
         else insulinStack = [...result[0].currentInsulinStack];
 
-//        setTimeout(() => {
-//            insulinOnBoardCalculator({
-//                insulinStack,
-//                duration,
-//                iobAmount: result[0].insulinOnBoard.amount,
-//                iobTime: result[0].insulinOnBoard.timeLeft,
-//                initialTime
-//            });
-//        }, 5000);//300000
+        setTimeout(() => {
+            insulinOnBoardCalculator({
+                insulinStack,
+                duration,
+                iobAmount: result[0].insulinOnBoard.amount,
+                iobTime: result[0].insulinOnBoard.timeLeft,
+                initialTime
+            });
+        }, 5000);//300000
 
 
 }
@@ -111,7 +111,7 @@ function newBolusEntry(iobObject) {
         timeStart: iobObject.initialTime,
         timeRemaining: iobObject.duration
     }
-
+    console.log(insulinStackObject);
     $.ajax({
         type: 'POST',
         url: `/iob/insulin-stack/${iobId}`,

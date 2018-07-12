@@ -115,114 +115,120 @@
                     <input id="current-user-iob" type="hidden"/>
 
                     <section id="iob-display">
-                        <h4>Calculated Insulin On Board:</h4>
+                        <h4>Insulin On Board:</h4>
                         <span>Units: <span id="i-o-b"></span></span>
+                        <span> | </span>
                         <span>Time Remaining: <span id="iob-time"></span></span>
                     </section>
+                    <div class="row-1">
+                        <button type="button" id="bolus-trigger" class="dash-button dash-4">Bolus</button>
 
-                    <button type="button" id="bolus-trigger" class="dash-button dash-4 row-1">Bolus</button>
+                        <form id="bolus-form" action="#root">
 
-                    <form id="bolus-form" action="#root">
+                            <fieldset>
+                                <!--Type-->
+                                <label for="insulin-type">Insulin Type</label>
+                                <select id="insulin-type">
+                                    <option value="Fiasp">Fiasp</option>
+                                    <option value="Humalog" selected>Humalog</option>
+                                    <option value="Novolog">Novolog</option>
+                                    <option value="Insulin R">Insulin R</option>
+                                </select>
+                                <!--# of Units/Carbs-->
+                                <div class="insulin-amount">
+                                    <label for="bolus-units">Units of Insulin</label>
+                                    <input type="number" class="insulin-input" id="bolus-units" placeholder="6" value="6"><span>unit(s)</span>
+                                </div>
+                                <div class="insulin-amount">
+                                    <label for="bolus-carbs">Carb Amount</label>
+                                    <input type="number" class="insulin-input" id="bolus-carbs" placeholder="54" value="54"><span>gram(s)</span>
+                                </div>
+                                <!--Blood Glucose-->
+                                <label for="bolus-bg">Blood Sugar</label>
+                                <input type="number" id="bolus-bg" placeholder="131" value="131">
+                                <!--Date & Time-->
+                                <label for="bolus-date">Date</label>
+                                <input type="date" class="date-dash" id="bolus-date" value="2015-05-12" required>
 
-                       <fieldset>
-                           <!--Type-->
-                           <label for="insulin-type">Insulin Type</label>
-                           <select id="insulin-type">
-                               <option value="Fiasp">Fiasp</option>
-                               <option value="Humalog" selected>Humalog</option>
-                               <option value="Novolog">Novolog</option>
-                               <option value="Insulin R">Insulin R</option>
-                           </select>
-                           <!--# of Units/Carbs-->
-                           <div class="insulin-amount">
-                               <label for="bolus-units">Units of Insulin</label>
-                               <input type="number" class="insulin-input" id="bolus-units" placeholder="6" value="6"><span>unit(s)</span>
-                           </div>
-                           <div class="insulin-amount">
-                               <label for="bolus-carbs">Carb Amount</label>
-                               <input type="number" class="insulin-input" id="bolus-carbs" placeholder="54" value="54"><span>gram(s)</span>
-                           </div>
-                            <!--Blood Glucose-->
-                           <label for="bolus-bg">Blood Sugar</label>
-                           <input type="number" id="bolus-bg" placeholder="131" value="131">
-                           <!--Date & Time-->
-                           <label for="bolus-date">Date</label>
-                           <input type="date" class="date-dash" id="bolus-date" value="2015-05-12" required>
+                                <label for="bolus-time">Time</label>
+                                <input type="time" class="time-dash" id="bolus-time" value="16:35" required>
 
-                           <label for="bolus-time">Time</label>
-                           <input type="time" class="time-dash" id="bolus-time" value="16:35" required>
+                                <p>Calculated Units: {Units || Carbs} + {Correction Amount} -> Exact Amount</p>
+                                <label for="suggested-bolus">Suggested Bolus Amount</label>
+                                <input type="number" class="insulin-input" id="suggested-bolus" value="7" required><span>unit(s)</span>
+                                <p>Suggested Total: {Exact calculation rounded to nearest whole number.}</p>
+                                <p>Info Toggle explaining Insulin Calculations: "Insulin Total Suggestions are calculated and rounded to nearest unit of insulin."</p>
 
-                           <p>Calculated Units: {Units || Carbs} + {Correction Amount} -> Exact Amount</p>
-                           <label for="suggested-bolus">Suggested Bolus Amount</label>
-                           <input type="number" class="insulin-input" id="suggested-bolus" value="7" required><span>unit(s)</span>
-                           <p>Suggested Total: {Exact calculation rounded to nearest whole number.}</p>
-                           <p>Info Toggle explaining Insulin Calculations: "Insulin Total Suggestions are calculated and rounded to nearest unit of insulin."</p>
+                                <button type="submit" class="submit-button">Add Bolus</button>
 
-                           <button type="submit" class="submit-button">Add Bolus</button>
+                                <button type="button" class="dash-back">Back</button>
+                            </fieldset>
+                        </form>
 
-                           <button type="button" class="dash-back">Back</button>
-                       </fieldset>
-                    </form>
+                        <button type="button" id="bg-trigger" class="dash-button dash-4">Blood Sugar</button>
+                        <form action="" id="blood-glucose-form">
+                            <fieldset>
+                                <legend>Blood Glucose</legend>
+                                <p>For correction calculator, use BOLUS from previous menu.</p>
+                                <label for="bg-input">Blood Sugar</label>
+                                <input type="number" id="bg-input"><span>mg/dl</span>
+                                <label for="bg-date">Date</label>
+                                <input type="date" class="date-dash" id="bg-date">
+                                <label for="bg-time">Time</label>
+                                <input type="time" class="time-dash" id="bg-time">
+                                <button type="submit" class="submit-button">Add BG</button>
 
-                    <button type="button" id="bg-trigger" class="dash-button dash-4 row-1">Blood Sugar</button>
-                    <form action="" id="blood-glucose-form">
-                        <fieldset>
-                            <legend>Blood Glucose</legend>
-                            <p>For correction calculator, use BOLUS from previous menu.</p>
-                            <label for="bg-input">Blood Sugar</label>
-                            <input type="number" id="bg-input"><span>mg/dl</span>
-                            <label for="bg-date">Date</label>
-                            <input type="date" class="date-dash" id="bg-date">
-                            <label for="bg-time">Time</label>
-                            <input type="time" class="time-dash" id="bg-time">
-                            <button type="submit" class="submit-button">Add BG</button>
+                                <button type="button" class="dash-back">Back</button>
+                            </fieldset>
+                        </form>
+                    </div>
 
-                            <button type="button" class="dash-back">Back</button>
-                        </fieldset>
-                    </form>
+                    <div class="row-2">
+                        <button type="button" id="basal-trigger" class="dash-button dash-4">Basal</button>
+                        <form action="" id="basal-form">
+                            <fieldset>
+                                <legend>Basal</legend>
 
-                    <button type="button" id="basal-trigger" class="dash-button dash-4 row-2">Basal</button>
-                    <form action="" id="basal-form">
-                       <fieldset>
-                            <legend>Basal</legend>
+                                <label for="basal-insulin-type">Insulin Type</label>
+                                <select id="basal-insulin-type">
+                                    <option value="Basaglar" selected>Basaglar</option>
+                                    <option value="Levemir">Levemir</option>
+                                    <option value="Lantus">Lantus</option>
+                                </select>
 
-                            <label for="basal-insulin-type">Insulin Type</label>
-                            <select id="basal-insulin-type">
-                               <option value="Basaglar" selected>Basaglar</option>
-                               <option value="Levemir">Levemir</option>
-                               <option value="Lantus">Lantus</option>
-                            </select>
+                                <label for="basal-units">Units of Insulin</label>
+                                <input type="number" class="insulin-input" id="basal-units" placeholder="25"><span>unit(s)</span>
+                                <label for="basal-date">Date</label>
+                                <input type="date" class="date-dash" id="basal-date">
+                                <label for="basal-time">Time</label>
+                                <input type="time" class="time-dash" id="basal-time">
 
-                            <label for="basal-units">Units of Insulin</label>
-                            <input type="number" class="insulin-input" id="basal-units" placeholder="25"><span>unit(s)</span>
-                            <label for="basal-date">Date</label>
-                           <input type="date" class="date-dash" id="basal-date">
-                            <label for="basal-time">Time</label>
-                           <input type="time" class="time-dash" id="basal-time">
+                                <button type="submit">Add Basal</button>
 
-                            <button type="submit">Add Basal</button>
+                                <button type="button" class="submit-button">Back</button>
+                            </fieldset>
+                        </form>
 
-                           <button type="button" class="submit-button">Back</button>
-                        </fieldset>
-                    </form>
+                        <button type="button" id="a1c-trigger" class="dash-button dash-4">A1c</button>
+                        <form action="" id="a1c-form">
+                            <fieldset>
+                                <legend>A1c</legend>
 
-                    <button type="button" id="a1c-trigger" class="dash-button dash-4 row-2">A1c</button>
-                    <form action="" id="a1c-form">
-                        <fieldset>
-                            <legend>A1c</legend>
+                                <label for="a1c-entry">A1c Result</label>
+                                <input type="number" class="insulin-input" id="a1c-entry" step="0.1" placeholder="6.6" required>
 
-                            <label for="a1c-entry">A1c Result</label>
-                            <input type="number" class="insulin-input" id="a1c-entry" step="0.1" placeholder="6.6" required>
+                                <label for="a1c-date">Date</label>
+                                <input type="date" class="date-dash" id="a1c-date" required>
 
-                            <label for="a1c-date">Date</label>
-                            <input type="date" class="date-dash" id="a1c-date" required>
+                                <button type="submit" class="submit-button">Add A1c</button>
+                                <button type="button" class="dash-back">Back</button>
+                            </fieldset>
+                        </form>
+                    </div>
 
-                            <button type="submit" class="submit-button">Add A1c</button>
-                            <button type="button" class="dash-back">Back</button>
-                        </fieldset>
-                    </form>
                     <div class="lower-dash-buttons">
                         <button type="button" id="settings-trigger" class="dash-button dash-2">Settings</button>
+
                         <button type="button" id="logs-trigger" class="dash-button dash-2">Logs</button>
                     </div>
 

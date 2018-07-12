@@ -234,7 +234,7 @@ app.post('/iob/insulin-stack/:id', (req, res) => {
     insulinOnBoard
         .findByIdAndUpdate(req.params.id, {
             $push: { currentInsulinStack: req.body }
-        }, { 'new': true})
+        }, {'new': true})
         .then(settings => {
             console.log(settings);
 //            settings.currentInsulinStack.push(req.body.entry);
