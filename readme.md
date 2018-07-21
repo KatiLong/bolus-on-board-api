@@ -1,16 +1,14 @@
 ## "B.O.B." | Fullstack React Capstone
-BOB - aka Bolus on Board - is designed for users that take Multiple Daily Injections (MDI) of insulin. It is meant to fill the gap for those that do not have access to insulin pumps or who prefer MDIs. It allows the User to input and track a number of Diabetic factors including: insulin on board (for multiple types of insulin), time of Basal Injection, and Blood Glucose readings. It also has the option to sync with a user's Dexcom account.
+BOB - aka Bolus on Board - is designed for users that take Multiple Daily Injections (MDI) of insulin. It is meant to fill the gap for those that do not have access to insulin pumps or who prefer MDIs. It allows the User to input and track a number of Diabetic factors including: insulin on board (for multiple types of insulin), time of Basal Injection, and Blood Glucose readings. It also has the option to sync with a user's Dexcom account. This application is designed to help those with T1D track all the many aspects of the disease that are impossible to track from memory.
 
 ## About this project
 BOB is built as a capstone project for Thinkful.
 
-My role in this project:
-
-I am the sole developer for this project
+I am the sole developer for this project.
 
 ## Diabetes FAQ
 #### What is Type 1 Diabetes?
-Type 1 Diabetes is an autoimmune disease in which the pancreas produces little or no Insulin. Insulin is a vital part of the body's metalbolic system, and it's function is to help the body break down Glucose and use it as fuel.
+Type 1 Diabetes is an autoimmune disease in which the pancreas produces little or no Insulin. Insulin is a vital part of the body's metalbolic system, and it's function is to help the body break down Glucose and use it as fuel. The T1D experience varies greatly from person to person, but management involves constant monitoring of Blood Sugar levels and insulin injections multiple times a day, not to mention a large myriad of other factors that go into daily management and overall health. A person with T1D MUST take insulin in order to live - not getting enough insulin can result in hospitalization and death.
 
 #### I think my Uncle has that.
 Possibly, but it's also likely that he has Type 2 Diabetes, which is far more common.
