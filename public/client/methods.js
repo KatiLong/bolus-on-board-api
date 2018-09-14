@@ -98,7 +98,7 @@ function iobLoginCalculator (result) {
 
 function newBolusEntry(iobObject) {
     console.log(iobObject);
-
+    //event.target.input_name
     let iobId =  $('#current-user-iob').val();
     let username = $('#current-username').val();
     let totalIOBAmount = iobObject.iobAmount + iobObject.newBolusAmount; //previousEntryAmounts + newEntryAmount
@@ -112,6 +112,8 @@ function newBolusEntry(iobObject) {
         timeRemaining: iobObject.duration
     }
     console.log(insulinStackObject);
+
+    //Dispatch an Action with Fetch
     $.ajax({
         type: 'POST',
         url: `/iob/insulin-stack/${iobId}`,
