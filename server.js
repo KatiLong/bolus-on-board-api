@@ -146,7 +146,6 @@ app.post('/users/create', (req, res) => {
         });
     });
 });
-
 // signing in a user
 app.post('/users/login', function (req, res) {
 
@@ -205,7 +204,6 @@ app.post('/users/login', function (req, res) {
         };
     });
 });
-
 // Create User Settings & IOB
 app.post('/iob/create', (req, res) => {
     insulinOnBoard
@@ -227,7 +225,6 @@ app.post('/iob/create', (req, res) => {
             res.status(500).json({ error: 'Something went wrong' });
         });
 })
-
 // Post entry to Insulin Stack using IOB id
 app.post('/iob/insulin-stack/:id', (req, res) => {
     console.log(req.body, req.params.id)
@@ -245,7 +242,6 @@ app.post('/iob/insulin-stack/:id', (req, res) => {
             res.status(500).json({ error: 'Something went wrong' });
         });
 })
-
 // POST Bolus Entry
 app.post('/bolus', (req, res) => {
     const requiredFields = ['bolusCarbs', 'bolusUnits', 'insulinType', 'bolusTime', 'bolusDate', 'bolusAmount', 'loggedInUsername', 'inputDateTime'];
@@ -378,7 +374,6 @@ app.get('/settings/:user', (req, res) => {
             });
     });
 });
-
 // accessing User's insulin on board & stack
 app.get('/iob-stack/:user', (req, res) => {
 
@@ -398,8 +393,7 @@ app.get('/iob-stack/:user', (req, res) => {
             });
         });
 });
-
-// accessing all of a user's entries
+// accessing user's entries
 app.get('/logs-bolus/:user', (req, res) => {
 
     Bolus
@@ -418,7 +412,7 @@ app.get('/logs-bolus/:user', (req, res) => {
         });
 
 });
-
+//accessing user's bg entries
 app.get('/logs-bg/:user', (req, res) => {
     bloodGlucose
         .find({
@@ -434,6 +428,7 @@ app.get('/logs-bg/:user', (req, res) => {
         });
     });
 })
+//accessing user's basal entries
 app.get('/logs-basal/:user', (req, res) => {
     Basal
         .find({
@@ -449,6 +444,7 @@ app.get('/logs-basal/:user', (req, res) => {
             });
         });
 })
+//accessing user's a1c entries
 app.get('/logs-a1c/:user', (req, res) => {
     A1c
         .find({
@@ -467,6 +463,7 @@ app.get('/logs-a1c/:user', (req, res) => {
 
 
 // PUT --------------------------------------
+// Update user's Settings
 app.put('/settings/:id', (req, res) => {
     let toUpdate = {};
 
@@ -488,7 +485,7 @@ app.put('/settings/:id', (req, res) => {
             });
         });
 });
-
+// Update user's IOB amounts
 app.put('/insulin-on-board/:id', (req, res) => {
     let toUpdate = {};
 
@@ -510,7 +507,7 @@ app.put('/insulin-on-board/:id', (req, res) => {
             });
         });
 });
-
+// Update user's IOB stack
 app.put('/insulin-stack-entry/:id', (req, res) => {
     let toUpdate = {};
 
@@ -535,7 +532,7 @@ app.put('/insulin-stack-entry/:id', (req, res) => {
 });
 
 // DELETE ----------------------------------------
-// deleting an achievement by id
+// deleting an IOB Entry on the stack by id
 app.delete('/iob/insulin-stack/:user/:id', (req, res) => {
     insulinOnBoard
         .findByIdAndUpdate(req.params.user, {
