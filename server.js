@@ -17,11 +17,24 @@ const passport = require('passport');
 const BasicStrategy = require('passport-http').BasicStrategy;
 const express = require('express');
 const app = express();
+
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.static('public'));
 
 mongoose.Promise = global.Promise;
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(function (req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE');
+    if (req.method === 'OPTIONS') {
+      return res.send(204);
+    }
+    next();
+  });
 
 // ---------------- RUN/CLOSE SERVER -----------------------------------------------------
 let server = undefined;
@@ -61,8 +74,9 @@ function closeServer() {
 
 // ---------------USER ENDPOINTS-------------------------------------
 // POST -----------------------------------
-// creating a new user & settings
+// creating a new User & User Settings
 app.post('/users/create', (req, res) => {
+    console.log(req.body)
 
     //take the name, username and the password from the ajax api call
     let name = req.body.name;
@@ -89,7 +103,7 @@ app.post('/users/create', (req, res) => {
 
             //display it
             return res.status(500).json({
-                message: 'Internal server error'
+                message: 'Internal server error 1'
             });
         }
 
@@ -101,7 +115,7 @@ app.post('/users/create', (req, res) => {
 
                 //display it
                 return res.status(500).json({
-                    message: 'Internal server error'
+                    message: 'Internal server error 2'
                 });
             }
 
@@ -116,7 +130,7 @@ app.post('/users/create', (req, res) => {
                 if (err) {
                     //display it
                     return res.status(500).json({
-                        message: 'Internal Server Error'
+                        message: 'Internal Server Error 3'
                     });
                 }
                 //if creating a new user in the DB is succefull
@@ -147,7 +161,7 @@ app.post('/users/create', (req, res) => {
     });
 });
 // signing in a user
-app.post('/users/login', function (req, res) {
+app.post('/users/login', (req, res) => {
 
     //take the username and the password from the ajax api call
     const username = req.body.username;
@@ -204,7 +218,7 @@ app.post('/users/login', function (req, res) {
         };
     });
 });
-// Create User Settings & IOB
+// Create User IOB
 app.post('/iob/create', (req, res) => {
     insulinOnBoard
         .create({
@@ -464,6 +478,7 @@ app.get('/logs-a1c/:user', (req, res) => {
 
 // PUT --------------------------------------
 // Update user's Settings
+// In future change these to find by User instead of Id
 app.put('/settings/:id', (req, res) => {
     let toUpdate = {};
 
@@ -486,6 +501,7 @@ app.put('/settings/:id', (req, res) => {
         });
 });
 // Update user's IOB amounts
+// In future change these to find by User instead of Id
 app.put('/insulin-on-board/:id', (req, res) => {
     let toUpdate = {};
 
@@ -508,6 +524,7 @@ app.put('/insulin-on-board/:id', (req, res) => {
         });
 });
 // Update user's IOB stack
+// In future change these to find by User instead of Id
 app.put('/insulin-stack-entry/:id', (req, res) => {
     let toUpdate = {};
 
