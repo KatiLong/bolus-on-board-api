@@ -4,8 +4,8 @@ const mongoose = require('mongoose');
 // const bcrypt = require('bcryptjs');
 
 const settingsSchema = new mongoose.Schema({
-    insulinMetric: {
-        type: String,
+    lowBg: {
+        type: Number,
         required: false
     },
     insulinIncrement: {

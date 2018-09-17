@@ -141,7 +141,7 @@ app.post('/user/create', (req, res) => {
 
                     Settings
                         .create({
-                        insulinMetric: 'units',
+                        lowBg: 65,
                         insulinIncrement: 1,
                         carbRatio: 9,
                         correctionFactor: 34,
@@ -220,6 +220,8 @@ app.post('/users/login', (req, res) => {
 });
 // Create User IOB
 app.post('/iob/create', (req, res) => {
+    console.log(req.body);
+    
     insulinOnBoard
         .create({
             insulinOnBoard: {
