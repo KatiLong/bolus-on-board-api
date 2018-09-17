@@ -18,13 +18,13 @@ const BasicStrategy = require('passport-http').BasicStrategy;
 const express = require('express');
 const app = express();
 
-app.use(bodyParser.json());
-app.use(cors());
-app.use(express.static('public'));
-
 mongoose.Promise = global.Promise;
 
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
+
+// app.use(express.static('public'));
 
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
@@ -75,7 +75,7 @@ function closeServer() {
 // ---------------USER ENDPOINTS-------------------------------------
 // POST -----------------------------------
 // creating a new User & User Settings
-app.post('/users/create', (req, res) => {
+app.post('/user/create', (req, res) => {
     console.log(req.body)
 
     //take the name, username and the password from the ajax api call
@@ -258,6 +258,7 @@ app.post('/iob/insulin-stack/:id', (req, res) => {
 })
 // POST Bolus Entry
 app.post('/bolus', (req, res) => {
+    console.log(req.body);
     const requiredFields = ['bolusCarbs', 'bolusUnits', 'insulinType', 'bolusTime', 'bolusDate', 'bolusAmount', 'loggedInUsername', 'inputDateTime'];
     for (let i = 0; i < requiredFields.length; i++) {
         const field = requiredFields[i];
@@ -288,6 +289,7 @@ app.post('/bolus', (req, res) => {
 })
 // POST blood sugar
 app.post('/blood-glucose', (req, res) => {
+    console.log(req.body);
     const requiredFields = ['bloodGlucose', 'bgDate', 'bgTime', 'loggedInUsername', 'inputDateTime'];
     for (let i = 0; i < requiredFields.length; i++) {
         const field = requiredFields[i];
