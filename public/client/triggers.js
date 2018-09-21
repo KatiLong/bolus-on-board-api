@@ -140,7 +140,7 @@ $(document).on('submit', '#login-form', (event) => {
         //User Login Call
         $.ajax({
             type: 'POST',
-            url: '/users/login',
+            url: '/user/login',
             dataType: 'json',
             data: JSON.stringify(loginUserObject),
             contentType: 'application/json'

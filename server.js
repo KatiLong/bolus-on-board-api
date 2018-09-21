@@ -82,19 +82,18 @@ app.post('/user/create', (req, res) => {
     let name = req.body.name;
     let username = req.body.username;
     let password = req.body.password;
+    let userExists = false;
 
     //exclude extra spaces from the username and password
     username = username.trim();
     password = password.trim();
 
-    User.findOne({username}, (err, items) => {
-        if (items) {
-            return res.status(409).json({
-                message: "User with that username already exists!"
-            });
-        }
-    })
-
+    if (User.findOne({username}, (err, items) => items)) {
+        console.log("User true");
+        return res.status(409).json({
+            message: "User with that username already exists!"
+        });
+    } 
     //create an encryption key
     bcrypt.genSalt(10, (err, salt) => {
 
@@ -161,8 +160,8 @@ app.post('/user/create', (req, res) => {
     });
 });
 // signing in a user
-app.post('/users/login', (req, res) => {
-
+app.post('/user/login', (req, res) => {
+    console.log(req.body);
     //take the username and the password from the ajax api call
     const username = req.body.username;
     const password = req.body.password;
