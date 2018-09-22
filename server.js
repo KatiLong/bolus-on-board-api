@@ -82,7 +82,6 @@ app.post('/user/create', (req, res) => {
     let name = req.body.name;
     let username = req.body.username;
     let password = req.body.password;
-    let userExists;
 
     //exclude extra spaces from the username and password
     username = username.trim();
@@ -90,81 +89,82 @@ app.post('/user/create', (req, res) => {
 
     User.count({username}, (err, items) => {
         console.log(items);
-        userExists = (items>0);
-    })
-    console.log(userExists);
-    // if () {
-    //     console.log("User doesn't exist");
-    // } else {
-    //     console.log("User exists");
-    //     return res.status(409).json({
-    //         message: "User with that username already exists!"
-    //     });
-    // }
-    //create an encryption key
-    bcrypt.genSalt(10, (err, salt) => {
-
-        //if creating the key returns an error...
-        if (err) {
-
-            //display it
-            return res.status(500).json({
-                message: 'Internal server error 1'
+        if (items>0) {
+            console.log("User exists");
+            return res.status(409).json({
+                message: "User with that username already exists!"
             });
-        }
+        } else {
+            console.log("User doesn't exist");
 
-        //using the encryption key above generate an encrypted pasword
-        bcrypt.hash(password, salt, (err, hash) => {
+            //create an encryption key
+            bcrypt.genSalt(10, (err, salt) => {
 
-            //if creating the ncrypted pasword returns an error..
-            if (err) {
-
-                //display it
-                return res.status(500).json({
-                    message: 'Internal server error 2'
-                });
-            }
-
-            //using the mongoose DB schema, connect to the database and create the new user
-            User.create({
-                name,
-                username,
-                password: hash,
-            }, (err, item) => {
-
-                //if creating a new user in the DB returns an error..
+                //if creating the key returns an error...
                 if (err) {
+
                     //display it
                     return res.status(500).json({
-                        message: 'Internal Server Error 3'
+                        message: 'Internal server error 1'
                     });
                 }
-                //if creating a new user in the DB is succefull
-                if (item) {
 
-                    //display the new user
-                    console.log(`User \`${username}\` created.`);
+                //using the encryption key above generate an encrypted pasword
+                bcrypt.hash(password, salt, (err, hash) => {
 
-                    Settings
-                        .create({
-                        lowBg: 65,
-                        insulinIncrement: 1,
-                        carbRatio: 9,
-                        correctionFactor: 34,
-                        targetBG: 120,
-                        insulinDuration: {hours: 4.25, milliSec: (4.25*3600000)},
-                        loggedInUsername: item.username,
-                        userID: item._id
-                    })
-                        .then(settings => res.status(201).json(settings))
-                        .catch(err => {
-                        console.error(err);
-                        res.status(500).json({ error: 'Something went wrong' });
+                    //if creating the ncrypted pasword returns an error..
+                    if (err) {
+
+                        //display it
+                        return res.status(500).json({
+                            message: 'Internal server error 2'
+                        });
+                    }
+
+                    //using the mongoose DB schema, connect to the database and create the new user
+                    User.create({
+                        name,
+                        username,
+                        password: hash,
+                    }, (err, item) => {
+
+                        //if creating a new user in the DB returns an error..
+                        if (err) {
+                            //display it
+                            return res.status(500).json({
+                                message: 'Internal Server Error 3'
+                            });
+                        }
+                        //if creating a new user in the DB is succefull
+                        if (item) {
+
+                            //display the new user
+                            console.log(`User \`${username}\` created.`);
+
+                            Settings
+                                .create({
+                                lowBg: 65,
+                                insulinIncrement: 1,
+                                carbRatio: 9,
+                                correctionFactor: 34,
+                                targetBG: 120,
+                                insulinDuration: {hours: 4.25, milliSec: (4.25*3600000)},
+                                loggedInUsername: item.username,
+                                userID: item._id
+                            })
+                                .then(settings => res.status(201).json(settings))
+                                .catch(err => {
+                                console.error(err);
+                                res.status(500).json({ error: 'Something went wrong' });
+                            });
+                        }
                     });
-                }
+                });
             });
-        });
-    });
+        }
+    })
+
+   
 });
 // signing in a user
 app.post('/user/login', (req, res) => {
