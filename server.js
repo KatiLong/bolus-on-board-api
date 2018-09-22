@@ -82,18 +82,25 @@ app.post('/user/create', (req, res) => {
     let name = req.body.name;
     let username = req.body.username;
     let password = req.body.password;
-    let userExists = false;
+    let userExists;
 
     //exclude extra spaces from the username and password
     username = username.trim();
     password = password.trim();
 
-    if (User.findOne({username}, (err, items) => items)) {
-        console.log("User true");
-        return res.status(409).json({
-            message: "User with that username already exists!"
-        });
-    } 
+    User.count({username}, (err, items) => {
+        console.log(items);
+        userExists = (items>0);
+    })
+    console.log(userExists);
+    // if () {
+    //     console.log("User doesn't exist");
+    // } else {
+    //     console.log("User exists");
+    //     return res.status(409).json({
+    //         message: "User with that username already exists!"
+    //     });
+    // }
     //create an encryption key
     bcrypt.genSalt(10, (err, salt) => {
 
