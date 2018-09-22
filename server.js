@@ -168,7 +168,6 @@ app.post('/user/create', (req, res) => {
 });
 // signing in a user
 app.post('/user/login', (req, res) => {
-    console.log(req.body);
     //take the username and the password from the ajax api call
     const username = req.body.username;
     const password = req.body.password;
@@ -230,12 +229,12 @@ app.post('/iob/create', (req, res) => {
     
     insulinOnBoard
         .create({
+            loggedInUsername: req.body.username,
             insulinOnBoard: {
                 amount: 0,
                 timeLeft: 0
             },
-            currentInsulinStack: [],
-            loggedInUsername: req.body.username
+            currentInsulinStack: []
         })
         .then(settings => {
             console.log('IOB Create:' + settings);

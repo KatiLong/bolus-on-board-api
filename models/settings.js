@@ -38,7 +38,7 @@ const settingsSchema = new mongoose.Schema({
         type: String
     },
     settingId: {
-        type: String,
+        type: String
     }
 });
 
