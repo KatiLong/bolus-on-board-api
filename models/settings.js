@@ -8,7 +8,7 @@ const settingsSchema = new mongoose.Schema({
         type: Number,
         required: false
     },
-    insulinIncrement: {
+    incrementInsulin: {
         type: Number,
         required: false
     },
@@ -16,15 +16,15 @@ const settingsSchema = new mongoose.Schema({
         type: Number,
         required: false
     },
-    correctionFactor: {
+    correction: {
         type: Number,
         required: false
     },
-    targetBG: {
+    targetBg: {
         type: Number,
         required: false
     },
-    insulinDuration: {
+    duration: {
         hours: {type: Number,
                  required: false},
         milliSec: {type: Number,
@@ -37,7 +37,7 @@ const settingsSchema = new mongoose.Schema({
     userID: {
         type: String
     },
-    settingId: {
+    settingsId: {
         type: String
     }
 });

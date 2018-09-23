@@ -143,15 +143,15 @@ app.post('/user/create', (req, res) => {
 
                             Settings
                                 .create({
-                                lowBg: 65,
-                                insulinIncrement: 1,
-                                carbRatio: 9,
-                                correctionFactor: 34,
-                                targetBG: 120,
-                                insulinDuration: {hours: 4.25, milliSec: (4.25*3600000)},
-                                loggedInUsername: item.username,
-                                userID: item._id
-                            })
+                                    lowBg: 65,
+                                    incrementInsulin: 1,
+                                    carbRatio: 9,
+                                    correction: 32,
+                                    targetBg: 120,
+                                    duration: {hours: 4.25, milliSec: (4.25*3600000)},
+                                    loggedInUsername: item.username,
+                                    userID: item._id
+                                })
                                 .then(settings => res.status(201).json(settings))
                                 .catch(err => {
                                 console.error(err);
@@ -489,9 +489,10 @@ app.get('/logs-a1c/:user', (req, res) => {
 // Update user's Settings
 // In future change these to find by User instead of Id
 app.put('/settings/:id', (req, res) => {
+    console.log(req.body);
     let toUpdate = {};
 
-    let updateableFields = ['insulinMetric', 'insulinIncrement', 'carbRatio', 'correctionFactor', 'targetBG', 'insulinDuration'];
+    let updateableFields = ['lowBg', 'incrementInsulin', 'carbRatio', 'correction', 'targetBg', 'duration'];
     updateableFields.forEach(function (field) {
         if (field in req.body) {
             toUpdate[field] = req.body[field];
