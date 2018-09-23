@@ -25,10 +25,8 @@ const settingsSchema = new mongoose.Schema({
         required: false
     },
     duration: {
-        hours: {type: Number,
-                 required: false},
-        milliSec: {type: Number,
-                   required: false}
+        type: Number,
+        required: false
     },
     loggedInUsername: {
         type: String,

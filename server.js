@@ -148,7 +148,7 @@ app.post('/user/create', (req, res) => {
                                     carbRatio: 9,
                                     correction: 32,
                                     targetBg: 120,
-                                    duration: {hours: 4.25, milliSec: (4.25*3600000)},
+                                    duration: 4.25,
                                     loggedInUsername: item.username,
                                     userID: item._id
                                 })
