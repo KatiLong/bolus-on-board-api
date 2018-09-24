@@ -248,15 +248,15 @@ app.post('/iob/create', (req, res) => {
 })
 // Post entry to Insulin Stack using IOB id
 app.post('/iob/insulin-stack/:id', (req, res) => {
-    console.log(req.body, req.params.id)
+    console.log('IOB Stack POST',req.body, req.params.id)
     insulinOnBoard
         .findByIdAndUpdate(req.params.id, {
             $push: { currentInsulinStack: req.body }
         }, {'new': true})
-        .then(settings => {
-            console.log(settings);
-//            settings.currentInsulinStack.push(req.body.entry);
-            res.status(201).json(settings);
+        .then(iob => {
+            // iobStack.currentInsulinStack.push(req.body.entry);
+            console.log(iob.currentInsulinStack[iob.currentInsulinStack.length -1]);
+            res.status(201).json(iob.currentInsulinStack[iob.currentInsulinStack.length -1]);
         })
         .catch(err => {
             console.error(err);
