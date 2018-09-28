@@ -265,8 +265,8 @@ app.post('/iob/insulin-stack/:id', (req, res) => {
 })
 // POST Bolus Entry
 app.post('/bolus', (req, res) => {
-    console.log(req.body);
-    const requiredFields = ['bolusCarbs', 'bolusUnits', 'insulinType', 'bolusTime', 'bolusDate', 'bolusAmount', 'loggedInUsername', 'inputDateTime'];
+    console.log('Bolus POST: ', req.body);
+    const requiredFields = ['bolusCarbs', 'bolusUnits', 'insulinType', 'bolusTime', 'bolusDate', 'bolusAmount', 'bloodGlucose', 'loggedInUsername', 'inputDateTime'];
     for (let i = 0; i < requiredFields.length; i++) {
         const field = requiredFields[i];
         if (!(field in req.body)) {
@@ -514,8 +514,9 @@ app.put('/settings/:id', (req, res) => {
 // In future change these to find by User instead of Id
 app.put('/insulin-on-board/:id', (req, res) => {
     let toUpdate = {};
-
     let updateableFields = ['insulinOnBoard', 'amount', 'timeLeft'];
+
+    console.log('IOB amounts Put', req.body);
 
     updateableFields.forEach((field) => {
         if (field in req.body) {
@@ -533,7 +534,7 @@ app.put('/insulin-on-board/:id', (req, res) => {
             });
         });
 });
-// Update user's IOB stack
+// Update user's IOB stack by Entry Id
 // In future change these to find by User instead of Id
 app.put('/insulin-stack-entry/:id', (req, res) => {
     let toUpdate = {};
@@ -560,9 +561,9 @@ app.put('/insulin-stack-entry/:id', (req, res) => {
 
 // DELETE ----------------------------------------
 // deleting an IOB Entry on the stack by id
-app.delete('/iob/insulin-stack/:user/:id', (req, res) => {
+app.delete('/iob/insulin-stack/:iob/:id', (req, res) => {
     insulinOnBoard
-        .findByIdAndUpdate(req.params.user, {
+        .findByIdAndUpdate(req.params.iob, {
             $pull: {currentInsulinStack: { _id: req.params.id}}
         }, { 'new': true})
         .then((entry) => {
