@@ -15,6 +15,48 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: false
+    },
+    settings: {
+        lowBg: {
+            type: Number,
+            required: false
+        },
+        incrementInsulin: {
+            type: Number,
+            required: false
+        },
+        carbRatio: {
+            type: Number,
+            required: false
+        },
+        correction: {
+            type: Number,
+            required: false
+        },
+        targetBg: {
+            type: Number,
+            required: false
+        },
+        duration: {
+            type: Number,
+            required: false
+        }
+    },
+    iob: {
+        currentInsulinStack: [{
+            entryAmount: {
+                type: Number
+            },
+            currentInsulin: {
+                type: Number
+            },
+            timeStart: {
+                type: Number
+            },
+            timeRemaining:{
+                type: Number
+            }
+        }]
     }
 });
 
