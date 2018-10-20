@@ -11,13 +11,14 @@ const bodyParser = require('body-parser');
 const {CLIENT_ORIGIN} = require('./config');
 const config = require('./config');
 const mongoose = require('mongoose');
-const moment = require('moment');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
-const passport = require('passport');
-const BasicStrategy = require('passport-http').BasicStrategy;
 const express = require('express');
 const app = express();
+
+const moment = require('moment');
+const passport = require('passport');
+const BasicStrategy = require('passport-http').BasicStrategy;
 
 mongoose.Promise = global.Promise;
 
