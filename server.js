@@ -8,7 +8,7 @@ const A1c = require('./models/a1c');
 const insulinOnBoard = require('./models/insulin-on-board');
 
 const bodyParser = require('body-parser');
-const config = require('./config');
+const {CLIENT_ORIGIN} = require('./config');
 const mongoose = require('mongoose');
 const moment = require('moment');
 const cors = require('cors');
@@ -22,7 +22,9 @@ mongoose.Promise = global.Promise;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({
+    origin: CLIENT_ORIGIN
+}));
 
 // app.use(express.static('public'));
 
@@ -386,7 +388,7 @@ app.get('/settings/:user', (req, res) => {
             loggedInUsername: req.params.user
         })
         .then((settings) => {
-
+            console.log('Settings GET:', settings);
             res.status(201).json(settings)
 
         })
