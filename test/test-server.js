@@ -13,21 +13,23 @@ chai.use(chaiHttp);
 
 describe('API', () => {
 
-    before(function() {
-        return runServer();
-      });
-    
-    after(function() {
-        return closeServer();
-    });
-
-    it('should 200 on GET requests', () => {
-        return chai
-            .request(app)
-            .get('/iob-stack/')
-            .then((res) => {
-                res.should.have.status(200);
-                res.should.be.json;
-        });
-    });
 });
+
+
+// before(function() {
+//     return runServer();
+//   });
+
+// after(function() {
+//     return closeServer();
+// });
+
+// it('should 200 on GET requests', () => {
+//     return chai
+//         .request(app)
+//         .get('/iob-stack/')
+//         .then((res) => {
+//             res.should.have.status(200);
+//             res.should.be.json;
+//     });
+// });

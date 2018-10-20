@@ -9,6 +9,7 @@ const insulinOnBoard = require('./models/insulin-on-board');
 
 const bodyParser = require('body-parser');
 const {CLIENT_ORIGIN} = require('./config');
+const config = require('./config');
 const mongoose = require('mongoose');
 const moment = require('moment');
 const cors = require('cors');
